@@ -1,4 +1,4 @@
-package eu.kormic.walue.walue_app
+package eu.kormic.walue
 
 import io.flutter.embedding.android.FlutterActivity
 
