@@ -28,6 +28,8 @@ dependencies:
 
   dio: 4.0.0-beta7
 
+  lint: 1.5.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
