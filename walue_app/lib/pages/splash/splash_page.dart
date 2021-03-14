@@ -12,9 +12,11 @@ class SplashPage extends HookWidget {
       duration: Duration(milliseconds: 250),
     );
 
-    final fadeInAnimation = useAnimation(CurvedAnimation(parent: animationController, curve: Curves.easeIn));
+    final fadeInAnimation = useAnimation(CurvedAnimation(parent: animationController, curve: Curves.easeInOut));
 
-    animationController.forward();
+    useEffect(() {
+      animationController.forward();
+    }, []);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -32,7 +34,19 @@ class SplashPage extends HookWidget {
         child: Center(
           child: Opacity(
             opacity: fadeInAnimation,
-            child: Logo(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Logo(),
+                Padding(
+                  padding: EdgeInsets.only(top: 32.0),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation(Colors.white),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

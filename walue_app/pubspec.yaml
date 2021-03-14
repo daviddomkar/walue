@@ -21,6 +21,13 @@ dependencies:
 
   shared_preferences: 2.0.4
 
+  firebase_core: 1.0.1
+  firebase_auth: 1.0.1
+
+  cloud_firestore: 1.0.1
+
+  dio: 4.0.0-beta7
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

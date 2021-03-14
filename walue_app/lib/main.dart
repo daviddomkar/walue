@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:walue_app/locations.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -15,11 +16,17 @@ void main() {
 
   _licenceFonts();
 
+  await _initFirebase();
+
   runApp(
     ProviderScope(
       child: WalueApp(),
     ),
   );
+}
+
+Future<void> _initFirebase() async {
+  await Firebase.initializeApp();
 }
 
 void _licenceFonts() {
