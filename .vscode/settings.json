@@ -35,9 +35,13 @@
     "editor.formatOnSave": false,
     "editor.formatOnPaste": false
   },
-  "prettier.requireConfig": true,
-  "prettier.configPath": "./.prettierrc",
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue"
+  ],
   "eslint.format.enable": true,
   "eslint.alwaysShowStatus": true,
   "eslint.lintTask.enable": true,
