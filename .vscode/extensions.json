@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "wix.vscode-import-cost",
+    "oderwat.indent-rainbow",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "octref.vetur",
+    "coenraads.bracket-pair-colorizer-2",
+    "pkief.material-icon-theme",
+    "eamodio.gitlens",
+    "aaron-bond.better-comments",
+    "dart-code.flutter"
+  ]
+}

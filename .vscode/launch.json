@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug",
+      "request": "launch",
+      "program": "walue_app/lib/main.dart",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--web-renderer=canvaskit", "--web-port=5000", "--dart-define=FLUTTER_WEB_USE_SKIA=true"]
+    },
+    {
+      "name": "Profile",
+      "request": "launch",
+      "program": "walue_app/lib/main.dart",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": ["--web-renderer=canvaskit", "--web-port=5000", "--dart-define=FLUTTER_WEB_USE_SKIA=true"]
+    },
+    {
+      "name": "Release",
+      "request": "launch",
+      "program": "walue_app/lib/main.dart",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": ["--web-renderer=canvaskit", "--web-port=5000", "--dart-define=FLUTTER_WEB_USE_SKIA=true"]
+    }
+  ]
+}
