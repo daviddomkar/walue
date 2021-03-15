@@ -1,8 +1,5 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:walue_app/providers.dart';
 
 import '../../widgets/logo.dart';
 
@@ -17,14 +14,8 @@ class SplashScreen extends HookWidget {
 
     final fadeInAnimation = useAnimation(CurvedAnimation(parent: animationController, curve: Curves.easeInOut));
 
-    final test = useProvider(testProvider);
-
     useEffect(() {
       animationController.forward();
-
-      Future.delayed(const Duration(seconds: 1)).then((_) {
-        test.state = true;
-      });
     }, []);
 
     return Scaffold(
