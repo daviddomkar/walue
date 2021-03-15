@@ -41,7 +41,10 @@ class FirebaseAuthRepository extends AuthRepository {
                           name: snapshot.data()!['currency']['name'] as String,
                         ),
                       )
-                    : null;
+                    : User(
+                        email: user.email!,
+                        displayName: user.displayName!,
+                      );
               }))
         .listen((event) {
       _user = Resource.withData(event);
