@@ -4,13 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:walue_app/locations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
 
@@ -44,7 +44,7 @@ void _licenceFonts() {
 class WalueApp extends StatelessWidget {
   final routerDelegate = BeamerRouterDelegate(
     beamLocations: [
-      MainLocation(),
+      HomeLocation(),
     ],
   );
 
@@ -56,7 +56,11 @@ class WalueApp extends StatelessWidget {
       routeInformationParser: BeamerRouteInformationParser(),
       backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
       theme: ThemeData(
-        textTheme: GoogleFonts.latoTextTheme(),
+        textTheme: GoogleFonts.latoTextTheme().copyWith(
+          headline2: GoogleFonts.fredokaOne(fontSize: 64.0),
+          headline3: GoogleFonts.fredokaOne(fontSize: 48.0),
+          headline5: GoogleFonts.lato(fontSize: 24.0, fontWeight: FontWeight.w300),
+        ),
         primaryColor: const Color(0xFF0054F6),
         accentColor: const Color(0xFF00D1FF),
       ),

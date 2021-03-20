@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../widgets/logo.dart';
 
-class SplashScreen extends HookWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final animationController = useAnimationController(
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  late Animation<double> _fadeInAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
       duration: const Duration(milliseconds: 250),
     );
 
-    final fadeInAnimation = useAnimation(CurvedAnimation(parent: animationController, curve: Curves.easeInOut));
+    _fadeInAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
-    useEffect(() {
-      animationController.forward();
-    }, []);
+    _controller.forward();
+  }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -32,21 +49,9 @@ class SplashScreen extends HookWidget {
           ),
         ),
         child: Center(
-          child: Opacity(
-            opacity: fadeInAnimation,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Logo(),
-                const Padding(
-                  padding: EdgeInsets.only(top: 32.0),
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation(Colors.white),
-                  ),
-                )
-              ],
-            ),
+          child: FadeTransition(
+            opacity: _fadeInAnimation,
+            child: const Logo(),
           ),
         ),
       ),
