@@ -2,19 +2,26 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:walue_app/providers/user_stream_provider.dart';
 
+import '../models/currency.dart';
 import '../models/user.dart';
+import '../providers/user_stream_provider.dart';
 import '../utils/resource.dart';
 
-final userRepositoryProvider = ChangeNotifierProvider<UserRepository>((ref) => UserRepository(userStream: ref.watch(userStreamProvider.stream)));
+final userRepositoryProvider = ChangeNotifierProvider<UserRepository>((ref) => FirebaseUserRepository(userStream: ref.watch(userStreamProvider.stream)));
 
-class UserRepository extends ChangeNotifier {
+abstract class UserRepository extends ChangeNotifier {
+  Future<void> chooseFiatCurrency(Currency currency);
+
+  Resource<User, String> get user;
+}
+
+class FirebaseUserRepository extends UserRepository {
   Resource<User, String> _user;
 
   late StreamSubscription _subscription;
 
-  UserRepository({required Stream<User?> userStream}) : _user = const Resource.empty() {
+  FirebaseUserRepository({required Stream<User?> userStream}) : _user = const Resource.empty() {
     _user = const Resource.loading();
     _subscription = userStream.listen((event) {
       if (event != null) {
@@ -30,11 +37,15 @@ class UserRepository extends ChangeNotifier {
   }
 
   @override
+  Future<void> chooseFiatCurrency(Currency currency) async {}
+
+  @override
   void dispose() {
     super.dispose();
 
     _subscription.cancel();
   }
 
+  @override
   Resource<User, String> get user => _user;
 }

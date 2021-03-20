@@ -7,6 +7,7 @@ import 'screens/choose_fiat_currency/choose_fiat_currency_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/login/login_screen.dart';
 import 'screens/splash/splash_screen.dart';
+import 'utils/no_transition_page.dart';
 
 class HomeLocation extends BeamLocation {
   @override
@@ -31,7 +32,7 @@ class HomeLocation extends BeamLocation {
 
     if (user.isNotFinished || user.hasError) {
       return [
-        BeamPage(
+        NoTransitionPage(
           key: const ValueKey('splash'),
           child: const SplashScreen(),
         ),
@@ -40,17 +41,17 @@ class HomeLocation extends BeamLocation {
 
     return [
       if (!user.hasData)
-        BeamPage(
+        NoTransitionPage(
           key: const ValueKey('login'),
           child: const LogInScreen(),
         ),
       if (user.hasData && user.data!.fiatCurrency == null)
-        BeamPage(
+        NoTransitionPage(
           key: const ValueKey('choose-fiat-currency'),
           child: const ChooseFiatCurrencyScreen(),
         ),
       if (user.hasData && user.data!.fiatCurrency != null)
-        BeamPage(
+        NoTransitionPage(
           key: const ValueKey('home'),
           child: const HomeScreen(),
         ),
