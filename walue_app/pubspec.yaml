@@ -14,7 +14,7 @@ dependencies:
 
   stream_transform: 2.0.0
 
-  beamer: 1.0.0-nullsafety.2
+  beamer: 1.0.0-nullsafety.3
 
   flutter_hooks: 0.16.0
   hooks_riverpod: 0.13.1
