@@ -4,7 +4,7 @@ enum ResourceState {
   finished,
 }
 
-class Resource<T, E> {
+class Resource<T extends Object, E extends Object> {
   final ResourceState state;
 
   final T? data;
@@ -14,9 +14,16 @@ class Resource<T, E> {
 
   const Resource.empty() : this._(ResourceState.empty, null, null);
   const Resource.loading() : this._(ResourceState.loading, null, null);
-  const Resource.withData(T data) : this._(ResourceState.finished, data, null);
-  const Resource.withError(E error) : this._(ResourceState.finished, null, error);
+  const Resource.finishWithData(T data) : this._(ResourceState.finished, data, null);
+  const Resource.finish() : this._(ResourceState.finished, null, null);
+  const Resource.finishWithError(E error) : this._(ResourceState.finished, null, error);
 
+  bool get isEmpty => state == ResourceState.empty;
+  bool get isLoading => state == ResourceState.loading;
+
+  bool get isFinished => state == ResourceState.finished;
   bool get hasError => state == ResourceState.finished && error != null;
   bool get hasData => state == ResourceState.finished && data != null;
+
+  bool get isNotFinished => state != ResourceState.finished;
 }

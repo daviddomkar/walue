@@ -12,21 +12,22 @@ dependencies:
   flutter:
     sdk: flutter
 
-  stream_transform: 2.0.0
+  beamer: 1.0.0-nullsafety.3
 
-  beamer: 1.0.0-nullsafety.2
-
-  flutter_hooks: 0.16.0
-  hooks_riverpod: 0.13.1
+  flutter_riverpod: 0.13.1
 
   google_fonts: 2.0.0
 
   shared_preferences: 2.0.4
 
+  stream_transform: 2.0.0
+
   firebase_core: 1.0.1
   firebase_auth: 1.0.1
 
   cloud_firestore: 1.0.1
+
+  google_sign_in: 5.0.1
 
   dio: 4.0.0-beta7
 
@@ -40,4 +41,5 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/icons/
     - google_fonts/
