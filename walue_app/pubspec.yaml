@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  beamer: 1.0.0-nullsafety.5
+  beamer: 1.0.0-nullsafety.8
 
   flutter_riverpod: 0.13.1
 
