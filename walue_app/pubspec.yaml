@@ -29,7 +29,7 @@ dependencies:
 
   google_sign_in: 5.0.1
 
-  dio: 4.0.0-prev3
+  dio: 4.0.0
 
   lint: 1.5.3
 
