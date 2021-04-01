@@ -18,8 +18,8 @@ final userStreamProvider = StreamProvider<User?>((ref) {
                   email: user.email!,
                   displayName: user.displayName!,
                   fiatCurrency: Currency(
-                    symbol: snapshot.data()!['currency']['symbol'] as String,
-                    name: snapshot.data()!['currency']['name'] as String,
+                    symbol: snapshot.data()!['fiat_currency']['symbol'] as String,
+                    name: snapshot.data()!['fiat_currency']['name'] as String,
                   ),
                 )
               : User(
