@@ -31,6 +31,8 @@ dependencies:
 
   dio: 4.0.0
 
+  quiver: 3.0.0
+
   lint: 1.5.3
 
 dev_dependencies:

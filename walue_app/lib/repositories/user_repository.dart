@@ -13,6 +13,7 @@ final userRepositoryProvider = ChangeNotifierProvider<UserRepository>((ref) => F
 
 abstract class UserRepository extends ChangeNotifier {
   Future<void> chooseFiatCurrency(Currency currency);
+  Future<void> changeFiatCurrency(Currency currency);
 
   Resource<User, String> get user;
 }
@@ -42,6 +43,16 @@ class FirebaseUserRepository extends UserRepository {
   @override
   Future<void> chooseFiatCurrency(Currency currency) async {
     await _firestore.collection('users').doc(_user.data?.id).set({
+      'fiat_currency': {
+        'symbol': currency.symbol,
+        'name': currency.name,
+      },
+    });
+  }
+
+  @override
+  Future<void> changeFiatCurrency(Currency currency) async {
+    await _firestore.collection('users').doc(_user.data?.id).update({
       'fiat_currency': {
         'symbol': currency.symbol,
         'name': currency.name,
