@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/currency.dart';
 import '../models/user.dart';
-import '../providers/user_stream_provider.dart';
+import '../providers.dart';
 import '../utils/resource.dart';
 
 final userRepositoryProvider = ChangeNotifierProvider<UserRepository>((ref) => FirebaseUserRepository(userStream: ref.watch(userStreamProvider.stream)));
@@ -17,6 +18,8 @@ abstract class UserRepository extends ChangeNotifier {
 }
 
 class FirebaseUserRepository extends UserRepository {
+  final _firestore = FirebaseFirestore.instance;
+
   Resource<User, String> _user;
 
   late StreamSubscription _subscription;
@@ -37,7 +40,14 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   @override
-  Future<void> chooseFiatCurrency(Currency currency) async {}
+  Future<void> chooseFiatCurrency(Currency currency) async {
+    await _firestore.collection('users').doc(_user.data?.id).set({
+      'fiat_currency': {
+        'symbol': currency.symbol,
+        'name': currency.name,
+      },
+    });
+  }
 
   @override
   void dispose() {

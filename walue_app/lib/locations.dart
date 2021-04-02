@@ -9,15 +9,28 @@ import 'screens/login/login_screen.dart';
 import 'screens/splash/splash_screen.dart';
 import 'utils/no_transition_page.dart';
 
-class HomeLocation extends BeamLocation {
+class RootLocation extends BeamLocation {
   @override
-  List<String> get pathBlueprints => ['/'];
+  List<String> get pathBlueprints => [
+        '/',
+        '/login',
+        '/choose-fiat-currency',
+        '/*',
+      ];
 
   @override
   Widget builder(BuildContext context, Widget navigator) {
     return ProviderListener<UserRepository>(
       onChange: (context, repository) {
-        context.updateCurrentLocation();
+        final user = repository.user;
+
+        if (!user.hasData) {
+          context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
+        } else if (user.hasData && user.data!.fiatCurrency == null) {
+          context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
+        } else {
+          context.currentBeamLocation.update((state) => state.copyWith());
+        }
       },
       provider: userRepositoryProvider,
       child: navigator,
@@ -56,5 +69,20 @@ class HomeLocation extends BeamLocation {
           child: const HomeScreen(),
         ),
     ];
+  }
+}
+
+class HomeLocation extends BeamLocation {
+  @override
+  List<String> get pathBlueprints => [
+        '/',
+        '/settings',
+        '/currency/:currencyId',
+      ];
+
+  @override
+  List<BeamPage> pagesBuilder(BuildContext context) {
+    // TODO: implement pagesBuilder
+    throw UnimplementedError();
   }
 }
