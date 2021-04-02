@@ -15,6 +15,7 @@ final userStreamProvider = StreamProvider<User?>((ref) {
       : _firestore.collection('users').doc(user.uid).snapshots().map((snapshot) {
           return snapshot.exists
               ? User(
+                  id: user.uid,
                   email: user.email!,
                   displayName: user.displayName!,
                   fiatCurrency: Currency(
@@ -23,6 +24,7 @@ final userStreamProvider = StreamProvider<User?>((ref) {
                   ),
                 )
               : User(
+                  id: user.uid,
                   email: user.email!,
                   displayName: user.displayName!,
                 );
