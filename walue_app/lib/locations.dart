@@ -2,14 +2,31 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'repositories/user_repository.dart';
+import 'models/user.dart';
+import 'providers.dart';
 import 'screens/choose_fiat_currency/choose_fiat_currency_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/login/login_screen.dart';
 import 'screens/splash/splash_screen.dart';
 import 'utils/no_transition_page.dart';
 
+class RootLocationViewModel {
+  final AsyncValue<User?> user;
+
+  RootLocationViewModel({required this.user});
+}
+
+final _rootLocationViewModelProvider = Provider.autoDispose<RootLocationViewModel>((ref) {
+  final user = ref.watch(userStreamProvider);
+
+  return RootLocationViewModel(
+    user: user,
+  );
+});
+
 class RootLocation extends BeamLocation {
+  final _beamerKey = GlobalKey<BeamerState>();
+
   @override
   List<String> get pathBlueprints => [
         '/',
@@ -20,19 +37,19 @@ class RootLocation extends BeamLocation {
 
   @override
   Widget builder(BuildContext context, Widget navigator) {
-    return ProviderListener<UserRepository>(
-      onChange: (context, repository) {
-        final user = repository.user;
+    return ProviderListener<RootLocationViewModel>(
+      onChange: (context, viewModel) {
+        final user = viewModel.user;
 
-        if (!user.hasData) {
+        if (user.data != null && user.data!.value == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
-        } else if (user.hasData && user.data!.fiatCurrency == null) {
+        } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrency == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
         } else {
           context.currentBeamLocation.update((state) => state.copyWith());
         }
       },
-      provider: userRepositoryProvider,
+      provider: _rootLocationViewModelProvider,
       child: navigator,
     );
   }
@@ -41,34 +58,50 @@ class RootLocation extends BeamLocation {
   List<BeamPage> pagesBuilder(BuildContext? context) {
     final container = ProviderScope.containerOf(context!);
 
-    final user = container.read(userRepositoryProvider).user;
+    final viewModel = container.read(_rootLocationViewModelProvider);
 
-    if (user.isNotFinished || user.hasError) {
-      return [
-        NoTransitionPage(
-          key: const ValueKey('splash'),
-          child: const SplashScreen(),
-        ),
-      ];
-    }
-
-    return [
-      if (!user.hasData)
-        NoTransitionPage(
-          key: const ValueKey('login'),
-          child: const LogInScreen(),
-        ),
-      if (user.hasData && user.data!.fiatCurrency == null)
-        NoTransitionPage(
-          key: const ValueKey('choose-fiat-currency'),
-          child: const ChooseFiatCurrencyScreen(),
-        ),
-      if (user.hasData && user.data!.fiatCurrency != null)
-        NoTransitionPage(
-          key: const ValueKey('home'),
-          child: const HomeScreen(),
-        ),
-    ];
+    return viewModel.user.when(
+      data: (user) {
+        return [
+          if (user == null)
+            NoTransitionPage(
+              key: const ValueKey('login'),
+              child: const LogInScreen(),
+            ),
+          if (user != null && user.fiatCurrency == null)
+            NoTransitionPage(
+              key: const ValueKey('choose-fiat-currency'),
+              child: const ChooseFiatCurrencyScreen(),
+            ),
+          if (user != null && user.fiatCurrency != null)
+            NoTransitionPage(
+              key: const ValueKey('home'),
+              child: Beamer(
+                key: _beamerKey,
+                beamLocations: [
+                  HomeLocation(),
+                ],
+              ),
+            ),
+        ];
+      },
+      loading: () {
+        return [
+          NoTransitionPage(
+            key: const ValueKey('splash'),
+            child: const SplashScreen(),
+          ),
+        ];
+      },
+      error: (error, stackTrace) {
+        return [
+          NoTransitionPage(
+            key: const ValueKey('splash'),
+            child: const SplashScreen(),
+          ),
+        ];
+      },
+    );
   }
 }
 
@@ -82,7 +115,11 @@ class HomeLocation extends BeamLocation {
 
   @override
   List<BeamPage> pagesBuilder(BuildContext context) {
-    // TODO: implement pagesBuilder
-    throw UnimplementedError();
+    return [
+      NoTransitionPage(
+        key: const ValueKey('home'),
+        child: HomeScreen(),
+      ),
+    ];
   }
 }

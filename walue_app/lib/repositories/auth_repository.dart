@@ -8,6 +8,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) => FirebaseAuthRep
 
 abstract class AuthRepository {
   Future<void> signInWithGoogle();
+  Future<void> signOut();
 }
 
 class FirebaseAuthRepository extends AuthRepository {
@@ -29,5 +30,10 @@ class FirebaseAuthRepository extends AuthRepository {
     } else {
       throw 'Could not sign in!';
     }
+  }
+
+  @override
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }

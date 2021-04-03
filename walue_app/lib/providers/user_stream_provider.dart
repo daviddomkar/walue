@@ -6,7 +6,7 @@ import 'package:stream_transform/stream_transform.dart';
 import '../models/currency.dart';
 import '../models/user.dart';
 
-final userStreamProvider = StreamProvider<User?>((ref) {
+final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
 

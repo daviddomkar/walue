@@ -2,7 +2,26 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
+      function isChoosingFiatCurrency() {
+        return request.auth.uid != null
+            && request.auth.uid == userId
+            && request.resource.data.keys().hasOnly(['fiat_currency'])
+            && request.resource.data.fiat_currency.keys().hasOnly(['name', 'symbol'])
+            && request.resource.data.fiat_currency.symbol in get(/databases/$(database)/documents/system/fiat).data.currencies.keys()
+            && request.resource.data.fiat_currency.name in get(/databases/$(database)/documents/system/fiat).data.currencies.values()
+      }
+
       allow get: if request.auth != null && (request.auth.uid == userId);
+
+      allow create: if isChoosingFiatCurrency();
+    }
+
+    match /system/fiat {
+      allow get: if request.auth != null;
+    }
+
+    match /system/crypto {
+      allow get: if request.auth != null;
     }
   }
 }
