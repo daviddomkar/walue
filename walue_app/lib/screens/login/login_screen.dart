@@ -8,8 +8,8 @@ import '../../widgets/logo.dart';
 
 import 'login_view_model.dart';
 
-final logInViewModelProvider = ChangeNotifierProvider<LogInViewModel>(
-  (ref) => LogInViewModel(auth: ref.watch(authRepositoryProvider)),
+final logInViewModelProvider = ChangeNotifierProvider.autoDispose<LogInViewModel>(
+  (ref) => LogInViewModel(authRepository: ref.watch(authRepositoryProvider)),
 );
 
 class LogInScreen extends ConsumerWidget {
