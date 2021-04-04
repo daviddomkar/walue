@@ -14,7 +14,7 @@ dependencies:
 
   beamer: 1.0.0-nullsafety.9
 
-  flutter_riverpod: 0.13.1
+  flutter_riverpod: 0.14.0
 
   google_fonts: 2.0.0
 
