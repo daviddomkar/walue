@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:walue_app/repositories/auth_repository.dart';
+import 'package:beamer/beamer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,7 +14,12 @@ class HomeScreen extends StatelessWidget {
           onPressed: () {
             context.read(authRepositoryProvider).signOut();
           },
-          child: Text('pog'),
+          child: ElevatedButton(
+            onPressed: () {
+              context.beamToNamed('/currency/bitcoin');
+            },
+            child: Text('bitcoin'),
+          ),
         ),
       ),
     );
