@@ -5,8 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'models/user.dart';
 import 'providers.dart';
 import 'screens/choose_fiat_currency/choose_fiat_currency_screen.dart';
+import 'screens/currency/currency_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/login/login_screen.dart';
+import 'screens/settings/settings_screen.dart';
 import 'screens/splash/splash_screen.dart';
 import 'utils/no_transition_page.dart';
 
@@ -80,6 +82,8 @@ class RootLocation extends BeamLocation {
                 key: _beamerKey,
                 beamLocations: [
                   HomeLocation(),
+                  CurrencyLocation(),
+                  SettingsLocation(),
                 ],
               ),
             ),
@@ -109,8 +113,6 @@ class HomeLocation extends BeamLocation {
   @override
   List<String> get pathBlueprints => [
         '/',
-        '/settings',
-        '/currency/:currencyId',
       ];
 
   @override
@@ -118,7 +120,41 @@ class HomeLocation extends BeamLocation {
     return [
       NoTransitionPage(
         key: const ValueKey('home'),
-        child: HomeScreen(),
+        child: const HomeScreen(),
+      ),
+    ];
+  }
+}
+
+class CurrencyLocation extends BeamLocation {
+  @override
+  List<String> get pathBlueprints => [
+        '/currency/:currencyId',
+      ];
+
+  @override
+  List<BeamPage> pagesBuilder(BuildContext context) {
+    return [
+      NoTransitionPage(
+        key: ValueKey('currency-${state.pathParameters['currencyId']!}'),
+        child: CurrencyScreen(id: state.pathParameters['currencyId']!),
+      ),
+    ];
+  }
+}
+
+class SettingsLocation extends BeamLocation {
+  @override
+  List<String> get pathBlueprints => [
+        '/settings',
+      ];
+
+  @override
+  List<BeamPage> pagesBuilder(BuildContext context) {
+    return [
+      NoTransitionPage(
+        key: const ValueKey('settings'),
+        child: const SettingsScreen(),
       ),
     ];
   }
