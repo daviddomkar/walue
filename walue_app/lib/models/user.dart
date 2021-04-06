@@ -7,5 +7,7 @@ class User {
 
   final Currency? fiatCurrency;
 
-  User({required this.id, required this.email, required this.displayName, this.fiatCurrency});
+  final List<String>? favouriteCurrencyIds;
+
+  User({required this.id, required this.email, required this.displayName, this.fiatCurrency, this.favouriteCurrencyIds});
 }

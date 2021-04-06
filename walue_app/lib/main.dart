@@ -43,17 +43,19 @@ void _licenceFonts() {
 
 class WalueApp extends StatelessWidget {
   final routerDelegate = BeamerRouterDelegate(
-    beamLocations: [
-      RootLocation(),
-    ],
+    locationBuilder: BeamerLocationBuilder(
+      beamLocations: [
+        RootLocation(),
+      ],
+    ),
   );
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      routerDelegate: routerDelegate,
       routeInformationParser: BeamerRouteInformationParser(),
+      routerDelegate: routerDelegate,
       backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme().copyWith(
