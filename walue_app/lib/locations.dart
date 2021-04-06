@@ -57,7 +57,7 @@ class RootLocation extends BeamLocation {
   }
 
   @override
-  List<BeamPage> pagesBuilder(BuildContext? context) {
+  List<BeamPage> pagesBuilder(BuildContext? context, BeamState state) {
     final container = ProviderScope.containerOf(context!);
 
     final viewModel = container.read(_rootLocationViewModelProvider);
@@ -80,11 +80,15 @@ class RootLocation extends BeamLocation {
               key: const ValueKey('home'),
               child: Beamer(
                 key: _beamerKey,
-                beamLocations: [
-                  HomeLocation(),
-                  CurrencyLocation(),
-                  SettingsLocation(),
-                ],
+                routerDelegate: BeamerRouterDelegate(
+                  locationBuilder: BeamerLocationBuilder(
+                    beamLocations: [
+                      HomeLocation(),
+                      CurrencyLocation(),
+                      SettingsLocation(),
+                    ],
+                  ),
+                ),
               ),
             ),
         ];
@@ -116,7 +120,7 @@ class HomeLocation extends BeamLocation {
       ];
 
   @override
-  List<BeamPage> pagesBuilder(BuildContext context) {
+  List<BeamPage> pagesBuilder(BuildContext context, BeamState state) {
     return [
       NoTransitionPage(
         key: const ValueKey('home'),
@@ -133,7 +137,7 @@ class CurrencyLocation extends BeamLocation {
       ];
 
   @override
-  List<BeamPage> pagesBuilder(BuildContext context) {
+  List<BeamPage> pagesBuilder(BuildContext context, BeamState state) {
     return [
       NoTransitionPage(
         key: ValueKey('currency-${state.pathParameters['currencyId']!}'),
@@ -150,7 +154,7 @@ class SettingsLocation extends BeamLocation {
       ];
 
   @override
-  List<BeamPage> pagesBuilder(BuildContext context) {
+  List<BeamPage> pagesBuilder(BuildContext context, BeamState state) {
     return [
       NoTransitionPage(
         key: const ValueKey('settings'),

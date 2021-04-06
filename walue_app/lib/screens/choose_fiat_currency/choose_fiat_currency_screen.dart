@@ -10,10 +10,12 @@ import '../../widgets/logo.dart';
 import 'choose_fiat_currency_view_model.dart';
 
 final chooseFiatCurrencyViewModelProvider = ChangeNotifierProvider.autoDispose<ChooseFiatCurrencyViewModel>((ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
   final userRepository = ref.watch(userRepositoryProvider);
   final fiatCurrencies = ref.watch(fiatCurrenciesStreamProvider);
 
   return ChooseFiatCurrencyViewModel(
+    authRepository: authRepository,
     userRepository: userRepository,
     fiatCurrencies: fiatCurrencies,
   );
@@ -29,7 +31,6 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
     final fiatCurrencies = viewModel.fiatCurrencies;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: Container(
         padding: const EdgeInsets.all(32.0),
         decoration: BoxDecoration(
@@ -108,6 +109,18 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
                 },
                 child: const Text(
                   'Continue',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              BasicButton(
+                onPressed: () {
+                  viewModel.signOut();
+                },
+                child: const Text(
+                  'Sign out',
                   style: TextStyle(
                     fontSize: 18.0,
                   ),

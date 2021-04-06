@@ -6,7 +6,7 @@ class NoTransitionPage extends BeamPage {
   final Widget child;
 
   NoTransitionPage({
-    Key? key,
+    LocalKey? key,
     String? name,
     required this.child,
     bool keepQueryOnPop = false,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:walue_app/repositories/auth_repository.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:beamer/beamer.dart';
+
+import '../../widgets/basic_button.dart';
+import '../../widgets/logo.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -9,18 +11,97 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: TextButton(
-          onPressed: () {
-            context.read(authRepositoryProvider).signOut();
-          },
-          child: ElevatedButton(
-            onPressed: () {
-              context.beamToNamed('/currency/bitcoin');
-            },
-            child: Text('bitcoin'),
-          ),
-        ),
+      backgroundColor: Colors.white,
+      body: LayoutBuilder(
+        builder: (context, constraint) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraint.maxHeight),
+              child: IntrinsicHeight(
+                child: Stack(
+                  children: [
+                    Transform(
+                      transform: Matrix4.rotationZ(0.4)..translate(-150.0, -96.0),
+                      alignment: Alignment.center,
+                      child: Container(
+                        width: 400.0,
+                        height: 400.0,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(40.0),
+                          ),
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).primaryColor,
+                              Theme.of(context).accentColor,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 32.0, left: 32.0, right: 32.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Logo(
+                                    small: true,
+                                  ),
+                                  Text(
+                                    'Dashboard',
+                                    style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color(0xCCFFFFFF), height: 0.7),
+                                  ),
+                                ],
+                              ),
+                              Transform.translate(
+                                offset: const Offset(8.0, -8.0),
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
+                                    context.beamToNamed('/settings');
+                                  },
+                                  icon: const FaIcon(
+                                    FontAwesomeIcons.userCog,
+                                    color: Color(0xFF222222),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(32.0),
+                          child: BasicButton(
+                            onPressed: () {},
+                            child: const Text(
+                              'Add New Crypto',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

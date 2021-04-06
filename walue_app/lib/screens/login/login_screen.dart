@@ -20,7 +20,6 @@ class LogInScreen extends ConsumerWidget {
     final viewModel = watch(logInViewModelProvider);
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: Container(
         padding: const EdgeInsets.all(32.0),
         decoration: BoxDecoration(

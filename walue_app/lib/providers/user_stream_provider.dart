@@ -13,20 +13,25 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
   return _auth.idTokenChanges().switchMap((user) => user == null
       ? Stream.value(null)
       : _firestore.collection('users').doc(user.uid).snapshots().map((snapshot) {
-          return snapshot.exists
-              ? User(
-                  id: user.uid,
-                  email: user.email!,
-                  displayName: user.displayName!,
-                  fiatCurrency: Currency(
-                    symbol: snapshot.data()!['fiat_currency']['symbol'] as String,
-                    name: snapshot.data()!['fiat_currency']['name'] as String,
-                  ),
-                )
-              : User(
-                  id: user.uid,
-                  email: user.email!,
-                  displayName: user.displayName!,
-                );
+          if (snapshot.exists) {
+            final data = snapshot.data()!;
+
+            return User(
+              id: user.uid,
+              email: user.email!,
+              displayName: user.displayName!,
+              fiatCurrency: Currency(
+                symbol: data['fiat_currency']['symbol'] as String,
+                name: data['fiat_currency']['name'] as String,
+              ),
+              favouriteCurrencyIds: data['favourite_currency_ids'] as List<String>?,
+            );
+          }
+
+          return User(
+            id: user.uid,
+            email: user.email!,
+            displayName: user.displayName!,
+          );
         }));
 });
