@@ -115,16 +115,31 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              BasicButton(
-                onPressed: () {
-                  viewModel.signOut();
-                },
-                child: const Text(
-                  'Sign out',
-                  style: TextStyle(
-                    fontSize: 18.0,
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: TextButton(
+                  onPressed: () {
+                    viewModel.signOut();
+                  },
+                  style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.resolveWith((states) => const Color(0x16000000)),
+                    padding: MaterialStateProperty.resolveWith((states) => const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0)),
+                    shape: MaterialStateProperty.resolveWith(
+                      (states) => const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(16.0),
+                        ),
+                      ),
+                    ),
                   ),
-                  textAlign: TextAlign.center,
+                  child: const Text(
+                    'Sign out',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ]
