@@ -26,13 +26,12 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
     final requests = partitionedIds.asMap().entries.map(
           (entry) => _dio.get<List<dynamic>>('/coins/markets', queryParameters: {
             'vs_currency': versusCurrency.symbol,
+            'order': 'market_cap_desc',
             'ids': entry.value.join(','),
           }),
         );
 
     final responses = await Future.wait(requests);
-
-    print(responses[2].data!.length);
 
     final currencies = quiver.concat(responses.map((response) => response.data!));
 
@@ -41,6 +40,7 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
         id: currency['id'] as String,
         name: currency['name'] as String,
         symbol: currency['symbol'] as String,
+        imageUrl: currency['image'] as String,
       );
     }).toList();
   }
@@ -58,6 +58,7 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
       id: currency['id'] as String,
       name: currency['name'] as String,
       symbol: currency['symbol'] as String,
+      imageUrl: currency['image'] as String,
     );
   }
 }

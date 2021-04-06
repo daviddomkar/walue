@@ -59,9 +59,10 @@ class WalueApp extends StatelessWidget {
       backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme().copyWith(
-          headline2: GoogleFonts.fredokaOne(fontSize: 64.0),
-          headline3: GoogleFonts.fredokaOne(fontSize: 48.0),
-          headline5: GoogleFonts.lato(fontSize: 24.0, fontWeight: FontWeight.w300),
+          headline2: GoogleFonts.fredokaOne(fontSize: 64.0, color: const Color(0xFF222222)),
+          headline3: GoogleFonts.fredokaOne(fontSize: 48.0, color: const Color(0xFF222222)),
+          headline5: GoogleFonts.lato(fontSize: 24.0, fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
+          headline6: GoogleFonts.lato(fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
         ),
         primaryColor: const Color(0xFF0054F6),
         accentColor: const Color(0xFF00D1FF),

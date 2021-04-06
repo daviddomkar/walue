@@ -18,10 +18,10 @@ class CurrencyScreen extends ConsumerWidget {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-          future: cryptoRepository.getCryptoCurrencies([id, 'ethereum', 'binancecoin', 'polkadot'], user.data!.value!.fiatCurrency!),
-          builder: (context, AsyncSnapshot<List<CryptoCurrency>> snapshot) {
+          future: cryptoRepository.getCryptoCurrency(id, user.data!.value!.fiatCurrency!),
+          builder: (context, AsyncSnapshot<CryptoCurrency> snapshot) {
             if (snapshot.hasData) {
-              return Text(snapshot.data!.map((currency) => currency.symbol).join(','));
+              return Text(snapshot.data!.name);
             } else {
               return Text(id);
             }
