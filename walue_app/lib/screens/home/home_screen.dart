@@ -87,15 +87,18 @@ class HomeScreen extends StatelessWidget {
                           child: GradientButton(
                             onPressed: () {
                               showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(40.0),
-                                      topRight: Radius.circular(40.0),
-                                    ),
+                                clipBehavior: Clip.hardEdge,
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.white,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(40.0),
+                                    topRight: Radius.circular(40.0),
                                   ),
-                                  builder: (context) => const CryptoSelectSheet());
+                                ),
+                                builder: (context) => const CryptoSelectSheet(),
+                              );
                             },
                             child: const Text(
                               'Add New Crypto',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:walue_app/providers.dart';
+import 'package:beamer/beamer.dart';
 
 class CryptoSelectSheet extends ConsumerWidget {
   const CryptoSelectSheet({Key? key}) : super(key: key);
@@ -15,12 +16,7 @@ class CryptoSelectSheet extends ConsumerWidget {
       expand: false,
       builder: (context, controller) {
         return Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40.0),
-              topRight: Radius.circular(40.0),
-            ),
-          ),
+          color: Colors.white,
           child: cryptoCurrencies.when(
             data: (data) {
               if (data != null) {
@@ -34,7 +30,21 @@ class CryptoSelectSheet extends ConsumerWidget {
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          return Text(data[index].name);
+                          return ListTile(
+                            leading: Container(
+                              width: 40.0,
+                              height: 40.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(image: NetworkImage(data[index].imageUrl), fit: BoxFit.contain),
+                              ),
+                            ),
+                            title: Text(data[index].name),
+                            subtitle: Text(data[index].symbol.toUpperCase()),
+                            onTap: () {
+                              context.beamToNamed('/currency/${data[index].id}');
+                            },
+                          );
                         },
                         childCount: data.length,
                       ),
@@ -57,7 +67,6 @@ class CryptoSelectSheet extends ConsumerWidget {
               ),
             ),
             error: (e, s) {
-              print(e);
               return Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
@@ -75,7 +84,13 @@ class CryptoSelectSheet extends ConsumerWidget {
 class CryptoSelectSheetHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(height: 64.0, child: Text('Lulw'));
+    return Container(
+      height: 64.0,
+      color: Colors.white,
+      child: Center(
+        child: Text('Choose a crypto currency', style: Theme.of(context).textTheme.headline6),
+      ),
+    );
   }
 
   @override
