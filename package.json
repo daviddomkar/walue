@@ -1,0 +1,11 @@
+{
+  "name": "walue",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "walue_scripts"
+  ],
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  }
+}

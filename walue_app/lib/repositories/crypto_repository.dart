@@ -27,12 +27,12 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
           (entry) => _dio.get<List<dynamic>>('/coins/markets', queryParameters: {
             'vs_currency': versusCurrency.symbol,
             'ids': entry.value.join(','),
-            'per_page': 250,
-            'page': entry.key + 1,
           }),
         );
 
     final responses = await Future.wait(requests);
+
+    print(responses[2].data!.length);
 
     final currencies = quiver.concat(responses.map((response) => response.data!));
 

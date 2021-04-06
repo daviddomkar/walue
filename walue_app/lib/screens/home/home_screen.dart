@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:beamer/beamer.dart';
 
-import '../../widgets/basic_button.dart';
+import '../../widgets/crypto_select_sheet.dart';
+import '../../widgets/gradient_button.dart';
 import '../../widgets/logo.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -82,9 +83,20 @@ class HomeScreen extends StatelessWidget {
                           child: Container(),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(32.0),
-                          child: BasicButton(
-                            onPressed: () {},
+                          padding: const EdgeInsets.all(32.0),
+                          child: GradientButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(40.0),
+                                      topRight: Radius.circular(40.0),
+                                    ),
+                                  ),
+                                  builder: (context) => const CryptoSelectSheet());
+                            },
                             child: const Text(
                               'Add New Crypto',
                               style: TextStyle(

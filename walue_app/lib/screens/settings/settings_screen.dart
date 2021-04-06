@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SettingsScreen extends StatelessWidget {
+import '../../repositories/auth_repository.dart';
+
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
+    final authRepository = watch(authRepositoryProvider);
+
     return Scaffold(
       body: Center(
-        child: Text('settings'),
+        child: TextButton(
+          onPressed: () {
+            authRepository.signOut();
+          },
+          child: Text('Sign out'),
+        ),
       ),
     );
   }

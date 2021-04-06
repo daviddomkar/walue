@@ -1,0 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:walue_app/repositories/crypto_repository.dart';
+
+import '../models/crypto_currency.dart';
+import '../providers.dart';
+
+final cryptoCurrenciesStreamProvider = StreamProvider.autoDispose<List<CryptoCurrency>?>((ref) {
+  final _firestore = FirebaseFirestore.instance;
+
+  final cryptoRepository = ref.watch(cryptoRepositoryProvider);
+  final user = ref.watch(userStreamProvider);
+
+  return user.data?.value == null || user.data?.value?.fiatCurrency == null
+      ? Stream.value(null)
+      : _firestore.collection('system').doc('crypto').snapshots().asyncMap((snapshot) async {
+          if (snapshot.exists) {
+            final currencyIds = snapshot.data()!['currencies'] as List<dynamic>;
+            final cryptoCurrencies = await cryptoRepository.getCryptoCurrencies(currencyIds.map((e) => e as String).toList(), user.data!.value!.fiatCurrency!);
+
+            return cryptoCurrencies;
+          }
+
+          throw 'Crypto currency data are not available!';
+        });
+});
