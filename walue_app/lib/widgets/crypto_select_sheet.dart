@@ -19,46 +19,36 @@ class CryptoSelectSheet extends ConsumerWidget {
           color: Colors.white,
           child: cryptoCurrencies.when(
             data: (data) {
-              if (data != null) {
-                return CustomScrollView(
-                  controller: controller,
-                  slivers: [
-                    SliverPersistentHeader(
-                      delegate: CryptoSelectSheetHeaderDelegate(),
-                      pinned: true,
-                    ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return ListTile(
-                            leading: Container(
-                              width: 40.0,
-                              height: 40.0,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(image: NetworkImage(data[index].imageUrl), fit: BoxFit.contain),
-                              ),
-                            ),
-                            title: Text(data[index].name),
-                            subtitle: Text(data[index].symbol.toUpperCase()),
-                            onTap: () {
-                              context.beamToNamed('/currency/${data[index].id}');
-                            },
-                          );
-                        },
-                        childCount: data.length,
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
-                    strokeWidth: 2.0,
+              return CustomScrollView(
+                controller: controller,
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate: CryptoSelectSheetHeaderDelegate(),
+                    pinned: true,
                   ),
-                );
-              }
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return ListTile(
+                          leading: Container(
+                            width: 40.0,
+                            height: 40.0,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(image: NetworkImage(data[index].imageUrl), fit: BoxFit.contain),
+                            ),
+                          ),
+                          title: Text(data[index].name),
+                          subtitle: Text(data[index].symbol.toUpperCase()),
+                          onTap: () {
+                            context.beamToNamed('/currency/${data[index].id}');
+                          },
+                        );
+                      },
+                      childCount: data.length,
+                    ),
+                  ),
+                ],
+              );
             },
             loading: () => Center(
               child: CircularProgressIndicator(

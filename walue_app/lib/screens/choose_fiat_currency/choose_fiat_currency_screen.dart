@@ -55,7 +55,7 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
               style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),
-            if (fiatCurrencies.data != null && fiatCurrencies.data!.value != null) ...[
+            if (fiatCurrencies.data != null) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0),
                 child: Theme(
