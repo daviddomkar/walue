@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:walue_app/locations.dart';
+
+import 'repositories/crypto_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,8 +21,13 @@ Future<void> main() async {
 
   await _initFirebase();
 
+  final databaseDirectory = await getApplicationSupportDirectory();
+
   runApp(
     ProviderScope(
+      overrides: [
+        cryptoRepositoryProvider.overrideWithValue(CoinGeckoCryptoRepository(databasePath: databaseDirectory.path)),
+      ],
       child: WalueApp(),
     ),
   );

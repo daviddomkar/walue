@@ -57,9 +57,12 @@ class HomeScreen extends StatelessWidget {
                                   const Logo(
                                     small: true,
                                   ),
-                                  Text(
-                                    'Dashboard',
-                                    style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color(0xCCFFFFFF), height: 0.7),
+                                  Transform.translate(
+                                    offset: const Offset(0.0, -10.0),
+                                    child: Text(
+                                      'Dashboard',
+                                      style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color(0xCCFFFFFF)),
+                                    ),
                                   ),
                                 ],
                               ),
