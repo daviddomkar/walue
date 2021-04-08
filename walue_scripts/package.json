@@ -9,7 +9,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "firebase-admin": "^9.6.0"
+    "axios": "0.21.1",
+    "firebase-admin": "9.6.0"
   }
 }
