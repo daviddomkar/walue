@@ -1,19 +1,50 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function requireFields(object, required) {
+      return object.keys().hasAll(required) && object.keys().hasOnly(required);
+    }
+
     match /users/{userId} {
-      function isChoosingFiatCurrency() {
+      allow get: if request.auth != null && request.auth.uid == userId;
+
+      function isAuthorized() {
         return request.auth.uid != null
-            && request.auth.uid == userId
-            && request.resource.data.keys().hasOnly(['fiat_currency'])
-            && request.resource.data.fiat_currency.keys().hasOnly(['name', 'symbol'])
-            && request.resource.data.fiat_currency.symbol in get(/databases/$(database)/documents/system/fiat).data.currencies.keys()
-            && request.resource.data.fiat_currency.name in get(/databases/$(database)/documents/system/fiat).data.currencies.values()
+            && request.auth.uid == userId;
       }
 
-      allow get: if request.auth != null && (request.auth.uid == userId);
+      function isChoosingFiatCurrency() {
+        return isAuthorized()
+            && requireFields(request.resource.data, ['fiat_currency'])
+            && requireFields(request.resource.data.fiat_currency, ['name', 'symbol'])
+            && request.resource.data.fiat_currency.symbol in get(/databases/$(database)/documents/system/fiat).data.currencies.keys()
+            && request.resource.data.fiat_currency.name in get(/databases/$(database)/documents/system/fiat).data.currencies.values();
+      }
 
       allow create: if isChoosingFiatCurrency();
+
+      match /portfolio/{cryptoId}/buy_records/{recordId} {
+        allow list: if request.auth != null && request.auth.uid == userId;
+
+        function isAddingNewRecord() {
+          return isAuthorized()
+              && cryptoId in get(/databases/$(database)/documents/system/crypto).data.currencies
+              && requireFields(request.resource.data, ['buy_price', 'amount'])
+              && request.resource.data.buy_price is float
+              && request.resource.data.amount is float;
+        }
+
+        function isEdittingExistingRecord() {
+          return isAuthorized()
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['buy_price', 'amount'])
+              && request.resource.data.buy_price is float
+              && request.resource.data.amount is float;
+        }
+
+        allow create: if isAddingNewRecord();
+        allow update: if isEdittingExistingRecord();
+        allow delete: if request.auth != null && request.auth.uid == userId;
+      }
     }
 
     match /system/fiat {
