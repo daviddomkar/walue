@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/crypto_currency.dart';
 import '../models/currency.dart';
 import '../providers.dart';
 
@@ -11,6 +12,9 @@ final userRepositoryProvider = Provider<UserRepository>((ref) => FirebaseUserRep
 abstract class UserRepository {
   Future<void> chooseFiatCurrency(Currency currency);
   Future<void> changeFiatCurrency(Currency currency);
+  Future<void> addCryptoCurrencyRecord(CryptoCurrency currency, double buyPrice, double amount);
+  Future<void> editCryptoCurrencyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount);
+  Future<void> deleteCryptoCurrencyRecord(CryptoCurrency currency, String id);
 }
 
 class FirebaseUserRepository extends UserRepository {
@@ -38,5 +42,37 @@ class FirebaseUserRepository extends UserRepository {
         'name': currency.name,
       },
     });
+  }
+
+  @override
+  Future<void> addCryptoCurrencyRecord(CryptoCurrency currency, double buyPrice, double amount) async {
+    // TODO: Change this to transaction
+
+    await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').add({
+      'buy_price': buyPrice,
+      'amount': amount,
+    });
+  }
+
+  @override
+  Future<void> editCryptoCurrencyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount) async {
+    // TODO: Change this to transaction
+
+    final data = <String, double>{};
+
+    if (buyPrice != null) {
+      data['buy_price'] = buyPrice;
+    }
+
+    if (amount != null) {
+      data['amount'] = amount;
+    }
+
+    await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(id).update(data);
+  }
+
+  @override
+  Future<void> deleteCryptoCurrencyRecord(CryptoCurrency currency, String id) async {
+    await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(id).delete();
   }
 }
