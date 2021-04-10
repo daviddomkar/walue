@@ -21,7 +21,16 @@ service cloud.firestore {
             && request.resource.data.fiat_currency.name in get(/databases/$(database)/documents/system/fiat).data.currencies.values();
       }
 
+      function isChangingFiatCurrency() {
+        return isAuthorized()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fiat_currency'])
+            && requireFields(request.resource.data.fiat_currency, ['name', 'symbol'])
+            && request.resource.data.fiat_currency.symbol in get(/databases/$(database)/documents/system/fiat).data.currencies.keys()
+            && request.resource.data.fiat_currency.name in get(/databases/$(database)/documents/system/fiat).data.currencies.values();
+      }
+
       allow create: if isChoosingFiatCurrency();
+      allow update: if isChangingFiatCurrency();
 
       match /portfolio/{cryptoId}/buy_records/{recordId} {
         allow list: if request.auth != null && request.auth.uid == userId;
