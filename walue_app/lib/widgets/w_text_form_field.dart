@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class WTextFormField extends StatefulWidget {
+  final bool autofocus;
   final String? hintText;
-  final bool? obscureText;
-  final String Function(String)? validator;
+  final bool obscureText;
+  final List<TextInputFormatter>? inputFormatters;
+  final String Function(String?)? validator;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final void Function(String)? onChanged;
   final void Function(String)? onFieldSubmitted;
   final void Function(String?)? onSaved;
@@ -11,9 +16,13 @@ class WTextFormField extends StatefulWidget {
 
   const WTextFormField({
     Key? key,
+    this.autofocus = false,
     this.hintText,
-    this.obscureText,
+    this.obscureText = false,
+    this.inputFormatters,
     this.validator,
+    this.keyboardType,
+    this.textInputAction,
     this.onChanged,
     this.onFieldSubmitted,
     this.onSaved,
@@ -54,9 +63,23 @@ class _WTextFormFieldState extends State<WTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(16.0),
+          ),
+        ),
+        isDense: true,
+        hintText: widget.hintText,
+      ),
+      autofocus: widget.autofocus,
       focusNode: _focusNode,
       autovalidateMode: _dirty != null && _dirty! ? AutovalidateMode.always : AutovalidateMode.disabled,
-      obscureText: widget.obscureText ?? false,
+      obscureText: widget.obscureText,
+      inputFormatters: widget.inputFormatters,
+      validator: widget.validator,
+      keyboardType: widget.keyboardType,
+      textInputAction: widget.textInputAction,
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onFieldSubmitted,
       onSaved: widget.onSaved,
