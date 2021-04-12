@@ -31,9 +31,6 @@ class RootLocation extends BeamLocation {
 
   @override
   List<String> get pathBlueprints => [
-        '/',
-        '/login',
-        '/choose-fiat-currency',
         '/*',
       ];
 
@@ -41,15 +38,19 @@ class RootLocation extends BeamLocation {
   Widget builder(BuildContext context, Widget navigator) {
     return ProviderListener<RootLocationViewModel>(
       onChange: (context, viewModel) {
-        final user = viewModel.user;
+        // TODO: Change url based on user status (this implementation currently throws not found error)
 
+        // final user = viewModel.user;
+/*
         if (user.data != null && user.data!.value == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
         } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrency == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
         } else {
-          context.currentBeamLocation.update((state) => state.copyWith());
+          
         }
+*/
+        context.currentBeamLocation.update();
       },
       provider: _rootLocationViewModelProvider,
       child: navigator,
