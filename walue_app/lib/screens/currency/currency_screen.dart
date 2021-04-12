@@ -112,6 +112,12 @@ class CurrencyScreen extends ConsumerWidget {
                                 child: IconButton(
                                   padding: EdgeInsets.zero,
                                   onPressed: () {
+                                    print('History length:');
+                                    print(Beamer.of(context).beamHistory.length);
+                                    print('Beam back location:');
+                                    print(Beamer.of(context).beamBackLocation);
+                                    print('Can beam back:');
+                                    print(Beamer.of(context).canBeamBack);
                                     context.beamBack();
                                   },
                                   icon: const FaIcon(
