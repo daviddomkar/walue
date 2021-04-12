@@ -31,6 +31,7 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
     final fiatCurrencies = viewModel.fiatCurrencies;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         padding: const EdgeInsets.all(32.0),
         decoration: BoxDecoration(

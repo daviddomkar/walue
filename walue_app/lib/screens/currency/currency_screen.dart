@@ -4,15 +4,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../providers.dart';
+import '../../repositories/user_repository.dart';
+import '../../widgets/add_record_dialog.dart';
 import '../../widgets/gradient_button.dart';
 import '../../widgets/logo.dart';
-
 import 'currency_view_model.dart';
 
 final currencyViewModelProvider = ChangeNotifierProvider.autoDispose.family<CurrencyViewModel, String>((ref, id) {
-  final currency = ref.watch(cryptoCurrencyStreamProvider(id));
+  final userRepository = ref.watch(userRepositoryProvider);
 
-  return CurrencyViewModel(currency: currency);
+  final currency = ref.watch(cryptoCurrencyStreamProvider(id));
+  final buyRecords = ref.watch(buyRecordsStreamProvider(id));
+
+  return CurrencyViewModel(
+    userRepository: userRepository,
+    currency: currency,
+    buyRecords: buyRecords,
+  );
 });
 
 class CurrencyScreen extends ConsumerWidget {
@@ -25,8 +33,10 @@ class CurrencyScreen extends ConsumerWidget {
     final viewModel = watch(currencyViewModelProvider(id));
 
     final currency = viewModel.currency;
+    final buyRecords = viewModel.buyRecords;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: LayoutBuilder(
         builder: (context, constraint) {
@@ -114,14 +124,58 @@ class CurrencyScreen extends ConsumerWidget {
                           ),
                         ),
                         Expanded(
-                          child: Container(),
-                        ),
+                            child: buyRecords.when(
+                          data: (data) {
+                            return DataTable(
+                              columns: const [
+                                DataColumn(
+                                  label: Text(
+                                    'Buy price',
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    'Amount',
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    'Profit',
+                                  ),
+                                ),
+                              ],
+                              rows: data
+                                  .map(
+                                    (record) => DataRow(
+                                      cells: <DataCell>[
+                                        DataCell(Text(record.buyPrice.toString())),
+                                        DataCell(Text(record.amount.toString())),
+                                        DataCell(Text('TODO')),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                            );
+                          },
+                          loading: () => Container(),
+                          error: (e, s) => Container(),
+                        )),
                         Padding(
                           padding: const EdgeInsets.all(32.0),
                           child: GradientButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (_) => AddRecordDialog(
+                                  onAddRecord: (record) {
+                                    viewModel.addBuyRecord(record);
+                                    Navigator.of(context, rootNavigator: true).pop(context);
+                                  },
+                                ),
+                              );
+                            },
                             child: const Text(
-                              'Add New Record',
+                              'Add new buy record',
                               style: TextStyle(
                                 fontSize: 18.0,
                               ),

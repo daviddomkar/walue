@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class WTextFormField extends StatefulWidget {
+  final TextEditingController? controller;
   final bool autofocus;
   final String? hintText;
   final bool obscureText;
   final List<TextInputFormatter>? inputFormatters;
-  final String Function(String?)? validator;
+  final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final void Function(String)? onChanged;
@@ -16,6 +17,7 @@ class WTextFormField extends StatefulWidget {
 
   const WTextFormField({
     Key? key,
+    this.controller,
     this.autofocus = false,
     this.hintText,
     this.obscureText = false,
@@ -63,6 +65,7 @@ class _WTextFormFieldState extends State<WTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
       decoration: InputDecoration(
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(

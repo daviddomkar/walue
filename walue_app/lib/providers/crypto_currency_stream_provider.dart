@@ -9,7 +9,11 @@ final cryptoCurrencyStreamProvider = StreamProvider.autoDispose.family<CryptoCur
   final cryptoRepository = ref.watch(cryptoRepositoryProvider);
   final user = ref.watch(userStreamProvider);
 
-  return Stream.value(null)
-      .asyncMap((event) => cryptoRepository.getCryptoCurrency(id, user.data!.value!.fiatCurrency!))
-      .merge(Stream.periodic(const Duration(minutes: 1)).asyncMap((_) => cryptoRepository.getCryptoCurrency(id, user.data!.value!.fiatCurrency!)));
+  return Stream.periodic(const Duration(minutes: 2))
+      .asyncMap(
+        (_) => cryptoRepository.getCryptoCurrency(id, user.data!.value!.fiatCurrency!),
+      )
+      .startWithStream(
+        Stream.fromFuture(cryptoRepository.getCryptoCurrency(id, user.data!.value!.fiatCurrency!)),
+      );
 });
