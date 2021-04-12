@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: LayoutBuilder(
         builder: (context, constraint) {
@@ -104,7 +105,7 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
                             child: const Text(
-                              'Add New Crypto',
+                              'Add new crypto',
                               style: TextStyle(
                                 fontSize: 18.0,
                               ),

@@ -11,12 +11,13 @@ class SettingsScreen extends ConsumerWidget {
     final authRepository = watch(authRepositoryProvider);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: TextButton(
           onPressed: () {
             authRepository.signOut();
           },
-          child: Text('Sign out'),
+          child: const Text('Sign out'),
         ),
       ),
     );

@@ -12,9 +12,9 @@ final userRepositoryProvider = Provider<UserRepository>((ref) => FirebaseUserRep
 abstract class UserRepository {
   Future<void> chooseFiatCurrency(Currency currency);
   Future<void> changeFiatCurrency(Currency currency);
-  Future<void> addCryptoCurrencyRecord(CryptoCurrency currency, double buyPrice, double amount);
-  Future<void> editCryptoCurrencyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount);
-  Future<void> deleteCryptoCurrencyRecord(CryptoCurrency currency, String id);
+  Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount);
+  Future<void> editCryptoCurrencyBuyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount);
+  Future<void> deleteCryptoCurrencyBuyRecord(CryptoCurrency currency, String id);
 }
 
 class FirebaseUserRepository extends UserRepository {
@@ -45,7 +45,7 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   @override
-  Future<void> addCryptoCurrencyRecord(CryptoCurrency currency, double buyPrice, double amount) async {
+  Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount) async {
     // TODO: Change this to transaction
 
     await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').add({
@@ -55,7 +55,7 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   @override
-  Future<void> editCryptoCurrencyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount) async {
+  Future<void> editCryptoCurrencyBuyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount) async {
     // TODO: Change this to transaction
 
     final data = <String, double>{};
@@ -72,7 +72,7 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   @override
-  Future<void> deleteCryptoCurrencyRecord(CryptoCurrency currency, String id) async {
+  Future<void> deleteCryptoCurrencyBuyRecord(CryptoCurrency currency, String id) async {
     await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(id).delete();
   }
 }

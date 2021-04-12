@@ -26,7 +26,7 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
     _options = CacheOptions(
       store: DbCacheStore(databasePath: databasePath),
       policy: CachePolicy.forceCache,
-      maxStale: const Duration(seconds: 30),
+      maxStale: const Duration(minutes: 1),
     );
 
     _dio.interceptors.add(
@@ -62,24 +62,30 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
         name: currency['name'] as String,
         symbol: currency['symbol'] as String,
         imageUrl: currency['image'] as String,
+        fiatPrice: (currency['current_price'] as num).toDouble(),
       );
     }).toList();
   }
 
   @override
   Future<CryptoCurrency> getCryptoCurrency(String id, Currency versusCurrency) async {
-    final response = await _dio.get<List<dynamic>>('/coins/markets', queryParameters: {
-      'vs_currency': versusCurrency.symbol,
-      'ids': id,
+    final response = await _dio.get<Map<String, dynamic>>('/coins/$id', queryParameters: {
+      'localization': false,
+      'tickers': false,
+      'market_data': true,
+      'community_data': false,
+      'developer_data': false,
+      'sparkline': false,
     });
 
-    final currency = response.data![0];
+    final currency = response.data!;
 
     return CryptoCurrency(
       id: currency['id'] as String,
       name: currency['name'] as String,
       symbol: currency['symbol'] as String,
-      imageUrl: currency['image'] as String,
+      imageUrl: currency['image']['large'] as String,
+      fiatPrice: (currency['market_data']['current_price'][versusCurrency.symbol] as num).toDouble(),
     );
   }
 }

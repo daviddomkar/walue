@@ -8,6 +8,7 @@ import '../../repositories/user_repository.dart';
 class ChooseFiatCurrencyViewModel extends ChangeNotifier {
   final AuthRepository authRepository;
   final UserRepository userRepository;
+
   final AsyncValue<Map<String, Currency>?> fiatCurrencies;
 
   bool _loading;
