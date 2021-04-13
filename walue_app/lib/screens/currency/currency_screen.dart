@@ -71,7 +71,7 @@ class CurrencyScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 32.0, left: 32.0, right: 32.0),
+                          padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +82,7 @@ class CurrencyScreen extends ConsumerWidget {
                                   const Logo(
                                     small: true,
                                   ),
-                                  if (currency.data?.value != null)
+                                  if (currency.data?.value != null) ...[
                                     Transform.translate(
                                       offset: const Offset(0.0, -10.0),
                                       child: Row(
@@ -105,6 +105,25 @@ class CurrencyScreen extends ConsumerWidget {
                                         ],
                                       ),
                                     ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: Text(
+                                        '3,241.45 USD',
+                                        style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white),
+                                      ),
+                                    ),
+                                    Text(
+                                      '0,067 BTC',
+                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(color: Colors.white),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 12.0, bottom: 96.0),
+                                      child: Text(
+                                        '+10,24%',
+                                        style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ],
                               ),
                               Transform.translate(
@@ -167,7 +186,11 @@ class CurrencyScreen extends ConsumerWidget {
                                         cells: <DataCell>[
                                           DataCell(Text(record.buyPrice.toString())),
                                           DataCell(Text(record.amount.toString())),
-                                          DataCell(Text('TODO')),
+                                          DataCell(
+                                            Text(
+                                              ((currency.data!.value!.fiatPrice * record.amount) - (record.buyPrice * record.amount)).toString(),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     )
