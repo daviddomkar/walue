@@ -5,15 +5,18 @@ class BasicButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Widget child;
 
-  const BasicButton({Key? key, this.loading = false, required this.onPressed, required this.child}) : super(key: key);
+  final Color? foregroundColor;
+  final Color? backgroundColor;
+
+  const BasicButton({Key? key, this.loading = false, required this.onPressed, required this.child, this.foregroundColor, this.backgroundColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.resolveWith((states) => const Color(0xFF222222)),
-        backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.white),
+        foregroundColor: MaterialStateProperty.resolveWith((states) => foregroundColor ?? const Color(0xFF222222)),
+        backgroundColor: MaterialStateProperty.resolveWith((states) => backgroundColor ?? Colors.white),
         overlayColor: MaterialStateProperty.resolveWith((states) => const Color(0x16000000)),
         padding: MaterialStateProperty.resolveWith((states) => const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0)),
         shape: MaterialStateProperty.resolveWith(

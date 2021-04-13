@@ -5,9 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../providers.dart';
 import '../../repositories/user_repository.dart';
-import '../../widgets/add_record_dialog.dart';
 import '../../widgets/gradient_button.dart';
 import '../../widgets/logo.dart';
+import '../../widgets/buy_record_dialog.dart';
 import 'currency_view_model.dart';
 
 final currencyViewModelProvider = ChangeNotifierProvider.autoDispose.family<CurrencyViewModel, String>((ref, id) {
@@ -112,12 +112,6 @@ class CurrencyScreen extends ConsumerWidget {
                                 child: IconButton(
                                   padding: EdgeInsets.zero,
                                   onPressed: () {
-                                    print('History length:');
-                                    print(Beamer.of(context).beamHistory.length);
-                                    print('Beam back location:');
-                                    print(Beamer.of(context).beamBackLocation);
-                                    print('Can beam back:');
-                                    print(Beamer.of(context).canBeamBack);
                                     context.beamBack();
                                   },
                                   icon: const FaIcon(
@@ -130,51 +124,73 @@ class CurrencyScreen extends ConsumerWidget {
                           ),
                         ),
                         Expanded(
-                            child: buyRecords.when(
-                          data: (data) {
-                            return DataTable(
-                              columns: const [
-                                DataColumn(
-                                  label: Text(
-                                    'Buy price',
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Text(
-                                    'Amount',
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Text(
-                                    'Profit',
-                                  ),
-                                ),
-                              ],
-                              rows: data
-                                  .map(
-                                    (record) => DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text(record.buyPrice.toString())),
-                                        DataCell(Text(record.amount.toString())),
-                                        DataCell(Text('TODO')),
-                                      ],
+                          child: buyRecords.when(
+                            data: (data) {
+                              return DataTable(
+                                showCheckboxColumn: false,
+                                columns: const [
+                                  DataColumn(
+                                    label: Text(
+                                      'Buy price',
                                     ),
-                                  )
-                                  .toList(),
-                            );
-                          },
-                          loading: () => Container(),
-                          error: (e, s) => Container(),
-                        )),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Amount',
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Profit',
+                                    ),
+                                  ),
+                                ],
+                                rows: data
+                                    .map(
+                                      (record) => DataRow(
+                                        onSelectChanged: (_) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) => BuyRecordDialog(
+                                              initialRecord: record,
+                                              onEditRecord: (id, buyPrice, amount) {
+                                                viewModel.editBuyRecord(id, buyPrice, amount);
+                                                Navigator.of(context, rootNavigator: true).pop(context);
+                                              },
+                                              onDeleteRecord: (id) {
+                                                viewModel.deleteBuyRecord(id);
+                                                Navigator.of(context, rootNavigator: true).pop(context);
+                                              },
+                                            ),
+                                          );
+                                        },
+                                        cells: <DataCell>[
+                                          DataCell(Text(record.buyPrice.toString())),
+                                          DataCell(Text(record.amount.toString())),
+                                          DataCell(Text('TODO')),
+                                        ],
+                                      ),
+                                    )
+                                    .toList(),
+                              );
+                            },
+                            loading: () => Center(
+                              child: Text('loading'),
+                            ),
+                            error: (e, s) => Center(
+                              child: Text('loading'),
+                            ),
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(32.0),
                           child: GradientButton(
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (_) => AddRecordDialog(
-                                  onAddRecord: (record) {
-                                    viewModel.addBuyRecord(record);
+                                builder: (_) => BuyRecordDialog(
+                                  onAddRecord: (buyPrice, amount) {
+                                    viewModel.addBuyRecord(buyPrice, amount);
                                     Navigator.of(context, rootNavigator: true).pop(context);
                                   },
                                 ),

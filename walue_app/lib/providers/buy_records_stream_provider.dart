@@ -9,11 +9,12 @@ final buyRecordsStreamProvider = StreamProvider.autoDispose.family<List<BuyRecor
 
   final user = ref.watch(userStreamProvider);
 
-  return _firestore.collection('users').doc(user.data?.value?.id).collection('portfolio').doc(id).collection('buy_records').snapshots().map((snapshot) {
+  return _firestore.collection('users').doc(user.data?.value?.id).collection('portfolio').doc(id).collection('buy_records').orderBy('timestamp').snapshots().map((snapshot) {
     return snapshot.docs.map((doc) {
       final data = doc.data();
 
       return BuyRecord(
+        id: doc.id,
         buyPrice: data['buy_price'] as double,
         amount: data['amount'] as double,
       );
