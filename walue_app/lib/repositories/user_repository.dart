@@ -51,6 +51,7 @@ class FirebaseUserRepository extends UserRepository {
     await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').add({
       'buy_price': buyPrice,
       'amount': amount,
+      'timestamp': FieldValue.serverTimestamp(),
     });
   }
 
@@ -73,6 +74,8 @@ class FirebaseUserRepository extends UserRepository {
 
   @override
   Future<void> deleteCryptoCurrencyBuyRecord(CryptoCurrency currency, String id) async {
+    // TODO: Change this to transaction
+
     await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(id).delete();
   }
 }

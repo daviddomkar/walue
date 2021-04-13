@@ -13,7 +13,15 @@ class CurrencyViewModel extends ChangeNotifier {
 
   CurrencyViewModel({required this.userRepository, required this.currency, required this.buyRecords});
 
-  void addBuyRecord(BuyRecord record) {
-    userRepository.addCryptoCurrencyBuyRecord(currency.data!.value!, record.buyPrice, record.amount);
+  void addBuyRecord(double buyPrice, double amount) {
+    userRepository.addCryptoCurrencyBuyRecord(currency.data!.value!, buyPrice, amount);
+  }
+
+  void editBuyRecord(String id, double? buyPrice, double? amount) {
+    userRepository.editCryptoCurrencyBuyRecord(currency.data!.value!, id, buyPrice, amount);
+  }
+
+  void deleteBuyRecord(String id) {
+    userRepository.deleteCryptoCurrencyBuyRecord(currency.data!.value!, id);
   }
 }

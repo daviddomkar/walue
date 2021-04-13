@@ -2,7 +2,13 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class CurrencyInputFormatter extends TextInputFormatter {
-  final formatter = NumberFormat.decimalPattern('en');
+  static final formatter = NumberFormat.decimalPattern('en');
+
+  static String? valueToString(double? value) {
+    if (value == null) return null;
+
+    return formatter.format(value);
+  }
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {

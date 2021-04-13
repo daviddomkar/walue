@@ -32,27 +32,32 @@ service cloud.firestore {
       allow create: if isChoosingFiatCurrency();
       allow update: if isChangingFiatCurrency();
 
-      match /portfolio/{cryptoId}/buy_records/{recordId} {
-        allow list: if request.auth != null && request.auth.uid == userId;
+      match /portfolio/{cryptoId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
 
-        function isAddingNewRecord() {
-          return isAuthorized()
-              && cryptoId in get(/databases/$(database)/documents/system/crypto).data.currencies
-              && requireFields(request.resource.data, ['buy_price', 'amount'])
-              && request.resource.data.buy_price is float
-              && request.resource.data.amount is float;
+        match /buy_records/{recordId} {
+          allow list: if request.auth != null && request.auth.uid == userId;
+
+          function isAddingNewRecord() {
+            return isAuthorized()
+                && cryptoId in get(/databases/$(database)/documents/system/crypto).data.currencies
+                && requireFields(request.resource.data, ['buy_price', 'amount', 'timestamp'])
+                && request.resource.data.buy_price is float
+                && request.resource.data.amount is float
+                && request.resource.data.timestamp == request.time;
+          }
+
+          function isEdittingExistingRecord() {
+            return isAuthorized()
+                && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['buy_price', 'amount'])
+                && request.resource.data.buy_price is float
+                && request.resource.data.amount is float;
+          }
+
+          allow create: if isAddingNewRecord();
+          allow update: if isEdittingExistingRecord();
+          allow delete: if request.auth != null && request.auth.uid == userId;
         }
-
-        function isEdittingExistingRecord() {
-          return isAuthorized()
-              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['buy_price', 'amount'])
-              && request.resource.data.buy_price is float
-              && request.resource.data.amount is float;
-        }
-
-        allow create: if isAddingNewRecord();
-        allow update: if isEdittingExistingRecord();
-        allow delete: if request.auth != null && request.auth.uid == userId;
       }
     }
 

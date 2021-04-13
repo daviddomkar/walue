@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 class WTextFormField extends StatefulWidget {
   final TextEditingController? controller;
+  final String? initialValue;
   final bool autofocus;
   final String? hintText;
   final bool obscureText;
@@ -18,6 +19,7 @@ class WTextFormField extends StatefulWidget {
   const WTextFormField({
     Key? key,
     this.controller,
+    this.initialValue,
     this.autofocus = false,
     this.hintText,
     this.obscureText = false,
@@ -65,6 +67,7 @@ class _WTextFormFieldState extends State<WTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: widget.initialValue,
       controller: widget.controller,
       decoration: InputDecoration(
         border: const OutlineInputBorder(
