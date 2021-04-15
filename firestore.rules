@@ -36,7 +36,7 @@ service cloud.firestore {
         allow read: if request.auth != null && request.auth.uid == userId;
 
         // TODO: Make this rule stricter
-        allow create, update: if request.auth != null && request.auth.uid == userId; 
+        allow create, update, delete: if request.auth != null && request.auth.uid == userId; 
 
         match /buy_records/{recordId} {
           allow list: if request.auth != null && request.auth.uid == userId;
