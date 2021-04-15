@@ -46,36 +46,124 @@ class FirebaseUserRepository extends UserRepository {
 
   @override
   Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount) async {
-    // TODO: Change this to transaction
+    await _firestore.runTransaction((transaction) async {
+      final currencyDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id);
 
-    await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').add({
-      'buy_price': buyPrice,
-      'amount': amount,
-      'timestamp': FieldValue.serverTimestamp(),
+      final currencyDocument = await transaction.get(currencyDocumentReference);
+
+      if (!currencyDocument.exists) {
+        transaction.set(currencyDocumentReference, {
+          'average_amount_in_fiat_currency_when_bought': buyPrice * amount,
+          'total_amount': amount,
+          'amount_of_records': 1,
+        });
+      } else {
+        final data = currencyDocument.data()!;
+
+        final averageAmountInFiatCurrencyWhenBought = data['average_amount_in_fiat_currency_when_bought'] as num;
+        final totalAmount = data['total_amount'] as num;
+        final amountOfRecords = data['amount_of_records'] as num;
+
+        transaction.update(currencyDocumentReference, {
+          'average_amount_in_fiat_currency_when_bought': (amountOfRecords * averageAmountInFiatCurrencyWhenBought + buyPrice * amount) / (amountOfRecords + 1),
+          'total_amount': totalAmount + amount,
+          'amount_of_records': amountOfRecords + 1,
+        });
+      }
+
+      transaction.set(_firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(), {
+        'buy_price': buyPrice,
+        'amount': amount,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
     });
   }
 
   @override
   Future<void> editCryptoCurrencyBuyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount) async {
-    // TODO: Change this to transaction
+    await _firestore.runTransaction((transaction) async {
+      final currencyDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id);
+      final currencyRecordDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(id);
 
-    final data = <String, double>{};
+      final currencyDocument = await transaction.get(currencyDocumentReference);
+      final currencyRecordDocument = await transaction.get(currencyRecordDocumentReference);
 
-    if (buyPrice != null) {
-      data['buy_price'] = buyPrice;
-    }
+      if (!currencyDocument.exists) {
+        throw 'Currency document does not exist!';
+      }
 
-    if (amount != null) {
-      data['amount'] = amount;
-    }
+      if (!currencyRecordDocument.exists) {
+        throw 'Currency record document does not exist!';
+      }
 
-    await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(id).update(data);
+      final currencyDocumentData = currencyDocument.data()!;
+      final currencyRecordDocumentData = currencyRecordDocument.data()!;
+
+      final oldBuyPrice = currencyRecordDocumentData['buy_price'] as num;
+      final oldAmount = currencyRecordDocumentData['amount'] as num;
+
+      final newBuyPrice = buyPrice ?? oldBuyPrice;
+      final newAmount = amount ?? oldAmount;
+
+      final oldAmountInFiatCurrencyWhenBought = oldBuyPrice * oldAmount;
+      final newAmountInFiatCurrencyWhenBought = newBuyPrice * newAmount;
+
+      final averageAmountInFiatCurrencyWhenBought = currencyDocumentData['average_amount_in_fiat_currency_when_bought'] as num;
+      final totalAmount = currencyDocumentData['total_amount'] as num;
+      final amountOfRecords = currencyDocumentData['amount_of_records'] as num;
+
+      transaction.update(currencyDocumentReference, {
+        'average_amount_in_fiat_currency_when_bought': (amountOfRecords * averageAmountInFiatCurrencyWhenBought - oldAmountInFiatCurrencyWhenBought + newAmountInFiatCurrencyWhenBought) / amountOfRecords,
+        'total_amount': totalAmount - oldAmount + newAmount,
+      });
+
+      transaction.update(currencyRecordDocumentReference, {
+        'buy_price': newBuyPrice,
+        'amount': newAmount,
+      });
+    });
   }
 
   @override
   Future<void> deleteCryptoCurrencyBuyRecord(CryptoCurrency currency, String id) async {
-    // TODO: Change this to transaction
+    await _firestore.runTransaction((transaction) async {
+      final currencyDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id);
+      final currencyRecordDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(id);
 
-    await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(id).delete();
+      final currencyDocument = await transaction.get(currencyDocumentReference);
+      final currencyRecordDocument = await transaction.get(currencyRecordDocumentReference);
+
+      if (!currencyDocument.exists) {
+        throw 'Currency document does not exist!';
+      }
+
+      if (!currencyRecordDocument.exists) {
+        throw 'Currency record document does not exist!';
+      }
+
+      final currencyDocumentData = currencyDocument.data()!;
+      final currencyRecordDocumentData = currencyRecordDocument.data()!;
+
+      final averageAmountInFiatCurrencyWhenBought = currencyDocumentData['average_amount_in_fiat_currency_when_bought'] as num;
+      final totalAmount = currencyDocumentData['total_amount'] as num;
+      final amountOfRecords = currencyDocumentData['amount_of_records'] as num;
+
+      final buyPrice = currencyRecordDocumentData['buy_price'] as num;
+      final amount = currencyRecordDocumentData['amount'] as num;
+
+      if (amountOfRecords == 1) {
+        transaction.delete(currencyDocumentReference);
+      } else {
+        final amountInFiatCurrencyWhenBought = buyPrice * amount;
+
+        transaction.update(currencyDocumentReference, {
+          'average_amount_in_fiat_currency_when_bought': (amountOfRecords * averageAmountInFiatCurrencyWhenBought - amountInFiatCurrencyWhenBought) / (amountOfRecords - 1),
+          'total_amount': totalAmount - amount,
+          'amount_of_records': amountOfRecords - 1,
+        });
+      }
+
+      transaction.delete(currencyRecordDocumentReference);
+    });
   }
 }
