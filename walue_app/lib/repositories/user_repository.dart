@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:decimal/decimal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/crypto_currency.dart';
@@ -47,34 +48,70 @@ class FirebaseUserRepository extends UserRepository {
   @override
   Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount) async {
     await _firestore.runTransaction((transaction) async {
-      final currencyDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id);
+      final uuid = read(userStreamProvider).data?.value?.id;
+      final symbol = read(userStreamProvider).data?.value?.fiatCurrency?.symbol;
+
+      final currencyDocumentReference = _firestore.collection('users').doc(uuid).collection('portfolio').doc(currency.id);
+      final currencyRecordDocumentReference = _firestore.collection('users').doc(uuid).collection('portfolio').doc(currency.id).collection('buy_records').doc();
 
       final currencyDocument = await transaction.get(currencyDocumentReference);
 
       if (!currencyDocument.exists) {
         transaction.set(currencyDocumentReference, {
-          'average_amount_in_fiat_currency_when_bought': buyPrice * amount,
           'total_amount': amount,
           'amount_of_records': 1,
+          'buy_records_data_by_fiat': {
+            // ignore: unnecessary_string_interpolations
+            '$symbol': {
+              'average_amount_in_fiat_currency_when_bought': buyPrice * amount,
+              'total_amount': amount,
+              'amount_of_records': 1,
+            },
+          }
         });
       } else {
         final data = currencyDocument.data()!;
 
-        final averageAmountInFiatCurrencyWhenBought = data['average_amount_in_fiat_currency_when_bought'] as num;
-        final totalAmount = data['total_amount'] as num;
-        final amountOfRecords = data['amount_of_records'] as num;
+        final totalAmount = (data['total_amount'] as num).toDouble();
+        final amountOfRecords = (data['amount_of_records'] as num).toInt();
 
-        transaction.update(currencyDocumentReference, {
-          'average_amount_in_fiat_currency_when_bought': (amountOfRecords * averageAmountInFiatCurrencyWhenBought + buyPrice * amount) / (amountOfRecords + 1),
-          'total_amount': totalAmount + amount,
-          'amount_of_records': amountOfRecords + 1,
-        });
+        if ((data['buy_records_data_by_fiat'] as Map<String, dynamic>).containsKey(symbol)) {
+          final symbolAverageAmountInFiatCurrencyWhenBought = (data['buy_records_data_by_fiat'][symbol]['average_amount_in_fiat_currency_when_bought'] as num).toDouble();
+          final symbolTotalAmount = (data['buy_records_data_by_fiat'][symbol]['total_amount'] as num).toDouble();
+          final symbolAmountOfRecords = (data['buy_records_data_by_fiat'][symbol]['amount_of_records'] as num).toInt();
+
+          transaction.update(currencyDocumentReference, {
+            'total_amount': (Decimal.parse(totalAmount.toString()) + Decimal.parse(amount.toString())).toDouble(),
+            'amount_of_records': amountOfRecords + 1,
+            'buy_records_data_by_fiat.$symbol.average_amount_in_fiat_currency_when_bought': (symbolAmountOfRecords * symbolAverageAmountInFiatCurrencyWhenBought + buyPrice * amount) / (symbolAmountOfRecords + 1),
+            'buy_records_data_by_fiat.$symbol.total_amount': (Decimal.parse(symbolTotalAmount.toString()) + Decimal.parse(amount.toString())).toDouble(),
+            'buy_records_data_by_fiat.$symbol.amount_of_records': symbolAmountOfRecords + 1,
+          });
+        } else {
+          transaction.set(
+            currencyDocumentReference,
+            {
+              'total_amount': (Decimal.parse(totalAmount.toString()) + Decimal.parse(amount.toString())).toDouble(),
+              'amount_of_records': amountOfRecords + 1,
+              'buy_records_data_by_fiat': {
+                // ignore: unnecessary_string_interpolations
+                '$symbol': {
+                  'average_amount_in_fiat_currency_when_bought': buyPrice * amount,
+                  'total_amount': amount,
+                  'amount_of_records': 1,
+                }
+              },
+            },
+            SetOptions(merge: true),
+          );
+        }
       }
 
-      transaction.set(_firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(), {
+      transaction.set(currencyRecordDocumentReference, {
         'buy_price': buyPrice,
         'amount': amount,
         'timestamp': FieldValue.serverTimestamp(),
+        'fiat_currency_symbol': symbol,
       });
     });
   }
@@ -82,8 +119,10 @@ class FirebaseUserRepository extends UserRepository {
   @override
   Future<void> editCryptoCurrencyBuyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount) async {
     await _firestore.runTransaction((transaction) async {
-      final currencyDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id);
-      final currencyRecordDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(id);
+      final uuid = read(userStreamProvider).data?.value?.id;
+
+      final currencyDocumentReference = _firestore.collection('users').doc(uuid).collection('portfolio').doc(currency.id);
+      final currencyRecordDocumentReference = _firestore.collection('users').doc(uuid).collection('portfolio').doc(currency.id).collection('buy_records').doc(id);
 
       final currencyDocument = await transaction.get(currencyDocumentReference);
       final currencyRecordDocument = await transaction.get(currencyRecordDocumentReference);
@@ -99,8 +138,9 @@ class FirebaseUserRepository extends UserRepository {
       final currencyDocumentData = currencyDocument.data()!;
       final currencyRecordDocumentData = currencyRecordDocument.data()!;
 
-      final oldBuyPrice = currencyRecordDocumentData['buy_price'] as num;
-      final oldAmount = currencyRecordDocumentData['amount'] as num;
+      final oldBuyPrice = (currencyRecordDocumentData['buy_price'] as num).toDouble();
+      final oldAmount = (currencyRecordDocumentData['amount'] as num).toDouble();
+      final symbol = currencyRecordDocumentData['fiat_currency_symbol'] as String;
 
       final newBuyPrice = buyPrice ?? oldBuyPrice;
       final newAmount = amount ?? oldAmount;
@@ -108,13 +148,18 @@ class FirebaseUserRepository extends UserRepository {
       final oldAmountInFiatCurrencyWhenBought = oldBuyPrice * oldAmount;
       final newAmountInFiatCurrencyWhenBought = newBuyPrice * newAmount;
 
-      final averageAmountInFiatCurrencyWhenBought = currencyDocumentData['average_amount_in_fiat_currency_when_bought'] as num;
-      final totalAmount = currencyDocumentData['total_amount'] as num;
-      final amountOfRecords = currencyDocumentData['amount_of_records'] as num;
+      final totalAmount = (currencyDocumentData['total_amount'] as num).toDouble();
+
+      final symbolAverageAmountInFiatCurrencyWhenBought = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['average_amount_in_fiat_currency_when_bought'] as num).toDouble();
+      final symbolTotalAmount = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['total_amount'] as num).toDouble();
+      final symbolAmountOfRecords = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['amount_of_records'] as num).toInt();
+
+      final newAverageAmountInFiatCurrencyWhenBought = (symbolAmountOfRecords * symbolAverageAmountInFiatCurrencyWhenBought - oldAmountInFiatCurrencyWhenBought + newAmountInFiatCurrencyWhenBought) / symbolAmountOfRecords;
 
       transaction.update(currencyDocumentReference, {
-        'average_amount_in_fiat_currency_when_bought': (amountOfRecords * averageAmountInFiatCurrencyWhenBought - oldAmountInFiatCurrencyWhenBought + newAmountInFiatCurrencyWhenBought) / amountOfRecords,
-        'total_amount': totalAmount - oldAmount + newAmount,
+        'total_amount': (Decimal.parse(totalAmount.toString()) + (Decimal.parse(newAmount.toString()) - Decimal.parse(oldAmount.toString()))).toDouble(),
+        'buy_records_data_by_fiat.$symbol.average_amount_in_fiat_currency_when_bought': newAverageAmountInFiatCurrencyWhenBought,
+        'buy_records_data_by_fiat.$symbol.total_amount': (Decimal.parse(symbolTotalAmount.toString()) + (Decimal.parse(newAmount.toString()) - Decimal.parse(oldAmount.toString()))).toDouble(),
       });
 
       transaction.update(currencyRecordDocumentReference, {
@@ -127,8 +172,10 @@ class FirebaseUserRepository extends UserRepository {
   @override
   Future<void> deleteCryptoCurrencyBuyRecord(CryptoCurrency currency, String id) async {
     await _firestore.runTransaction((transaction) async {
-      final currencyDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id);
-      final currencyRecordDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).collection('portfolio').doc(currency.id).collection('buy_records').doc(id);
+      final uuid = read(userStreamProvider).data?.value?.id;
+
+      final currencyDocumentReference = _firestore.collection('users').doc(uuid).collection('portfolio').doc(currency.id);
+      final currencyRecordDocumentReference = _firestore.collection('users').doc(uuid).collection('portfolio').doc(currency.id).collection('buy_records').doc(id);
 
       final currencyDocument = await transaction.get(currencyDocumentReference);
       final currencyRecordDocument = await transaction.get(currencyRecordDocumentReference);
@@ -144,22 +191,34 @@ class FirebaseUserRepository extends UserRepository {
       final currencyDocumentData = currencyDocument.data()!;
       final currencyRecordDocumentData = currencyRecordDocument.data()!;
 
-      final averageAmountInFiatCurrencyWhenBought = currencyDocumentData['average_amount_in_fiat_currency_when_bought'] as num;
-      final totalAmount = currencyDocumentData['total_amount'] as num;
-      final amountOfRecords = currencyDocumentData['amount_of_records'] as num;
+      final totalAmount = (currencyDocumentData['total_amount'] as num).toDouble();
+      final amountOfRecords = (currencyDocumentData['amount_of_records'] as num).toInt();
+      final symbol = currencyRecordDocumentData['fiat_currency_symbol'] as String;
 
-      final buyPrice = currencyRecordDocumentData['buy_price'] as num;
-      final amount = currencyRecordDocumentData['amount'] as num;
+      final symbolAverageAmountInFiatCurrencyWhenBought = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['average_amount_in_fiat_currency_when_bought'] as num).toDouble();
+      final symbolTotalAmount = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['total_amount'] as num).toDouble();
+      final symbolAmountOfRecords = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['amount_of_records'] as num).toInt();
+
+      final buyPrice = (currencyRecordDocumentData['buy_price'] as num).toDouble();
+      final amount = (currencyRecordDocumentData['amount'] as num).toDouble();
 
       if (amountOfRecords == 1) {
         transaction.delete(currencyDocumentReference);
+      } else if (symbolAmountOfRecords == 1) {
+        transaction.update(currencyDocumentReference, {
+          'total_amount': (Decimal.parse(totalAmount.toString()) - Decimal.parse(amount.toString())).toDouble(),
+          'amount_of_records': amountOfRecords - 1,
+          'buy_records_data_by_fiat.$symbol': FieldValue.delete(),
+        });
       } else {
         final amountInFiatCurrencyWhenBought = buyPrice * amount;
 
         transaction.update(currencyDocumentReference, {
-          'average_amount_in_fiat_currency_when_bought': (amountOfRecords * averageAmountInFiatCurrencyWhenBought - amountInFiatCurrencyWhenBought) / (amountOfRecords - 1),
-          'total_amount': totalAmount - amount,
+          'total_amount': (Decimal.parse(totalAmount.toString()) - Decimal.parse(amount.toString())).toDouble(),
           'amount_of_records': amountOfRecords - 1,
+          'buy_records_data_by_fiat.$symbol.average_amount_in_fiat_currency_when_bought': (symbolAmountOfRecords * symbolAverageAmountInFiatCurrencyWhenBought - amountInFiatCurrencyWhenBought) / (symbolAmountOfRecords - 1),
+          'buy_records_data_by_fiat.$symbol.total_amount': (Decimal.parse(symbolTotalAmount.toString()) - Decimal.parse(amount.toString())).toDouble(),
+          'buy_records_data_by_fiat.$symbol.amount_of_records': symbolAmountOfRecords - 1,
         });
       }
 
