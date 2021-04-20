@@ -2,12 +2,12 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class CurrencyInputFormatter extends TextInputFormatter {
-  static final formatter = NumberFormat.decimalPattern('en');
+  static final _formatter = NumberFormat.decimalPattern('en');
 
   static String? valueToString(double? value) {
     if (value == null) return null;
 
-    return formatter.format(value);
+    return _formatter.format(value);
   }
 
   @override
@@ -29,14 +29,14 @@ class CurrencyInputFormatter extends TextInputFormatter {
       splitted[0] = splitted[0].replaceAll(RegExp(r'^0+(?!$)'), '');
 
       if (splitted[0].isNotEmpty) {
-        splitted[0] = formatter.format(double.parse(splitted[0]));
+        splitted[0] = _formatter.format(double.parse(splitted[0]));
       }
 
       text = '${splitted[0]}.${splitted[1]}';
     } else {
       text = text.replaceAll(RegExp(r'\D'), '');
       text = text.replaceAll(RegExp(r'^0+(?!$)'), '');
-      text = formatter.format(double.parse(text));
+      text = _formatter.format(double.parse(text));
     }
 
     return TextEditingValue(
