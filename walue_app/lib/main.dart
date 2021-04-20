@@ -50,7 +50,7 @@ void _licenceFonts() {
 }
 
 class WalueApp extends StatelessWidget {
-  final routerDelegate = RootRouterDelegate(
+  final routerDelegate = BeamerRouterDelegate(
     locationBuilder: BeamerLocationBuilder(
       beamLocations: [
         RootLocation(),
