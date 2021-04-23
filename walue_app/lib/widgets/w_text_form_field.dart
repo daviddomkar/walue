@@ -50,7 +50,10 @@ class _WTextFormFieldState extends State<WTextFormField> {
     _dirty = false;
 
     _focusNode?.addListener(() {
-      if (_focusNode != null && _dirty != null && !_focusNode!.hasFocus && !_dirty!) {
+      if (_focusNode != null &&
+          _dirty != null &&
+          !_focusNode!.hasFocus &&
+          !_dirty!) {
         setState(() {
           _dirty = true;
         });
@@ -80,7 +83,9 @@ class _WTextFormFieldState extends State<WTextFormField> {
       ),
       autofocus: widget.autofocus,
       focusNode: _focusNode,
-      autovalidateMode: _dirty != null && _dirty! ? AutovalidateMode.always : AutovalidateMode.disabled,
+      autovalidateMode: _dirty != null && _dirty!
+          ? AutovalidateMode.always
+          : AutovalidateMode.disabled,
       obscureText: widget.obscureText,
       inputFormatters: widget.inputFormatters,
       validator: widget.validator,

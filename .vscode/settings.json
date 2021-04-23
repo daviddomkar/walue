@@ -1,5 +1,6 @@
 {
-  "dart.lineLength": 240,
+  "dart.updateImportsOnRename": true,
+  "dart.lineLength": 80,
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,

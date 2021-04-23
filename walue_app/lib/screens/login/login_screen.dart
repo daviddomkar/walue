@@ -8,7 +8,8 @@ import '../../widgets/logo.dart';
 
 import 'login_view_model.dart';
 
-final logInViewModelProvider = ChangeNotifierProvider.autoDispose<LogInViewModel>(
+final logInViewModelProvider =
+    ChangeNotifierProvider.autoDispose<LogInViewModel>(
   (ref) => LogInViewModel(authRepository: ref.watch(authRepositoryProvider)),
 );
 
@@ -42,7 +43,10 @@ class LogInScreen extends ConsumerWidget {
             ),
             Text(
               'Log in to get started',
-              style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5!
+                  .copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),
             Padding(

@@ -11,7 +11,8 @@ class CurrencyInputFormatter extends TextInputFormatter {
   }
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     if (oldValue.text == newValue.text) {
       return newValue;
     }
@@ -42,8 +43,12 @@ class CurrencyInputFormatter extends TextInputFormatter {
     return TextEditingValue(
       text: text,
       selection: TextSelection(
-        baseOffset: oldValue.text.length > newValue.text.length ? newValue.selection.baseOffset.clamp(0, text.length) : text.length,
-        extentOffset: oldValue.text.length > newValue.text.length ? newValue.selection.extentOffset.clamp(0, text.length) : text.length,
+        baseOffset: oldValue.text.length > newValue.text.length
+            ? newValue.selection.baseOffset.clamp(0, text.length)
+            : text.length,
+        extentOffset: oldValue.text.length > newValue.text.length
+            ? newValue.selection.extentOffset.clamp(0, text.length)
+            : text.length,
       ),
     );
   }

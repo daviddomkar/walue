@@ -12,7 +12,11 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
 
   return _auth.idTokenChanges().switchMap((user) => user == null
       ? Stream.value(null)
-      : _firestore.collection('users').doc(user.uid).snapshots().map((snapshot) {
+      : _firestore
+          .collection('users')
+          .doc(user.uid)
+          .snapshots()
+          .map((snapshot) {
           if (snapshot.exists) {
             final data = snapshot.data()!;
 
@@ -24,7 +28,8 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
                 symbol: data['fiat_currency']['symbol'] as String,
                 name: data['fiat_currency']['name'] as String,
               ),
-              favouriteCurrencyIds: data['favourite_currency_ids'] as List<String>?,
+              favouriteCurrencyIds:
+                  data['favourite_currency_ids'] as List<String>?,
             );
           }
 

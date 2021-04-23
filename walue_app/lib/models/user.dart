@@ -9,5 +9,11 @@ class User {
 
   final List<String>? favouriteCurrencyIds;
 
-  User({required this.id, required this.email, required this.displayName, this.fiatCurrency, this.favouriteCurrencyIds});
+  User({
+    required this.id,
+    required this.email,
+    required this.displayName,
+    this.fiatCurrency,
+    this.favouriteCurrencyIds,
+  });
 }

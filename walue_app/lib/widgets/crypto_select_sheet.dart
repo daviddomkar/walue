@@ -1,7 +1,8 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:walue_app/providers.dart';
-import 'package:beamer/beamer.dart';
+
+import '../providers.dart';
 
 class CryptoSelectSheet extends ConsumerWidget {
   const CryptoSelectSheet({Key? key}) : super(key: key);
@@ -34,7 +35,9 @@ class CryptoSelectSheet extends ConsumerWidget {
                             width: 40.0,
                             height: 40.0,
                             decoration: BoxDecoration(
-                              image: DecorationImage(image: NetworkImage(data[index].imageUrl), fit: BoxFit.contain),
+                              image: DecorationImage(
+                                  image: NetworkImage(data[index].imageUrl),
+                                  fit: BoxFit.contain),
                             ),
                           ),
                           title: Text(data[index].name),
@@ -52,14 +55,16 @@ class CryptoSelectSheet extends ConsumerWidget {
             },
             loading: () => Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                valueColor:
+                    AlwaysStoppedAnimation(Theme.of(context).primaryColor),
                 strokeWidth: 2.0,
               ),
             ),
             error: (e, s) {
               return Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                  valueColor:
+                      AlwaysStoppedAnimation(Theme.of(context).primaryColor),
                   strokeWidth: 2.0,
                 ),
               );
@@ -73,12 +78,14 @@ class CryptoSelectSheet extends ConsumerWidget {
 
 class CryptoSelectSheetHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       height: 64.0,
       color: Colors.white,
       child: Center(
-        child: Text('Choose a crypto currency', style: Theme.of(context).textTheme.headline6),
+        child: Text('Choose a crypto currency',
+            style: Theme.of(context).textTheme.headline6),
       ),
     );
   }

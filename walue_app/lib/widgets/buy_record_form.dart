@@ -10,11 +10,26 @@ import 'w_text_form_field.dart';
 class BuyRecordForm extends StatefulWidget {
   final BuyRecord? initialRecord;
 
-  final void Function(double buyPrice, double amount)? onAddRecord;
-  final void Function(String id, double? buyPrice, double? amount)? onEditRecord;
+  final void Function(
+    double buyPrice,
+    double amount,
+  )? onAddRecord;
+
+  final void Function(
+    String id,
+    double? buyPrice,
+    double? amount,
+  )? onEditRecord;
+
   final void Function(String id)? onDeleteRecord;
 
-  const BuyRecordForm({Key? key, this.initialRecord, this.onAddRecord, this.onEditRecord, this.onDeleteRecord}) : super(key: key);
+  const BuyRecordForm({
+    Key? key,
+    this.initialRecord,
+    this.onAddRecord,
+    this.onEditRecord,
+    this.onDeleteRecord,
+  }) : super(key: key);
 
   @override
   _BuyRecordFormState createState() => _BuyRecordFormState();
@@ -44,7 +59,9 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
       return;
     }
 
-    if (widget.onEditRecord != null && widget.initialRecord != null && _formKey.currentState!.validate()) {
+    if (widget.onEditRecord != null &&
+        widget.initialRecord != null &&
+        _formKey.currentState!.validate()) {
       widget.onEditRecord!(
         widget.initialRecord!.id,
         double.tryParse(_buyPrice.replaceAll(',', '')),
@@ -71,7 +88,9 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
             child: Text(
-              widget.initialRecord != null ? 'Edit buy record' : 'Add new buy record',
+              widget.initialRecord != null
+                  ? 'Edit buy record'
+                  : 'Add new buy record',
               style: Theme.of(context).textTheme.headline6,
               textAlign: TextAlign.center,
             ),
@@ -79,7 +98,8 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: WTextFormField(
-              initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.buyPrice),
+              initialValue: CurrencyInputFormatter.valueToString(
+                  widget.initialRecord?.buyPrice),
               autofocus: widget.initialRecord == null,
               hintText: 'Buy price',
               keyboardType: TextInputType.number,
@@ -105,7 +125,8 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: WTextFormField(
-              initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.amount),
+              initialValue: CurrencyInputFormatter.valueToString(
+                  widget.initialRecord?.amount),
               hintText: 'Amount',
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
