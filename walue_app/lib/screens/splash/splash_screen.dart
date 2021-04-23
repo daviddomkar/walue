@@ -9,7 +9,8 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   late Animation<double> _fadeInAnimation;
@@ -23,7 +24,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       duration: const Duration(milliseconds: 250),
     );
 
-    _fadeInAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    _fadeInAnimation =
+        CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
     _controller.forward();
   }

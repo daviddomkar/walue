@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:walue_app/repositories/user_repository.dart';
 
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
+import '../../repositories/user_repository.dart';
 import '../../widgets/basic_button.dart';
 import '../../widgets/logo.dart';
-
 import 'choose_fiat_currency_view_model.dart';
 
-final chooseFiatCurrencyViewModelProvider = ChangeNotifierProvider.autoDispose<ChooseFiatCurrencyViewModel>((ref) {
+final chooseFiatCurrencyViewModelProvider =
+    ChangeNotifierProvider.autoDispose<ChooseFiatCurrencyViewModel>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final userRepository = ref.watch(userRepositoryProvider);
   final fiatCurrencies = ref.watch(fiatCurrenciesStreamProvider);
@@ -53,21 +53,26 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
             ),
             Text(
               'Choose your fiat currency',
-              style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5!
+                  .copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),
             if (fiatCurrencies.data != null) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0),
                 child: Theme(
-                  data: Theme.of(context).copyWith(canvasColor: Theme.of(context).primaryColor),
+                  data: Theme.of(context)
+                      .copyWith(canvasColor: Theme.of(context).primaryColor),
                   child: DropdownButtonFormField<String>(
                     isExpanded: true,
                     value: 'eur',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18.0,
-                      fontFamily: Theme.of(context).textTheme.bodyText1!.fontFamily,
+                      fontFamily:
+                          Theme.of(context).textTheme.bodyText1!.fontFamily,
                     ),
                     decoration: const InputDecoration(
                       border: InputBorder.none,
@@ -90,7 +95,8 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
                             Text(currencies[symbol]!.name),
                             Padding(
                               padding: const EdgeInsets.only(right: 8.0),
-                              child: Text(currencies[symbol]!.symbol.toUpperCase()),
+                              child: Text(
+                                  currencies[symbol]!.symbol.toUpperCase()),
                             ),
                           ],
                         ),
@@ -123,8 +129,11 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
                     viewModel.signOut();
                   },
                   style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.resolveWith((states) => const Color(0x16000000)),
-                    padding: MaterialStateProperty.resolveWith((states) => const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0)),
+                    overlayColor: MaterialStateProperty.resolveWith(
+                        (states) => const Color(0x16000000)),
+                    padding: MaterialStateProperty.resolveWith((states) =>
+                        const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 12.0)),
                     shape: MaterialStateProperty.resolveWith(
                       (states) => const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(

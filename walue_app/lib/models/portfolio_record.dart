@@ -1,11 +1,16 @@
 import 'buy_record.dart';
 
-class CryptoCurrencyData {
+class PortfolioRecord {
   final int? amountOfRecords;
   final double? averageAmountInFiatCurrencyWhenBought;
   final double? totalAmount;
 
   final List<BuyRecord> buyRecords;
 
-  CryptoCurrencyData({this.amountOfRecords, this.averageAmountInFiatCurrencyWhenBought, this.totalAmount, required this.buyRecords});
+  PortfolioRecord({
+    this.amountOfRecords,
+    this.averageAmountInFiatCurrencyWhenBought,
+    this.totalAmount,
+    required this.buyRecords,
+  });
 }

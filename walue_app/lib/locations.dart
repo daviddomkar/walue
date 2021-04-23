@@ -18,7 +18,8 @@ class RootLocationViewModel {
   RootLocationViewModel({required this.user});
 }
 
-final _rootLocationViewModelProvider = Provider.autoDispose<RootLocationViewModel>((ref) {
+final _rootLocationViewModelProvider =
+    Provider.autoDispose<RootLocationViewModel>((ref) {
   final user = ref.watch(userStreamProvider);
 
   return RootLocationViewModel(
@@ -38,17 +39,17 @@ class RootLocation extends BeamLocation {
   Widget builder(BuildContext context, Widget navigator) {
     return ProviderListener<RootLocationViewModel>(
       onChange: (context, viewModel) {
-        // TODO: Change url based on user status (this implementation currently throws not found error)
-
         // final user = viewModel.user;
 /*
         if (user.data != null && user.data!.value == null) {
-          context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
-        } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrency == null) {
-          context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
-        } else {
-          
-        }
+          context.currentBeamLocation.update(
+              (state) => state.copyWith(pathBlueprintSegments: ['login']));
+        } else if (user.data != null &&
+            user.data!.value != null &&
+            user.data!.value!.fiatCurrency == null) {
+          context.currentBeamLocation.update((state) =>
+              state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
+        } else {}
 */
         context.currentBeamLocation.update();
       },

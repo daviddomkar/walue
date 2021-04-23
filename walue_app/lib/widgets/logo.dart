@@ -9,7 +9,12 @@ class Logo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       'Walue',
-      style: (small ? Theme.of(context).textTheme.headline3! : Theme.of(context).textTheme.headline2!).copyWith(color: Colors.white),
+      style: (small
+              ? Theme.of(context).textTheme.headline3!
+              : Theme.of(context).textTheme.headline2!)
+          .copyWith(
+        color: Colors.white,
+      ),
       textAlign: TextAlign.center,
     );
   }

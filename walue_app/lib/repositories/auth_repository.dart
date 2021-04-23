@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-final authRepositoryProvider = Provider<AuthRepository>((ref) => FirebaseAuthRepository());
+final authRepositoryProvider =
+    Provider<AuthRepository>((ref) => FirebaseAuthRepository());
 
 abstract class AuthRepository {
   Future<void> signInWithGoogle();
@@ -19,7 +20,8 @@ class FirebaseAuthRepository extends AuthRepository {
     final googleUser = await GoogleSignIn().signIn();
 
     if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,

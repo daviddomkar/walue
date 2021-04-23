@@ -6,11 +6,26 @@ import 'buy_record_form.dart';
 class BuyRecordDialog extends StatelessWidget {
   final BuyRecord? initialRecord;
 
-  final void Function(double buyPrice, double amount)? onAddRecord;
-  final void Function(String id, double? buyPrice, double? amount)? onEditRecord;
+  final void Function(
+    double buyPrice,
+    double amount,
+  )? onAddRecord;
+
+  final void Function(
+    String id,
+    double? buyPrice,
+    double? amount,
+  )? onEditRecord;
+
   final void Function(String id)? onDeleteRecord;
 
-  const BuyRecordDialog({Key? key, this.initialRecord, this.onAddRecord, this.onEditRecord, this.onDeleteRecord}) : super(key: key);
+  const BuyRecordDialog({
+    Key? key,
+    this.initialRecord,
+    this.onAddRecord,
+    this.onEditRecord,
+    this.onDeleteRecord,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

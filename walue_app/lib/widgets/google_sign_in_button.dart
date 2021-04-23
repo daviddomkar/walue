@@ -4,17 +4,23 @@ class GoogleSignInButton extends StatelessWidget {
   final bool loading;
   final VoidCallback onPressed;
 
-  const GoogleSignInButton({Key? key, this.loading = false, required this.onPressed}) : super(key: key);
+  const GoogleSignInButton(
+      {Key? key, this.loading = false, required this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.resolveWith((states) => const Color(0xFF444444)),
-        backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.white),
-        overlayColor: MaterialStateProperty.resolveWith((states) => const Color(0x16000000)),
-        padding: MaterialStateProperty.resolveWith((states) => const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0)),
+        foregroundColor: MaterialStateProperty.resolveWith(
+            (states) => const Color(0xFF444444)),
+        backgroundColor:
+            MaterialStateProperty.resolveWith((states) => Colors.white),
+        overlayColor: MaterialStateProperty.resolveWith(
+            (states) => const Color(0x16000000)),
+        padding: MaterialStateProperty.resolveWith((states) =>
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0)),
         shape: MaterialStateProperty.resolveWith(
           (states) => const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
@@ -41,7 +47,8 @@ class GoogleSignInButton extends StatelessWidget {
                         width: 24.0,
                         height: 24.0,
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF444444)),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xFF444444)),
                           strokeWidth: 2.0,
                         ),
                       ),

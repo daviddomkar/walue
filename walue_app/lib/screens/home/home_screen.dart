@@ -23,7 +23,8 @@ class HomeScreen extends StatelessWidget {
                 child: Stack(
                   children: [
                     Transform(
-                      transform: Matrix4.rotationZ(0.4)..translate(-150.0, -96.0),
+                      transform: Matrix4.rotationZ(0.4)
+                        ..translate(-150.0, -96.0),
                       alignment: Alignment.center,
                       child: Container(
                         width: 400.0,
@@ -47,7 +48,8 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
+                          padding: const EdgeInsets.only(
+                              top: 24.0, left: 32.0, right: 32.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +64,11 @@ class HomeScreen extends StatelessWidget {
                                     offset: const Offset(0.0, -10.0),
                                     child: Text(
                                       'Dashboard',
-                                      style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color(0xCCFFFFFF)),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5!
+                                          .copyWith(
+                                              color: const Color(0xCCFFFFFF)),
                                     ),
                                   ),
                                 ],

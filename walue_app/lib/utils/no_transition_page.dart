@@ -10,7 +10,12 @@ class NoTransitionPage extends BeamPage {
     String? name,
     required this.child,
     bool keepQueryOnPop = false,
-  }) : super(key: key, name: name, child: child, keepQueryOnPop: keepQueryOnPop);
+  }) : super(
+          key: key,
+          name: name,
+          child: child,
+          keepQueryOnPop: keepQueryOnPop,
+        );
 
   @override
   Route createRoute(BuildContext context) {
