@@ -43,11 +43,14 @@ service cloud.firestore {
           function isAddingNewRecord() {
             return isAuthorized()
                 && cryptoId in get(/databases/$(database)/documents/system/crypto).data.currencies
-                && requireFields(request.resource.data, ['buy_price', 'amount', 'timestamp', 'fiat_currency_symbol'])
+                && requireFields(request.resource.data, ['buy_price', 'amount', 'timestamp', 'fiat_currency'])
+                && requireFields(request.resource.data.fiat_currency, ['name', 'symbol'])
                 && request.resource.data.buy_price is float
                 && request.resource.data.amount is float
                 && request.resource.data.timestamp == request.time
-                && request.resource.data.fiat_currency_symbol in get(/databases/$(database)/documents/system/fiat).data.currencies.keys();
+                && request.resource.data.fiat_currency.symbol in get(/databases/$(database)/documents/system/fiat).data.currencies.keys()
+                && request.resource.data.fiat_currency.name in get(/databases/$(database)/documents/system/fiat).data.currencies.values()
+                && get(/databases/$(database)/documents/system/fiat).data.currencies[request.resource.data.fiat_currency.symbol] == request.resource.data.fiat_currency.name;
           }
 
           function isEdittingExistingRecord() {
