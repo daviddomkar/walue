@@ -49,7 +49,8 @@ class FirebaseUserRepository extends UserRepository {
   Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount) async {
     await _firestore.runTransaction((transaction) async {
       final uuid = read(userStreamProvider).data?.value?.id;
-      final symbol = read(userStreamProvider).data?.value?.fiatCurrency?.symbol;
+      final fiatCurrency = read(userStreamProvider).data?.value?.fiatCurrency;
+      final symbol = fiatCurrency?.symbol;
 
       final currencyDocumentReference = _firestore.collection('users').doc(uuid).collection('portfolio').doc(currency.id);
       final currencyRecordDocumentReference = _firestore.collection('users').doc(uuid).collection('portfolio').doc(currency.id).collection('buy_records').doc();
@@ -111,7 +112,10 @@ class FirebaseUserRepository extends UserRepository {
         'buy_price': buyPrice,
         'amount': amount,
         'timestamp': FieldValue.serverTimestamp(),
-        'fiat_currency_symbol': symbol,
+        'fiat_currency': {
+          'name': fiatCurrency?.name,
+          'symbol': symbol,
+        },
       });
     });
   }
@@ -140,7 +144,7 @@ class FirebaseUserRepository extends UserRepository {
 
       final oldBuyPrice = (currencyRecordDocumentData['buy_price'] as num).toDouble();
       final oldAmount = (currencyRecordDocumentData['amount'] as num).toDouble();
-      final symbol = currencyRecordDocumentData['fiat_currency_symbol'] as String;
+      final symbol = currencyRecordDocumentData['fiat_currency']['symbol'] as String;
 
       final newBuyPrice = buyPrice ?? oldBuyPrice;
       final newAmount = amount ?? oldAmount;
@@ -193,7 +197,7 @@ class FirebaseUserRepository extends UserRepository {
 
       final totalAmount = (currencyDocumentData['total_amount'] as num).toDouble();
       final amountOfRecords = (currencyDocumentData['amount_of_records'] as num).toInt();
-      final symbol = currencyRecordDocumentData['fiat_currency_symbol'] as String;
+      final symbol = currencyRecordDocumentData['fiat_currency']['symbol'] as String;
 
       final symbolAverageAmountInFiatCurrencyWhenBought = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['average_amount_in_fiat_currency_when_bought'] as num).toDouble();
       final symbolTotalAmount = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['total_amount'] as num).toDouble();

@@ -10,12 +10,11 @@ import '../../widgets/gradient_button.dart';
 import '../../widgets/logo.dart';
 import 'currency_view_model.dart';
 
-final currencyViewModelProvider = ChangeNotifierProvider.autoDispose
-    .family<CurrencyViewModel, String>((ref, id) {
+final currencyViewModelProvider = ChangeNotifierProvider.autoDispose.family<CurrencyViewModel, String>((ref, id) {
   final userRepository = ref.watch(userRepositoryProvider);
   final user = ref.watch(userStreamProvider);
   final currency = ref.watch(cryptoCurrencyStreamProvider(id));
-  final currencyData = ref.watch(cryptoCurrencyDataStreamProvider(id));
+  final currencyData = ref.watch(portfolioRecordStreamProvider(id));
 
   return CurrencyViewModel(
     userRepository: userRepository,
@@ -46,8 +45,7 @@ class CurrencyScreen extends ConsumerWidget {
                 child: Stack(
                   children: [
                     Transform(
-                      transform: Matrix4.rotationZ(0.4)
-                        ..translate(-150.0, -96.0),
+                      transform: Matrix4.rotationZ(0.4)..translate(-150.0, -96.0),
                       alignment: Alignment.center,
                       child: Container(
                         width: 400.0,
@@ -71,8 +69,7 @@ class CurrencyScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(
-                              top: 24.0, left: 32.0, right: 32.0),
+                          padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,34 +83,20 @@ class CurrencyScreen extends ConsumerWidget {
                                   Transform.translate(
                                     offset: const Offset(0.0, -10.0),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Container(
                                           width: 24.0,
                                           height: 24.0,
                                           decoration: BoxDecoration(
-                                            image: viewModel.currencyImageUrl !=
-                                                    null
-                                                ? DecorationImage(
-                                                    image: NetworkImage(
-                                                        viewModel
-                                                            .currencyImageUrl!),
-                                                    fit: BoxFit.contain)
-                                                : null,
+                                            image: viewModel.currencyImageUrl != null ? DecorationImage(image: NetworkImage(viewModel.currencyImageUrl!), fit: BoxFit.contain) : null,
                                           ),
                                         ),
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 4.0),
+                                          padding: const EdgeInsets.only(left: 4.0),
                                           child: Text(
                                             viewModel.currencyName ?? '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5!
-                                                .copyWith(
-                                                    color: const Color(
-                                                        0xCCFFFFFF)),
+                                            style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color(0xCCFFFFFF)),
                                           ),
                                         ),
                                       ],
@@ -123,28 +106,18 @@ class CurrencyScreen extends ConsumerWidget {
                                     padding: const EdgeInsets.only(top: 12.0),
                                     child: Text(
                                       viewModel.totalFiatAmount ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle1!
-                                          .copyWith(color: Colors.white),
+                                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white),
                                     ),
                                   ),
                                   Text(
                                     viewModel.totalAmount ?? '',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle2!
-                                        .copyWith(color: Colors.white),
+                                    style: Theme.of(context).textTheme.subtitle2!.copyWith(color: Colors.white),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 12.0, bottom: 96.0),
+                                    padding: const EdgeInsets.only(top: 12.0, bottom: 96.0),
                                     child: Text(
                                       viewModel.increasePercentage ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline4!
-                                          .copyWith(color: Colors.white),
+                                      style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white),
                                     ),
                                   ),
                                 ],
@@ -167,8 +140,7 @@ class CurrencyScreen extends ConsumerWidget {
                         ),
                         Expanded(
                           child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 32.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 32.0),
                             child: Column(
                               children: [
                                 Row(
@@ -182,17 +154,13 @@ class CurrencyScreen extends ConsumerWidget {
                                     ),
                                     Text(
                                       'Buy Records',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline4!
-                                          .copyWith(fontSize: 24.0),
+                                      style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0),
                                     ),
                                   ],
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 16.0, top: 8.0),
+                                    padding: const EdgeInsets.only(bottom: 16.0, top: 8.0),
                                     child: Container(
                                       clipBehavior: Clip.hardEdge,
                                       decoration: const BoxDecoration(
@@ -208,102 +176,107 @@ class CurrencyScreen extends ConsumerWidget {
                                         ],
                                       ),
                                       child: AnimatedSwitcher(
-                                        duration:
-                                            const Duration(milliseconds: 250),
+                                        duration: const Duration(milliseconds: 250),
                                         child: viewModel.loading
                                             ? Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation(
-                                                          Theme.of(context)
-                                                              .primaryColor),
+                                                child: CircularProgressIndicator(
+                                                  valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
                                                   strokeWidth: 2.0,
                                                 ),
                                               )
                                             : Container(
-                                                constraints:
-                                                    const BoxConstraints
-                                                        .expand(),
+                                                constraints: const BoxConstraints.expand(),
                                                 child: DataTable(
                                                   showCheckboxColumn: false,
-                                                  columns: const [
+                                                  showBottomBorder: true,
+                                                  headingTextStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                        fontSize: 14.0,
+                                                      ),
+                                                  columns: [
                                                     DataColumn(
                                                       label: Text(
                                                         'Buy price',
+                                                        maxLines: 1,
                                                       ),
                                                     ),
                                                     DataColumn(
                                                       label: Text(
                                                         'Amount',
+                                                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                              color: const Color(0x80222222),
+                                                              fontSize: 14.0,
+                                                            ),
+                                                        maxLines: 1,
                                                       ),
                                                     ),
                                                     DataColumn(
-                                                      label: Text(
-                                                        'Profit',
+                                                      label: Expanded(
+                                                        child: Text(
+                                                          'Profit',
+                                                          textAlign: TextAlign.end,
+                                                          maxLines: 1,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
-                                                  rows: viewModel.buyRecords!
-                                                      .map(
-                                                        (record) => DataRow(
-                                                          onSelectChanged: (_) {
-                                                            showDialog(
-                                                              context: context,
-                                                              builder: (_) =>
-                                                                  BuyRecordDialog(
-                                                                initialRecord:
-                                                                    record,
-                                                                onEditRecord: (id,
-                                                                    buyPrice,
-                                                                    amount) {
-                                                                  viewModel.editBuyRecord(
-                                                                      id,
-                                                                      buyPrice,
-                                                                      amount);
-                                                                  Navigator.of(
-                                                                          context,
-                                                                          rootNavigator:
-                                                                              true)
-                                                                      .pop(
-                                                                          context);
-                                                                },
-                                                                onDeleteRecord:
-                                                                    (id) {
-                                                                  viewModel
-                                                                      .deleteBuyRecord(
-                                                                          id);
-                                                                  Navigator.of(
-                                                                          context,
-                                                                          rootNavigator:
-                                                                              true)
-                                                                      .pop(
-                                                                          context);
-                                                                },
+                                                  rows: viewModel.buyRecords!.map((record) {
+                                                    final profitText = record.calculateformattedProfit(viewModel.currency.data!.value.fiatPrice);
+
+                                                    var color = const Color(0xFF222222);
+
+                                                    if (profitText.startsWith('+')) {
+                                                      color = const Color(0xFF54D790);
+                                                    } else if (profitText.startsWith('-')) {
+                                                      color = const Color(0xFFD90D00);
+                                                    }
+
+                                                    return DataRow(
+                                                      onSelectChanged: (_) {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (_) => BuyRecordDialog(
+                                                            initialRecord: record,
+                                                            onEditRecord: (id, buyPrice, amount) {
+                                                              viewModel.editBuyRecord(id, buyPrice, amount);
+                                                              Navigator.of(context, rootNavigator: true).pop(context);
+                                                            },
+                                                            onDeleteRecord: (id) {
+                                                              viewModel.deleteBuyRecord(id);
+                                                              Navigator.of(context, rootNavigator: true).pop(context);
+                                                            },
+                                                          ),
+                                                        );
+                                                      },
+                                                      cells: <DataCell>[
+                                                        DataCell(Text(
+                                                          record.formattedBuyPrice.toString(),
+                                                          maxLines: 1,
+                                                        )),
+                                                        DataCell(Text(
+                                                          '${viewModel.currencySymbol!} ${record.amount}',
+                                                          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                                color: const Color(0x80222222),
+                                                                fontSize: 14.0,
                                                               ),
-                                                            );
-                                                          },
-                                                          cells: <DataCell>[
-                                                            DataCell(Text(record
-                                                                .buyPrice
-                                                                .toString())),
-                                                            DataCell(Text(record
-                                                                .amount
-                                                                .toString())),
-                                                            DataCell(
-                                                              Text(
-                                                                ((viewModel.currency.data!.value.fiatPrice *
-                                                                            record
-                                                                                .amount) -
-                                                                        (record.buyPrice *
-                                                                            record.amount))
-                                                                    .toString(),
-                                                              ),
+                                                          maxLines: 1,
+                                                        )),
+                                                        DataCell(
+                                                          Align(
+                                                            alignment: Alignment.centerRight,
+                                                            child: Text(
+                                                              profitText,
+                                                              textAlign: TextAlign.right,
+                                                              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                                    color: color,
+                                                                    fontSize: 14.0,
+                                                                  ),
+                                                              maxLines: 1,
                                                             ),
-                                                          ],
+                                                          ),
                                                         ),
-                                                      )
-                                                      .toList(),
+                                                      ],
+                                                    );
+                                                  }).toList(),
                                                 ),
                                               ),
                                       ),
@@ -313,73 +286,9 @@ class CurrencyScreen extends ConsumerWidget {
                               ],
                             ),
                           ),
-
-                          /*
-                          viewModel.currencyData.when(
-                            data: (data) {
-                              return DataTable(
-                                showCheckboxColumn: false,
-                                columns: const [
-                                  DataColumn(
-                                    label: Text(
-                                      'Buy price',
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Amount',
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Profit',
-                                    ),
-                                  ),
-                                ],
-                                rows: data.buyRecords
-                                    .map(
-                                      (record) => DataRow(
-                                        onSelectChanged: (_) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (_) => BuyRecordDialog(
-                                              initialRecord: record,
-                                              onEditRecord: (id, buyPrice, amount) {
-                                                viewModel.editBuyRecord(id, buyPrice, amount);
-                                                Navigator.of(context, rootNavigator: true).pop(context);
-                                              },
-                                              onDeleteRecord: (id) {
-                                                viewModel.deleteBuyRecord(id);
-                                                Navigator.of(context, rootNavigator: true).pop(context);
-                                              },
-                                            ),
-                                          );
-                                        },
-                                        cells: <DataCell>[
-                                          DataCell(Text(record.buyPrice.toString())),
-                                          DataCell(Text(record.amount.toString())),
-                                          DataCell(
-                                            Text(
-                                              ((viewModel.currency.data!.value.fiatPrice * record.amount) - (record.buyPrice * record.amount)).toString(),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                    .toList(),
-                              );
-                            },
-                            loading: () => Center(
-                              child: Text('loading'),
-                            ),
-                            error: (e, s) => Center(
-                              child: Text(e.toString()),
-                            ),
-                          ),*/
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 32.0, left: 32.0, right: 32.0),
+                          padding: const EdgeInsets.only(bottom: 32.0, left: 32.0, right: 32.0),
                           child: GradientButton(
                             onPressed: () {
                               showDialog(
@@ -387,8 +296,7 @@ class CurrencyScreen extends ConsumerWidget {
                                 builder: (_) => BuyRecordDialog(
                                   onAddRecord: (buyPrice, amount) {
                                     viewModel.addBuyRecord(buyPrice, amount);
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop(context);
+                                    Navigator.of(context, rootNavigator: true).pop(context);
                                   },
                                 ),
                               );

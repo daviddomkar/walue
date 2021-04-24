@@ -30,10 +30,8 @@ Future<void> main() async {
   runApp(
     ProviderScope(
       overrides: [
-        cryptoRepositoryProvider.overrideWithValue(
-            CoinGeckoCryptoRepository(cacheStore: cacheStore)),
-        fiatRepositoryProvider.overrideWithValue(
-            ExchangeRateHostFiatRepository(cacheStore: cacheStore)),
+        cryptoRepositoryProvider.overrideWithValue(CoinGeckoCryptoRepository(cacheStore: cacheStore)),
+        fiatRepositoryProvider.overrideWithValue(ExchangeRateHostFiatRepository(cacheStore: cacheStore)),
       ],
       child: WalueApp(),
     ),
@@ -51,8 +49,7 @@ void _licenceFonts() {
   });
 
   LicenseRegistry.addLicense(() async* {
-    final license =
-        await rootBundle.loadString('google_fonts/OFL-FredokaOne.txt');
+    final license = await rootBundle.loadString('google_fonts/OFL-FredokaOne.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 }
@@ -72,30 +69,16 @@ class WalueApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routeInformationParser: BeamerRouteInformationParser(),
       routerDelegate: routerDelegate,
-      backButtonDispatcher:
-          BeamerBackButtonDispatcher(delegate: routerDelegate),
+      backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme().copyWith(
-          headline2: GoogleFonts.fredokaOne(
-              fontSize: 64.0, color: const Color(0xFF222222)),
-          headline3: GoogleFonts.fredokaOne(
-              fontSize: 48.0, color: const Color(0xFF222222)),
-          headline4: GoogleFonts.lato(
-              fontSize: 36.0,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF222222)),
-          headline5: GoogleFonts.lato(
-              fontSize: 24.0,
-              fontWeight: FontWeight.w300,
-              color: const Color(0xFF222222)),
-          headline6: GoogleFonts.lato(
-              fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
-          subtitle1:
-              GoogleFonts.lato(fontSize: 18.0, color: const Color(0xFF222222)),
-          subtitle2: GoogleFonts.lato(
-              fontSize: 14.0,
-              fontWeight: FontWeight.w300,
-              color: const Color(0xFF222222)),
+          headline2: GoogleFonts.fredokaOne(fontSize: 64.0, color: const Color(0xFF222222)),
+          headline3: GoogleFonts.fredokaOne(fontSize: 48.0, color: const Color(0xFF222222)),
+          headline4: GoogleFonts.lato(fontSize: 36.0, fontWeight: FontWeight.w700, color: const Color(0xFF222222)),
+          headline5: GoogleFonts.lato(fontSize: 24.0, fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
+          headline6: GoogleFonts.lato(fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
+          subtitle1: GoogleFonts.lato(fontSize: 18.0, color: const Color(0xFF222222)),
+          subtitle2: GoogleFonts.lato(fontSize: 14.0, fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
         ),
         primaryColor: const Color(0xFF0054F6),
         accentColor: const Color(0xFF00D1FF),
