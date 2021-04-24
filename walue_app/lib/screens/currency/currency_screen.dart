@@ -220,7 +220,7 @@ class CurrencyScreen extends ConsumerWidget {
                                                     ),
                                                   ],
                                                   rows: viewModel.buyRecords!.map((record) {
-                                                    final profitText = record.calculateformattedProfit(viewModel.currency.data!.value.fiatPrice);
+                                                    final profitText = record.calculateformattedProfit(viewModel.currency.data!.value.additionalFiatPrices![record.fiatCurrency.symbol]!);
 
                                                     var color = const Color(0xFF222222);
 
