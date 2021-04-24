@@ -1,7 +1,8 @@
 {
   "dart.updateImportsOnRename": true,
-  "dart.lineLength": 80,
+  "dart.lineLength": 240,
   "editor.tabSize": 2,
+  "editor.rulers": [240],
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -9,7 +10,8 @@
     "source.fixAll.eslint": true
   },
   "[dart]": {
-    "editor.defaultFormatter": "Dart-Code.dart-code"
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.rulers": [240]
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",

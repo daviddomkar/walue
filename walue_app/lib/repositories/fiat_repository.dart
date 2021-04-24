@@ -4,8 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/currency.dart';
 
-final fiatRepositoryProvider =
-    Provider<FiatRepository>((ref) => throw UnimplementedError());
+final fiatRepositoryProvider = Provider<FiatRepository>((ref) => throw UnimplementedError());
 
 abstract class FiatRepository {
   Future<double> getExchangeRate(Currency from, Currency to);
@@ -19,8 +18,7 @@ class ExchangeRateHostFiatRepository extends FiatRepository {
 
   late CacheOptions _options;
 
-  ExchangeRateHostFiatRepository({required this.cacheStore})
-      : _dio = Dio(BaseOptions(baseUrl: 'https://api.exchangerate.host')) {
+  ExchangeRateHostFiatRepository({required this.cacheStore}) : _dio = Dio(BaseOptions(baseUrl: 'https://api.exchangerate.host')) {
     _options = CacheOptions(
       store: cacheStore,
       policy: CachePolicy.forceCache,
@@ -50,6 +48,6 @@ class ExchangeRateHostFiatRepository extends FiatRepository {
   Future<double> exchange(Currency from, Currency to, double amount) async {
     final exchangeRate = await getExchangeRate(from, to);
 
-    return double.parse((exchangeRate * amount).toStringAsFixed(2));
+    return exchangeRate * amount;
   }
 }

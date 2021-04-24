@@ -9,8 +9,7 @@ import '../../models/user.dart';
 import '../../repositories/user_repository.dart';
 
 class CurrencyViewModel extends ChangeNotifier {
-  static final _percentageFormatter =
-      NumberFormat.decimalPercentPattern(locale: 'en', decimalDigits: 2);
+  static final _percentageFormatter = NumberFormat.decimalPercentPattern(locale: 'en', decimalDigits: 2);
 
   final UserRepository userRepository;
 
@@ -49,13 +48,11 @@ class CurrencyViewModel extends ChangeNotifier {
     );
   }
 
-  bool get loading =>
-      currency is AsyncLoading ||
-      currencyData is AsyncLoading ||
-      user is AsyncLoading;
+  bool get loading => currency is AsyncLoading || currencyData is AsyncLoading || user is AsyncLoading;
 
   String? get currencyImageUrl => currency.data?.value.imageUrl;
   String? get currencyName => currency.data?.value.name;
+  String? get currencySymbol => currency.data?.value.symbol.toUpperCase();
 
   String? get totalFiatAmount {
     final fiatSymbol = user.data?.value?.fiatCurrency?.symbol;
@@ -67,13 +64,9 @@ class CurrencyViewModel extends ChangeNotifier {
 
       final totalFiatAmount = totalAmount * fiatPrice;
 
-      final currencyFormatter = NumberFormat.currency(
-          locale: 'en', decimalDigits: 2, symbol: fiatSymbol);
+      final currencyFormatter = NumberFormat.simpleCurrency(locale: 'en', name: fiatSymbol.toUpperCase());
 
-      final totalFiatAmountFormatted =
-          currencyFormatter.format(totalFiatAmount).replaceAll(fiatSymbol, '');
-
-      return '$totalFiatAmountFormatted ${fiatSymbol.toUpperCase()}';
+      return currencyFormatter.format(totalFiatAmount);
     }
 
     return null;
@@ -81,7 +74,7 @@ class CurrencyViewModel extends ChangeNotifier {
 
   String? get totalAmount {
     if (currencyData.data?.value.totalAmount != null && currency.data != null) {
-      return '${currencyData.data!.value.totalAmount!} ${currency.data!.value.symbol.toUpperCase()}';
+      return '${currency.data!.value.symbol.toUpperCase()} ${currencyData.data!.value.totalAmount!}';
     }
 
     return null;
@@ -89,17 +82,14 @@ class CurrencyViewModel extends ChangeNotifier {
 
   String? get increasePercentage {
     if (currencyData.data?.value.totalAmount != null && currency.data != null) {
-      final averageAmountInFiatCurrencyWhenBought =
-          currencyData.data!.value.averageAmountInFiatCurrencyWhenBought!;
+      final averageAmountInFiatCurrencyWhenBought = currencyData.data!.value.averageAmountInFiatCurrencyWhenBought!;
 
       final totalAmount = currencyData.data!.value.totalAmount!;
       final fiatPrice = currency.data!.value.fiatPrice;
 
       final totalFiatAmount = totalAmount * fiatPrice;
 
-      final increasePercentage =
-          ((1.0 / averageAmountInFiatCurrencyWhenBought) * totalFiatAmount) -
-              1.0;
+      final increasePercentage = ((1.0 / averageAmountInFiatCurrencyWhenBought) * totalFiatAmount) - 1.0;
 
       var mark = '';
 

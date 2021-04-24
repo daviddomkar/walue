@@ -7,4 +7,3 @@ linter:
     prefer_single_quotes: true
     prefer_relative_imports: true
     sort_pub_dependencies: false
-    lines_longer_than_80_chars: true
