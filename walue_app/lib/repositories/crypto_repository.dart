@@ -8,14 +8,11 @@ import 'package:quiver/iterables.dart' as quiver;
 import '../models/crypto_currency.dart';
 import '../models/currency.dart';
 
-final cryptoRepositoryProvider =
-    Provider<CryptoRepository>((ref) => throw UnimplementedError());
+final cryptoRepositoryProvider = Provider<CryptoRepository>((ref) => throw UnimplementedError());
 
 abstract class CryptoRepository {
   Future<CryptoCurrency> getCryptoCurrency(String id, Currency versusCurrency);
-  Future<List<CryptoCurrency>> getCryptoCurrencies(
-      List<String> ids, Currency versusCurrency,
-      {bool cache = false});
+  Future<List<CryptoCurrency>> getCryptoCurrencies(List<String> ids, Currency versusCurrency, {bool cache = false});
 }
 
 class CoinGeckoCryptoRepository extends CryptoRepository {
@@ -25,8 +22,7 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
 
   late CacheOptions _options;
 
-  CoinGeckoCryptoRepository({required this.cacheStore})
-      : _dio = Dio(BaseOptions(baseUrl: 'https://api.coingecko.com/api/v3')) {
+  CoinGeckoCryptoRepository({required this.cacheStore}) : _dio = Dio(BaseOptions(baseUrl: 'https://api.coingecko.com/api/v3')) {
     _options = CacheOptions(
       store: cacheStore,
       policy: CachePolicy.forceCache,
@@ -41,9 +37,7 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
   }
 
   @override
-  Future<List<CryptoCurrency>> getCryptoCurrencies(
-      List<String> ids, Currency versusCurrency,
-      {bool cache = false}) async {
+  Future<List<CryptoCurrency>> getCryptoCurrencies(List<String> ids, Currency versusCurrency, {bool cache = false}) async {
     final partitionedIds = quiver.partition(ids, 100).toList();
 
     final requests = partitionedIds.asMap().entries.map(
@@ -54,18 +48,13 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
               'order': 'market_cap_desc',
               'ids': entry.value.join(','),
             },
-            options: cache
-                ? _options
-                    .copyWith(maxStale: const Duration(days: 7))
-                    .toOptions()
-                : _options.toOptions(),
+            options: cache ? _options.copyWith(maxStale: const Duration(days: 7)).toOptions() : _options.toOptions(),
           ),
         );
 
     final responses = await Future.wait(requests);
 
-    final currencies =
-        quiver.concat(responses.map((response) => response.data!));
+    final currencies = quiver.concat(responses.map((response) => response.data!));
 
     return currencies.map((currency) {
       return CryptoCurrency(
@@ -79,10 +68,8 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
   }
 
   @override
-  Future<CryptoCurrency> getCryptoCurrency(
-      String id, Currency versusCurrency) async {
-    final response =
-        await _dio.get<Map<String, dynamic>>('/coins/$id', queryParameters: {
+  Future<CryptoCurrency> getCryptoCurrency(String id, Currency versusCurrency) async {
+    final response = await _dio.get<Map<String, dynamic>>('/coins/$id', queryParameters: {
       'localization': false,
       'tickers': false,
       'market_data': true,
@@ -98,12 +85,8 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
       name: currency['name'] as String,
       symbol: currency['symbol'] as String,
       imageUrl: currency['image']['large'] as String,
-      fiatPrice: (currency['market_data']['current_price']
-              [versusCurrency.symbol] as num)
-          .toDouble(),
-      additionalFiatPrices:
-          (currency['market_data']['current_price'] as Map<String, dynamic>)
-              .cast<String, double>(),
+      fiatPrice: (currency['market_data']['current_price'][versusCurrency.symbol] as num).toDouble(),
+      additionalFiatPrices: (currency['market_data']['current_price'] as Map<String, dynamic>).map((key, value) => MapEntry(key, (value as num).toDouble())).cast<String, double>(),
     );
   }
 }
