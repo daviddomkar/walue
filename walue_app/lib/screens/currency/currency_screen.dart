@@ -252,14 +252,15 @@ class CurrencyScreen extends ConsumerWidget {
                                                           record.formattedBuyPrice.toString(),
                                                           maxLines: 1,
                                                         )),
-                                                        DataCell(Text(
-                                                          '${viewModel.currencySymbol!} ${record.amount}',
-                                                          style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                                                color: const Color(0x80222222),
-                                                                fontSize: 14.0,
-                                                              ),
-                                                          maxLines: 1,
-                                                        )),
+                                                        DataCell(
+                                                          Text(
+                                                            '${record.amount}',
+                                                            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                                  color: const Color(0x80222222),
+                                                                  fontSize: 14.0,
+                                                                ),
+                                                          ),
+                                                        ),
                                                         DataCell(
                                                           Align(
                                                             alignment: Alignment.centerRight,

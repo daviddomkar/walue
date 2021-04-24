@@ -97,10 +97,6 @@ class CurrencyViewModel extends ChangeNotifier {
         mark = '+';
       }
 
-      if (increasePercentage < 0) {
-        mark = '-';
-      }
-
       return mark + _percentageFormatter.format(increasePercentage);
     }
 
