@@ -9,19 +9,17 @@ import '../../models/user.dart';
 import '../../repositories/user_repository.dart';
 
 class CurrencyViewModel extends ChangeNotifier {
-  static final _percentageFormatter = NumberFormat.decimalPercentPattern(locale: 'en', decimalDigits: 2);
-
   final UserRepository userRepository;
 
   final AsyncValue<User?> user;
   final AsyncValue<CryptoCurrency> currency;
-  final AsyncValue<PortfolioRecord> currencyData;
+  final AsyncValue<PortfolioRecord> portfolioRecord;
 
   CurrencyViewModel({
     required this.userRepository,
     required this.user,
     required this.currency,
-    required this.currencyData,
+    required this.portfolioRecord,
   });
 
   void addBuyRecord(double buyPrice, double amount) {
@@ -48,60 +46,17 @@ class CurrencyViewModel extends ChangeNotifier {
     );
   }
 
-  bool get loading => currency is AsyncLoading || currencyData is AsyncLoading || user is AsyncLoading;
+  bool get loading => currency is AsyncLoading || portfolioRecord is AsyncLoading || user is AsyncLoading;
 
   String? get currencyImageUrl => currency.data?.value.imageUrl;
   String? get currencyName => currency.data?.value.name;
   String? get currencySymbol => currency.data?.value.symbol.toUpperCase();
 
-  String? get totalFiatAmount {
-    final fiatSymbol = user.data?.value?.fiatCurrency?.symbol;
-    final totalAmount = currencyData.data?.value.totalAmount;
+  String? get totalFiatAmount => portfolioRecord.data?.value.computeTotalFiatAmount(currency.data?.value.fiatPrice, user.data?.value?.fiatCurrency?.symbol);
 
-    if (totalAmount != null && currency.data != null && fiatSymbol != null) {
-      final totalAmount = currencyData.data!.value.totalAmount!;
-      final fiatPrice = currency.data!.value.fiatPrice;
+  String? get totalAmount => portfolioRecord.data?.value.computeTotalAmount(currency.data?.value.symbol);
 
-      final totalFiatAmount = totalAmount * fiatPrice;
+  String? get increasePercentage => portfolioRecord.data?.value.computeIncreasePercentage(currency.data?.value.fiatPrice);
 
-      final currencyFormatter = NumberFormat.simpleCurrency(locale: 'en', name: fiatSymbol.toUpperCase());
-
-      return currencyFormatter.format(totalFiatAmount);
-    }
-
-    return null;
-  }
-
-  String? get totalAmount {
-    if (currencyData.data?.value.totalAmount != null && currency.data != null) {
-      return '${currency.data!.value.symbol.toUpperCase()} ${currencyData.data!.value.totalAmount!}';
-    }
-
-    return null;
-  }
-
-  String? get increasePercentage {
-    if (currencyData.data?.value.totalAmount != null && currency.data != null) {
-      final averageAmountInFiatCurrencyWhenBought = currencyData.data!.value.averageAmountInFiatCurrencyWhenBought!;
-
-      final totalAmount = currencyData.data!.value.totalAmount!;
-      final fiatPrice = currency.data!.value.fiatPrice;
-
-      final totalFiatAmount = totalAmount * fiatPrice;
-
-      final increasePercentage = ((1.0 / averageAmountInFiatCurrencyWhenBought) * totalFiatAmount) - 1.0;
-
-      var mark = '';
-
-      if (increasePercentage > 0) {
-        mark = '+';
-      }
-
-      return mark + _percentageFormatter.format(increasePercentage);
-    }
-
-    return null;
-  }
-
-  List<BuyRecord>? get buyRecords => currencyData.data?.value.buyRecords;
+  List<BuyRecord>? get buyRecords => portfolioRecord.data?.value.buyRecords;
 }

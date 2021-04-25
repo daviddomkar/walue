@@ -5,18 +5,15 @@ import '../models/crypto_currency.dart';
 import '../providers.dart';
 import '../repositories/crypto_repository.dart';
 
-final cryptoCurrencyStreamProvider =
-    StreamProvider.autoDispose.family<CryptoCurrency, String>((ref, id) {
+final cryptoCurrencyStreamProvider = StreamProvider.autoDispose.family<CryptoCurrency, String>((ref, id) {
   final cryptoRepository = ref.watch(cryptoRepositoryProvider);
   final user = ref.watch(userStreamProvider);
 
-  return Stream.periodic(const Duration(minutes: 2))
+  return Stream.periodic(const Duration(minutes: 1))
       .asyncMap(
-        (_) => cryptoRepository.getCryptoCurrency(
-            id, user.data!.value!.fiatCurrency!),
+        (_) => cryptoRepository.getCryptoCurrency(id, user.data!.value!.fiatCurrency!),
       )
       .startWithStream(
-        Stream.fromFuture(cryptoRepository.getCryptoCurrency(
-            id, user.data!.value!.fiatCurrency!)),
+        Stream.fromFuture(cryptoRepository.getCryptoCurrency(id, user.data!.value!.fiatCurrency!)),
       );
 });

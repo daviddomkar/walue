@@ -79,6 +79,8 @@ class WalueApp extends StatelessWidget {
           headline6: GoogleFonts.lato(fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
           subtitle1: GoogleFonts.lato(fontSize: 18.0, color: const Color(0xFF222222)),
           subtitle2: GoogleFonts.lato(fontSize: 14.0, fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
+          bodyText1: GoogleFonts.lato(fontSize: 14.0, color: const Color(0xFF222222)),
+          bodyText2: GoogleFonts.lato(fontSize: 14.0, fontWeight: FontWeight.w300, color: const Color(0x80222222)),
         ),
         primaryColor: const Color(0xFF0054F6),
         accentColor: const Color(0xFF00D1FF),

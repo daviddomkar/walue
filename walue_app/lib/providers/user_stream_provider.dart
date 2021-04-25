@@ -24,7 +24,7 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
                 symbol: data['fiat_currency']['symbol'] as String,
                 name: data['fiat_currency']['name'] as String,
               ),
-              favouriteCurrencyIds: data['favourite_currency_ids'] as List<String>?,
+              favouriteCurrencyIds: (data['favourite_currency_ids'] as List<dynamic>?)?.cast<String>() ?? [],
             );
           }
 

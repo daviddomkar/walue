@@ -18,8 +18,7 @@ class RootLocationViewModel {
   RootLocationViewModel({required this.user});
 }
 
-final _rootLocationViewModelProvider =
-    Provider.autoDispose<RootLocationViewModel>((ref) {
+final _rootLocationViewModelProvider = Provider.autoDispose<RootLocationViewModel>((ref) {
   final user = ref.watch(userStreamProvider);
 
   return RootLocationViewModel(
