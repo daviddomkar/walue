@@ -22,7 +22,7 @@ class PortfolioRecord {
     if (totalAmount != null && fiatPrice != null && fiatSymbol != null) {
       final totalFiatAmount = totalAmount! * fiatPrice;
 
-      final currencyFormatter = NumberFormat.simpleCurrency(locale: 'en', name: fiatSymbol.toUpperCase());
+      final currencyFormatter = totalFiatAmount > 100000 ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatSymbol.toUpperCase()) : NumberFormat.simpleCurrency(locale: 'en', name: fiatSymbol.toUpperCase());
 
       return currencyFormatter.format(totalFiatAmount);
     }

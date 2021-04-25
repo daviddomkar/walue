@@ -188,17 +188,27 @@ class HomeScreen extends ConsumerWidget {
                                                                         Row(
                                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                           children: [
-                                                                            Text(
-                                                                              viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.name,
-                                                                              style: Theme.of(context).textTheme.bodyText1,
+                                                                            LimitedBox(
+                                                                              maxWidth: 80.0,
+                                                                              child: Text(
+                                                                                viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.name,
+                                                                                style: Theme.of(context).textTheme.bodyText1,
+                                                                                maxLines: 1,
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                              ),
                                                                             ),
-                                                                            Text(
-                                                                              viewModel.portfolioRecords![i].computeTotalFiatAmount(
-                                                                                viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.fiatPrice,
-                                                                                viewModel.fiatCurrencySymbol,
-                                                                              )!,
-                                                                              style: Theme.of(context).textTheme.bodyText1,
-                                                                              textAlign: TextAlign.right,
+                                                                            LimitedBox(
+                                                                              maxWidth: 80.0,
+                                                                              child: Text(
+                                                                                viewModel.portfolioRecords![i].computeTotalFiatAmount(
+                                                                                  viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.fiatPrice,
+                                                                                  viewModel.fiatCurrencySymbol,
+                                                                                )!,
+                                                                                style: Theme.of(context).textTheme.bodyText1,
+                                                                                textAlign: TextAlign.right,
+                                                                                maxLines: 1,
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                              ),
                                                                             ),
                                                                           ],
                                                                         ),
