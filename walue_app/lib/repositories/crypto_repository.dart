@@ -26,7 +26,7 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
     _options = CacheOptions(
       store: cacheStore,
       policy: CachePolicy.forceCache,
-      maxStale: const Duration(minutes: 1),
+      maxStale: const Duration(seconds: 30),
     );
 
     _dio.interceptors.add(

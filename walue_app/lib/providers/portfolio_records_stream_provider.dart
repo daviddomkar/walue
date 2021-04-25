@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:stream_transform/stream_transform.dart';
 
-import '../models/buy_record.dart';
-import '../models/currency.dart';
 import '../models/portfolio_record.dart';
 import '../providers.dart';
 import '../repositories/fiat_repository.dart';
 
-final portfolioRecordStreamProvider = StreamProvider.autoDispose.family<PortfolioRecord, String>((ref, id) {
+final portfolioRecordsStreamProvider = StreamProvider.autoDispose<List<PortfolioRecord>>((ref) {
   final _firestore = FirebaseFirestore.instance;
 
   final fiatCurrenciesAsyncValue = ref.watch(fiatCurrenciesStreamProvider);
@@ -22,24 +19,9 @@ final portfolioRecordStreamProvider = StreamProvider.autoDispose.family<Portfoli
 
   final fiatCurrencies = fiatCurrenciesAsyncValue.data?.value;
 
-  return _firestore.collection('users').doc(uuid).collection('portfolio').doc(id).snapshots().combineLatest<List<BuyRecord>, PortfolioRecord>(
-      _firestore.collection('users').doc(uuid).collection('portfolio').doc(id).collection('buy_records').orderBy('timestamp').snapshots().map((snapshot) {
-        return snapshot.docs.map((doc) {
-          final data = doc.data();
-
-          return BuyRecord(
-            id: doc.id,
-            buyPrice: data['buy_price'] as double,
-            amount: data['amount'] as double,
-            fiatCurrency: Currency(
-              symbol: data['fiat_currency']['symbol'] as String,
-              name: data['fiat_currency']['name'] as String,
-            ),
-          );
-        }).toList();
-      }), (snapshot, buyRecords) async {
-    if (snapshot.exists) {
-      final data = snapshot.data()!;
+  return _firestore.collection('users').doc(uuid).collection('portfolio').snapshots().asyncMap((snapshot) {
+    return Future.wait(snapshot.docs.map((document) async {
+      final data = document.data();
 
       final buyRecordsDataByFiat = data['buy_records_data_by_fiat'] as Map<String, dynamic>;
 
@@ -66,14 +48,11 @@ final portfolioRecordStreamProvider = StreamProvider.autoDispose.family<Portfoli
       final averageAmountInFiatCurrencyWhenBought = amounts.reduce((a, b) => a + b);
 
       return PortfolioRecord(
-        id: id,
+        id: document.id,
         amountOfRecords: (data['amount_of_records'] as num).toInt(),
         averageAmountInFiatCurrencyWhenBought: averageAmountInFiatCurrencyWhenBought,
         totalAmount: (data['total_amount'] as num).toDouble(),
-        buyRecords: buyRecords,
       );
-    }
-
-    return PortfolioRecord(id: id, buyRecords: buyRecords);
+    }));
   });
 });

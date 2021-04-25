@@ -14,13 +14,13 @@ final currencyViewModelProvider = ChangeNotifierProvider.autoDispose.family<Curr
   final userRepository = ref.watch(userRepositoryProvider);
   final user = ref.watch(userStreamProvider);
   final currency = ref.watch(cryptoCurrencyStreamProvider(id));
-  final currencyData = ref.watch(portfolioRecordStreamProvider(id));
+  final portfolioRecord = ref.watch(portfolioRecordStreamProvider(id));
 
   return CurrencyViewModel(
     userRepository: userRepository,
     user: user,
     currency: currency,
-    currencyData: currencyData,
+    portfolioRecord: portfolioRecord,
   );
 });
 
@@ -202,9 +202,8 @@ class CurrencyScreen extends ConsumerWidget {
                                                     DataColumn(
                                                       label: Text(
                                                         'Amount',
-                                                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                                               color: const Color(0x80222222),
-                                                              fontSize: 14.0,
                                                             ),
                                                         maxLines: 1,
                                                       ),
@@ -251,13 +250,15 @@ class CurrencyScreen extends ConsumerWidget {
                                                         DataCell(Text(
                                                           record.formattedBuyPrice.toString(),
                                                           maxLines: 1,
+                                                          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                                                color: const Color(0xFF222222),
+                                                              ),
                                                         )),
                                                         DataCell(
                                                           Text(
                                                             '${record.amount}',
-                                                            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                                                   color: const Color(0x80222222),
-                                                                  fontSize: 14.0,
                                                                 ),
                                                           ),
                                                         ),
@@ -267,9 +268,8 @@ class CurrencyScreen extends ConsumerWidget {
                                                             child: Text(
                                                               profitText,
                                                               textAlign: TextAlign.right,
-                                                              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                              style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                                                     color: color,
-                                                                    fontSize: 14.0,
                                                                   ),
                                                               maxLines: 1,
                                                             ),
