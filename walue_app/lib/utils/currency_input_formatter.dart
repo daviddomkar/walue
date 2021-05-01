@@ -7,12 +7,17 @@ class CurrencyInputFormatter extends TextInputFormatter {
   static String? valueToString(double? value) {
     if (value == null) return null;
 
-    return _formatter.format(value);
+    var text = '${_formatter.format(value).split('.')[0]}.${value.toString().split('.')[1]}';
+
+    if (text.endsWith('.0')) {
+      text = text.substring(0, text.length - 2);
+    }
+
+    return text;
   }
 
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     if (oldValue.text == newValue.text) {
       return newValue;
     }
@@ -37,18 +42,15 @@ class CurrencyInputFormatter extends TextInputFormatter {
     } else {
       text = text.replaceAll(RegExp(r'\D'), '');
       text = text.replaceAll(RegExp(r'^0+(?!$)'), '');
+
       text = _formatter.format(double.parse(text));
     }
 
     return TextEditingValue(
       text: text,
       selection: TextSelection(
-        baseOffset: oldValue.text.length > newValue.text.length
-            ? newValue.selection.baseOffset.clamp(0, text.length)
-            : text.length,
-        extentOffset: oldValue.text.length > newValue.text.length
-            ? newValue.selection.extentOffset.clamp(0, text.length)
-            : text.length,
+        baseOffset: oldValue.text.length > newValue.text.length ? newValue.selection.baseOffset.clamp(0, text.length) : text.length,
+        extentOffset: oldValue.text.length > newValue.text.length ? newValue.selection.extentOffset.clamp(0, text.length) : text.length,
       ),
     );
   }
