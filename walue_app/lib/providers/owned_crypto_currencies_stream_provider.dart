@@ -14,7 +14,7 @@ final ownedCryptoCurrenciesStreamProvider = StreamProvider.autoDispose<Map<Strin
   final favouriteCurrencyIds = user.data?.value?.favouriteCurrencyIds ?? [];
   final cryptoCurrencyIds = portfolioRecords.data?.value.map((record) => record.id) ?? [];
 
-  final currencyIds = quiver.concat([favouriteCurrencyIds, cryptoCurrencyIds]).toList();
+  final currencyIds = quiver.concat([favouriteCurrencyIds, cryptoCurrencyIds]).toSet().toList();
 
   return Stream.periodic(const Duration(minutes: 1))
       .asyncMap(

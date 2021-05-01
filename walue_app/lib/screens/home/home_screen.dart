@@ -130,6 +130,8 @@ class HomeScreen extends ConsumerWidget {
                                   padding: const EdgeInsets.symmetric(horizontal: 32.0),
                                   scrollDirection: Axis.horizontal,
                                   itemBuilder: (context, index) {
+                                    final itemCount = viewModel.favouritesLoading ? 1 : viewModel.favouriteCurrencyIds!.length + 1;
+
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                                       child: Container(
@@ -150,6 +152,134 @@ class HomeScreen extends ConsumerWidget {
                                         ),
                                         child: Material(
                                           color: Colors.white,
+                                          child: index == itemCount - 1
+                                              ? AnimatedSwitcher(
+                                                  duration: const Duration(milliseconds: 250),
+                                                  child: viewModel.favouritesLoading
+                                                      ? Center(
+                                                          child: CircularProgressIndicator(
+                                                            valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                                                            strokeWidth: 2.0,
+                                                          ),
+                                                        )
+                                                      : InkWell(
+                                                          onTap: () {
+                                                            showModalBottomSheet(
+                                                              clipBehavior: Clip.hardEdge,
+                                                              context: context,
+                                                              isScrollControlled: true,
+                                                              backgroundColor: Colors.white,
+                                                              shape: const RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.only(
+                                                                  topLeft: Radius.circular(40.0),
+                                                                  topRight: Radius.circular(40.0),
+                                                                ),
+                                                              ),
+                                                              builder: (context) => CryptoSelectSheet(
+                                                                onCryptoCurrencySelected: (currency) {
+                                                                  viewModel.addToFavourites(currency);
+                                                                  Navigator.of(context).pop(context);
+                                                                },
+                                                              ),
+                                                            );
+                                                          },
+                                                          child: Center(
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                const FaIcon(
+                                                                  FontAwesomeIcons.plus,
+                                                                  color: Color(0xFF222222),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(top: 8.0),
+                                                                  child: Text(
+                                                                    'Add favourite',
+                                                                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                                          fontSize: 14.0,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                )
+                                              : AnimatedSwitcher(
+                                                  duration: const Duration(milliseconds: 250),
+                                                  child: !viewModel.ownedCurrencies!.containsKey(viewModel.favouriteCurrencyIds![index])
+                                                      ? Center(
+                                                          child: CircularProgressIndicator(
+                                                            valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                                                            strokeWidth: 2.0,
+                                                          ),
+                                                        )
+                                                      : InkWell(
+                                                          onTap: () {
+                                                            final id = viewModel.favouriteCurrencyIds![index];
+
+                                                            context.beamToNamed('/currency/$id');
+                                                          },
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      width: 32.0,
+                                                                      height: 32.0,
+                                                                      decoration: BoxDecoration(
+                                                                        image: DecorationImage(image: NetworkImage(viewModel.ownedCurrencies![viewModel.favouriteCurrencyIds![index]]!.imageUrl), fit: BoxFit.contain),
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.only(left: 8.0),
+                                                                      child: Column(
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          LimitedBox(
+                                                                            maxWidth: 70.0,
+                                                                            child: Text(
+                                                                              viewModel.ownedCurrencies![viewModel.favouriteCurrencyIds![index]]!.name,
+                                                                              style: Theme.of(context).textTheme.bodyText1,
+                                                                              maxLines: 1,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                            ),
+                                                                          ),
+                                                                          Text(
+                                                                            viewModel.ownedCurrencies![viewModel.favouriteCurrencyIds![index]]!.symbol.toUpperCase(),
+                                                                            style: const TextStyle(height: 0.9),
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Column(
+                                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Market Price',
+                                                                      style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 12.0),
+                                                                      textAlign: TextAlign.right,
+                                                                    ),
+                                                                    Text(
+                                                                      viewModel.ownedCurrencies![viewModel.favouriteCurrencyIds![index]]!.calculateFormattedFiatPrice(viewModel.fiatCurrencySymbol)!,
+                                                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                                                            fontSize: 18.0,
+                                                                          ),
+                                                                      textAlign: TextAlign.right,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                ),
                                         ),
                                       ),
                                     );
@@ -159,7 +289,7 @@ class HomeScreen extends ConsumerWidget {
                                       width: 16.0,
                                     );
                                   },
-                                  itemCount: 5,
+                                  itemCount: viewModel.favouritesLoading ? 1 : viewModel.favouriteCurrencyIds!.length + 1,
                                 ),
                               ),
                             ],
@@ -349,7 +479,9 @@ class HomeScreen extends ConsumerWidget {
                                     topRight: Radius.circular(40.0),
                                   ),
                                 ),
-                                builder: (context) => const CryptoSelectSheet(),
+                                builder: (context) => CryptoSelectSheet(
+                                  onCryptoCurrencySelected: (currency) => context.beamToNamed('/currency/${currency.id}'),
+                                ),
                               );
                             },
                             child: const Text(
