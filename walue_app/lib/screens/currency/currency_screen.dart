@@ -128,15 +128,34 @@ class CurrencyScreen extends ConsumerWidget {
                               ),
                               Transform.translate(
                                 offset: const Offset(8.0, -8.0),
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () {
-                                    context.beamBack();
-                                  },
-                                  icon: const FaIcon(
-                                    FontAwesomeIcons.arrowLeft,
-                                    color: Color(0xFF222222),
-                                  ),
+                                child: Column(
+                                  children: [
+                                    IconButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () {
+                                        context.beamBack();
+                                      },
+                                      icon: const FaIcon(
+                                        FontAwesomeIcons.arrowLeft,
+                                        color: Color(0xFF222222),
+                                      ),
+                                    ),
+                                    if (!viewModel.loading)
+                                      IconButton(
+                                        padding: EdgeInsets.zero,
+                                        onPressed: () {
+                                          if (viewModel.favouriteCurrencyIds!.contains(id)) {
+                                            viewModel.deleteFromFavourites();
+                                          } else {
+                                            viewModel.addToFavourites();
+                                          }
+                                        },
+                                        icon: FaIcon(
+                                          viewModel.favouriteCurrencyIds!.contains(id) ? FontAwesomeIcons.solidStar : FontAwesomeIcons.star,
+                                          color: viewModel.favouriteCurrencyIds!.contains(id) ? Colors.amber : const Color(0xFF222222),
+                                        ),
+                                      ),
+                                  ],
                                 ),
                               ),
                             ],
