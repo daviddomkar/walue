@@ -48,10 +48,52 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   @override
-  Future<void> addCryptoCurrencyToFavourites(CryptoCurrency currency) async {}
+  Future<void> addCryptoCurrencyToFavourites(CryptoCurrency currency) async {
+    await _firestore.runTransaction((transaction) async {
+      final uuid = read(userStreamProvider).data?.value?.id;
+      final userDocumentReference = _firestore.collection('users').doc(uuid);
+
+      final userDocument = await transaction.get(userDocumentReference);
+
+      final userDocumentData = userDocument.data()!;
+
+      if (userDocumentData.containsKey('favourite_currency_ids')) {
+        transaction.update(userDocumentReference, {
+          'favourite_currency_ids': FieldValue.arrayUnion([currency.id]),
+        });
+      } else {
+        transaction.update(userDocumentReference, {
+          'favourite_currency_ids': [currency.id],
+        });
+      }
+    });
+  }
 
   @override
-  Future<void> deleteCryptoCurrencyFromFavourites(CryptoCurrency currency) async {}
+  Future<void> deleteCryptoCurrencyFromFavourites(CryptoCurrency currency) async {
+    await _firestore.runTransaction((transaction) async {
+      final uuid = read(userStreamProvider).data?.value?.id;
+      final userDocumentReference = _firestore.collection('users').doc(uuid);
+
+      final userDocument = await transaction.get(userDocumentReference);
+
+      final userDocumentData = userDocument.data()!;
+
+      final favouriteCurrencyIds = userDocumentData['favourite_currency_ids'] as List<dynamic>;
+
+      favouriteCurrencyIds.remove(currency.id);
+
+      if (favouriteCurrencyIds.isEmpty) {
+        transaction.update(userDocumentReference, {
+          'favourite_currency_ids': FieldValue.delete(),
+        });
+      } else {
+        transaction.update(userDocumentReference, {
+          'favourite_currency_ids': FieldValue.arrayRemove([currency.id]),
+        });
+      }
+    });
+  }
 
   @override
   Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount) async {
