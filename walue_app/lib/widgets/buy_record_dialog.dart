@@ -36,13 +36,15 @@ class BuyRecordDialog extends StatelessWidget {
           Radius.circular(16.0),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: BuyRecordForm(
-          initialRecord: initialRecord,
-          onAddRecord: onAddRecord,
-          onEditRecord: onEditRecord,
-          onDeleteRecord: onDeleteRecord,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: BuyRecordForm(
+            initialRecord: initialRecord,
+            onAddRecord: onAddRecord,
+            onEditRecord: onEditRecord,
+            onDeleteRecord: onDeleteRecord,
+          ),
         ),
       ),
     );

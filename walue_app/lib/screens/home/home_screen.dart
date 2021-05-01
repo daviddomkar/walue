@@ -105,9 +105,65 @@ class HomeScreen extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(
-                          width: double.infinity,
-                          height: 202.0,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 21.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 4.0, left: 32.0),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.solidStar,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Favourites',
+                                    style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0, color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 128.0 + 16.0,
+                                child: ListView.separated(
+                                  padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                      child: Container(
+                                        width: 128.0,
+                                        height: 128.0,
+                                        clipBehavior: Clip.hardEdge,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(16.0),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              blurRadius: 4.0,
+                                              color: Color(0x32000000),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Material(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return const SizedBox(
+                                      width: 16.0,
+                                    );
+                                  },
+                                  itemCount: 5,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         Expanded(
                           child: Padding(
@@ -162,107 +218,109 @@ class HomeScreen extends ConsumerWidget {
                                                   child: Column(
                                                     children: [
                                                       for (var i = 0; i < viewModel.portfolioRecords!.length; i++) ...[
-                                                        InkWell(
-                                                          onTap: () {
-                                                            context.beamToNamed('/currency/${viewModel.portfolioRecords![i].id}');
-                                                          },
-                                                          child: Container(
-                                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                            height: 64.0,
-                                                            child: Row(
-                                                              children: [
-                                                                Container(
-                                                                  width: 32.0,
-                                                                  height: 32.0,
-                                                                  decoration: BoxDecoration(
-                                                                    image: DecorationImage(image: NetworkImage(viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.imageUrl), fit: BoxFit.contain),
+                                                        if (viewModel.ownedCurrencies!.containsKey(viewModel.portfolioRecords![i].id))
+                                                          InkWell(
+                                                            onTap: () {
+                                                              context.beamToNamed('/currency/${viewModel.portfolioRecords![i].id}');
+                                                            },
+                                                            child: Container(
+                                                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                              height: 64.0,
+                                                              child: Row(
+                                                                children: [
+                                                                  Container(
+                                                                    width: 32.0,
+                                                                    height: 32.0,
+                                                                    decoration: BoxDecoration(
+                                                                      image: DecorationImage(image: NetworkImage(viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.imageUrl), fit: BoxFit.contain),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                Expanded(
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                                    child: Column(
-                                                                      mainAxisSize: MainAxisSize.min,
-                                                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                                      children: [
-                                                                        Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                          children: [
-                                                                            LimitedBox(
-                                                                              maxWidth: 80.0,
-                                                                              child: Text(
-                                                                                viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.name,
-                                                                                style: Theme.of(context).textTheme.bodyText1,
-                                                                                maxLines: 1,
-                                                                                overflow: TextOverflow.ellipsis,
+                                                                  Expanded(
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                                      child: Column(
+                                                                        mainAxisSize: MainAxisSize.min,
+                                                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                                        children: [
+                                                                          Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                            children: [
+                                                                              LimitedBox(
+                                                                                maxWidth: 80.0,
+                                                                                child: Text(
+                                                                                  viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.name,
+                                                                                  style: Theme.of(context).textTheme.bodyText1,
+                                                                                  maxLines: 1,
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                ),
                                                                               ),
-                                                                            ),
-                                                                            LimitedBox(
-                                                                              maxWidth: 80.0,
-                                                                              child: Text(
-                                                                                viewModel.portfolioRecords![i].computeTotalFiatAmount(
-                                                                                  viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.fiatPrice,
-                                                                                  viewModel.fiatCurrencySymbol,
-                                                                                )!,
-                                                                                style: Theme.of(context).textTheme.bodyText1,
+                                                                              LimitedBox(
+                                                                                maxWidth: 80.0,
+                                                                                child: Text(
+                                                                                  viewModel.portfolioRecords![i].computeTotalFiatAmount(
+                                                                                    viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.fiatPrice,
+                                                                                    viewModel.fiatCurrencySymbol,
+                                                                                  )!,
+                                                                                  style: Theme.of(context).textTheme.bodyText1,
+                                                                                  textAlign: TextAlign.right,
+                                                                                  maxLines: 1,
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                            children: [
+                                                                              Text(
+                                                                                viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.symbol.toUpperCase(),
+                                                                              ),
+                                                                              Text(
+                                                                                viewModel.portfolioRecords![i].computeTotalAmount()!,
                                                                                 textAlign: TextAlign.right,
-                                                                                maxLines: 1,
-                                                                                overflow: TextOverflow.ellipsis,
                                                                               ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                          children: [
-                                                                            Text(
-                                                                              viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.symbol.toUpperCase(),
-                                                                            ),
-                                                                            Text(
-                                                                              viewModel.portfolioRecords![i].totalAmount.toString(),
-                                                                              textAlign: TextAlign.right,
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ],
+                                                                            ],
+                                                                          ),
+                                                                        ],
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 90.0,
-                                                                  child: AutoSizeText(
-                                                                    viewModel.portfolioRecords![i].computeIncreasePercentage(
-                                                                      viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.fiatPrice,
-                                                                    )!,
-                                                                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                                                      color: (() {
-                                                                        final profitText = viewModel.portfolioRecords![i].computeIncreasePercentage(
+                                                                  if (viewModel.ownedCurrencies!.containsKey(viewModel.portfolioRecords![i].id))
+                                                                    SizedBox(
+                                                                      width: 90.0,
+                                                                      child: AutoSizeText(
+                                                                        viewModel.portfolioRecords![i].computeIncreasePercentage(
                                                                           viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.fiatPrice,
-                                                                        )!;
+                                                                        )!,
+                                                                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                                          color: (() {
+                                                                            final profitText = viewModel.portfolioRecords![i].computeIncreasePercentage(
+                                                                              viewModel.ownedCurrencies![viewModel.portfolioRecords![i].id]!.fiatPrice,
+                                                                            )!;
 
-                                                                        var color = const Color(0xFF222222);
+                                                                            var color = const Color(0xFF222222);
 
-                                                                        if (profitText.startsWith('+')) {
-                                                                          color = const Color(0xFF54D790);
-                                                                        } else if (profitText.startsWith('-')) {
-                                                                          color = const Color(0xFFD90D00);
-                                                                        }
+                                                                            if (profitText.startsWith('+')) {
+                                                                              color = const Color(0xFF54D790);
+                                                                            } else if (profitText.startsWith('-')) {
+                                                                              color = const Color(0xFFD90D00);
+                                                                            }
 
-                                                                        return color;
-                                                                      })(),
-                                                                    ),
-                                                                    textAlign: TextAlign.right,
-                                                                  ),
-                                                                )
-                                                              ],
+                                                                            return color;
+                                                                          })(),
+                                                                        ),
+                                                                        textAlign: TextAlign.right,
+                                                                      ),
+                                                                    )
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        Divider(
+                                                        const Divider(
                                                           height: 1,
                                                           thickness: 1,
                                                           color: Color(0x20000000),
-                                                        )
+                                                        ),
                                                       ],
                                                     ],
                                                   ),

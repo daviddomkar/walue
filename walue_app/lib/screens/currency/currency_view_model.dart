@@ -54,7 +54,7 @@ class CurrencyViewModel extends ChangeNotifier {
 
   String? get totalFiatAmount => portfolioRecord.data?.value.computeTotalFiatAmount(currency.data?.value.fiatPrice, user.data?.value?.fiatCurrency?.symbol);
 
-  String? get totalAmount => portfolioRecord.data?.value.computeTotalAmount(currency.data?.value.symbol);
+  String? get totalAmount => currency.data?.value.symbol != null ? portfolioRecord.data?.value.computeTotalAmount(currency.data?.value.symbol) : null;
 
   String? get increasePercentage => portfolioRecord.data?.value.computeIncreasePercentage(currency.data?.value.fiatPrice);
 
