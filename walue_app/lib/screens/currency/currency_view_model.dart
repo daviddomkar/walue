@@ -22,6 +22,14 @@ class CurrencyViewModel extends ChangeNotifier {
     required this.portfolioRecord,
   });
 
+  void addToFavourites() {
+    userRepository.addCryptoCurrencyToFavourites(currency.data!.value);
+  }
+
+  void deleteFromFavourites() {
+    userRepository.deleteCryptoCurrencyFromFavourites(currency.data!.value);
+  }
+
   void addBuyRecord(double buyPrice, double amount) {
     userRepository.addCryptoCurrencyBuyRecord(
       currency.data!.value,
@@ -47,6 +55,8 @@ class CurrencyViewModel extends ChangeNotifier {
   }
 
   bool get loading => currency is AsyncLoading || portfolioRecord is AsyncLoading || user is AsyncLoading;
+
+  List<String>? get favouriteCurrencyIds => user.data?.value?.favouriteCurrencyIds;
 
   String? get currencyImageUrl => currency.data?.value.imageUrl;
   String? get currencyName => currency.data?.value.name;

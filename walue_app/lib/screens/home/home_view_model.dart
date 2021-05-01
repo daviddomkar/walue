@@ -22,7 +22,7 @@ class HomeViewModel extends ChangeNotifier {
         _portfolioRecords = portfolioRecords;
 
   void addToFavourites(CryptoCurrency currency) {
-    userRepository.addToFavourites(currency);
+    userRepository.addCryptoCurrencyToFavourites(currency);
   }
 
   bool get favouritesLoading => user is AsyncLoading || _ownedCurrencies is AsyncLoading;

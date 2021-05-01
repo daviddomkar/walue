@@ -13,8 +13,8 @@ final userRepositoryProvider = Provider<UserRepository>((ref) => FirebaseUserRep
 abstract class UserRepository {
   Future<void> chooseFiatCurrency(Currency currency);
   Future<void> changeFiatCurrency(Currency currency);
-  Future<void> addToFavourites(CryptoCurrency currency);
-  Future<void> deleteFromFavourites(CryptoCurrency currency);
+  Future<void> addCryptoCurrencyToFavourites(CryptoCurrency currency);
+  Future<void> deleteCryptoCurrencyFromFavourites(CryptoCurrency currency);
   Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount);
   Future<void> editCryptoCurrencyBuyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount);
   Future<void> deleteCryptoCurrencyBuyRecord(CryptoCurrency currency, String id);
@@ -48,10 +48,10 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   @override
-  Future<void> addToFavourites(CryptoCurrency currency) async {}
+  Future<void> addCryptoCurrencyToFavourites(CryptoCurrency currency) async {}
 
   @override
-  Future<void> deleteFromFavourites(CryptoCurrency currency) async {}
+  Future<void> deleteCryptoCurrencyFromFavourites(CryptoCurrency currency) async {}
 
   @override
   Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount) async {
