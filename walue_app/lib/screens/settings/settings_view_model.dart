@@ -24,7 +24,7 @@ class SettingsViewModel extends ChangeNotifier {
     return authRepository.signOut();
   }
 
-  bool get loading => user is AsyncLoading || user is AsyncError;
+  bool get loading => user is AsyncLoading || user is AsyncError || _fiatCurrencies is AsyncLoading || _fiatCurrencies is AsyncError || user.data?.value == null;
 
   String? get photoUrl => user.data?.value?.photoUrl;
   String? get displayName => user.data?.value?.displayName;

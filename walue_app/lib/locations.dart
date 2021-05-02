@@ -27,30 +27,28 @@ final _rootLocationViewModelProvider = Provider.autoDispose<RootLocationViewMode
 });
 
 class RootLocation extends BeamLocation {
-  final _beamerKey = GlobalKey<BeamerState>();
-
   @override
   List<String> get pathBlueprints => [
-        '/*',
+        '/',
+        '/login',
+        '/choose-fiat-currency',
+        '/settings',
+        '/currency/:currencyId',
       ];
 
   @override
   Widget builder(BuildContext context, Widget navigator) {
     return ProviderListener<RootLocationViewModel>(
       onChange: (context, viewModel) {
-        // final user = viewModel.user;
-/*
+        final user = viewModel.user;
+
         if (user.data != null && user.data!.value == null) {
-          context.currentBeamLocation.update(
-              (state) => state.copyWith(pathBlueprintSegments: ['login']));
-        } else if (user.data != null &&
-            user.data!.value != null &&
-            user.data!.value!.fiatCurrency == null) {
-          context.currentBeamLocation.update((state) =>
-              state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
-        } else {}
-*/
-        context.currentBeamLocation.update();
+          context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
+        } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrency == null) {
+          context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
+        } else {
+          context.currentBeamLocation.update();
+        }
       },
       provider: _rootLocationViewModelProvider,
       child: navigator,
@@ -76,22 +74,22 @@ class RootLocation extends BeamLocation {
               key: const ValueKey('choose-fiat-currency'),
               child: const ChooseFiatCurrencyScreen(),
             ),
-          if (user != null && user.fiatCurrency != null)
+          if (user != null && user.fiatCurrency != null) ...[
             NoTransitionPage(
               key: const ValueKey('home'),
-              child: Beamer(
-                key: _beamerKey,
-                routerDelegate: BeamerRouterDelegate(
-                  locationBuilder: BeamerLocationBuilder(
-                    beamLocations: [
-                      HomeLocation(),
-                      CurrencyLocation(),
-                      SettingsLocation(),
-                    ],
-                  ),
-                ),
-              ),
+              child: const HomeScreen(),
             ),
+            if (state.pathBlueprintSegments.contains('currency'))
+              NoTransitionPage(
+                key: ValueKey('currency-${state.pathParameters['currencyId']!}'),
+                child: CurrencyScreen(id: state.pathParameters['currencyId']!),
+              ),
+            if (state.pathBlueprintSegments.contains('settings'))
+              NoTransitionPage(
+                key: const ValueKey('settings'),
+                child: const SettingsScreen(),
+              ),
+          ]
         ];
       },
       loading: () {
@@ -111,56 +109,5 @@ class RootLocation extends BeamLocation {
         ];
       },
     );
-  }
-}
-
-class HomeLocation extends BeamLocation {
-  @override
-  List<String> get pathBlueprints => [
-        '/',
-      ];
-
-  @override
-  List<BeamPage> pagesBuilder(BuildContext context, BeamState state) {
-    return [
-      NoTransitionPage(
-        key: const ValueKey('home-home'),
-        child: const HomeScreen(),
-      ),
-    ];
-  }
-}
-
-class CurrencyLocation extends BeamLocation {
-  @override
-  List<String> get pathBlueprints => [
-        '/currency/:currencyId',
-      ];
-
-  @override
-  List<BeamPage> pagesBuilder(BuildContext context, BeamState state) {
-    return [
-      NoTransitionPage(
-        key: ValueKey('home-currency-${state.pathParameters['currencyId']!}'),
-        child: CurrencyScreen(id: state.pathParameters['currencyId']!),
-      ),
-    ];
-  }
-}
-
-class SettingsLocation extends BeamLocation {
-  @override
-  List<String> get pathBlueprints => [
-        '/settings',
-      ];
-
-  @override
-  List<BeamPage> pagesBuilder(BuildContext context, BeamState state) {
-    return [
-      NoTransitionPage(
-        key: const ValueKey('home-settings'),
-        child: const SettingsScreen(),
-      ),
-    ];
   }
 }

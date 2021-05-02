@@ -56,5 +56,5 @@ final portfolioRecordsStreamProvider = StreamProvider.autoDispose<List<Portfolio
         totalAmount: (data['total_amount'] as num).toDouble(),
       );
     }));
-  });
+  }).handleError((e, _) => {});
 });

@@ -17,5 +17,5 @@ final fiatCurrenciesStreamProvider = StreamProvider<Map<String, Currency>>((ref)
     }
 
     throw 'Fiat currency data are not available!';
-  });
+  }).handleError((e, _) => {});
 });
