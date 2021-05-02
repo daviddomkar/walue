@@ -25,8 +25,8 @@ class HomeViewModel extends ChangeNotifier {
     userRepository.addCryptoCurrencyToFavourites(currency);
   }
 
-  bool get favouritesLoading => user is AsyncLoading || _ownedCurrencies is AsyncLoading;
-  bool get portfolioRecordsLoading => _portfolioRecords is AsyncLoading || _ownedCurrencies is AsyncLoading;
+  bool get favouritesLoading => user is AsyncLoading || user is AsyncError || _ownedCurrencies is AsyncLoading || _ownedCurrencies is AsyncError;
+  bool get portfolioRecordsLoading => user is AsyncLoading || user is AsyncError || _portfolioRecords is AsyncLoading || _portfolioRecords is AsyncError || _ownedCurrencies is AsyncLoading || _ownedCurrencies is AsyncError;
 
   String? get fiatCurrencySymbol => user.data?.value?.fiatCurrency?.symbol;
 

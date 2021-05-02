@@ -124,7 +124,7 @@ class HomeLocation extends BeamLocation {
   List<BeamPage> pagesBuilder(BuildContext context, BeamState state) {
     return [
       NoTransitionPage(
-        key: const ValueKey('home'),
+        key: const ValueKey('home-home'),
         child: const HomeScreen(),
       ),
     ];
@@ -141,7 +141,7 @@ class CurrencyLocation extends BeamLocation {
   List<BeamPage> pagesBuilder(BuildContext context, BeamState state) {
     return [
       NoTransitionPage(
-        key: ValueKey('currency-${state.pathParameters['currencyId']!}'),
+        key: ValueKey('home-currency-${state.pathParameters['currencyId']!}'),
         child: CurrencyScreen(id: state.pathParameters['currencyId']!),
       ),
     ];
@@ -158,7 +158,7 @@ class SettingsLocation extends BeamLocation {
   List<BeamPage> pagesBuilder(BuildContext context, BeamState state) {
     return [
       NoTransitionPage(
-        key: const ValueKey('settings'),
+        key: const ValueKey('home-settings'),
         child: const SettingsScreen(),
       ),
     ];

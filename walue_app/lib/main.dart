@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'locations.dart';
 import 'repositories/crypto_repository.dart';
 import 'repositories/fiat_repository.dart';
+import 'utils/no_glow_scroll_behavior.dart';
 
 /*
 class Logger extends ProviderObserver {
@@ -79,6 +80,12 @@ class WalueApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: NoGlowScrollBehavior(),
+          child: child!,
+        );
+      },
       debugShowCheckedModeBanner: false,
       routeInformationParser: BeamerRouteInformationParser(),
       routerDelegate: routerDelegate,
