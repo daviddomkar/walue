@@ -20,9 +20,11 @@ class SettingsViewModel extends ChangeNotifier {
     required AsyncValue<Map<String, Currency>?> fiatCurrencies,
   }) : _fiatCurrencies = fiatCurrencies;
 
-  Future<void> signOut() {
-    return authRepository.signOut();
+  void signOut() {
+    authRepository.signOut();
   }
+
+  void deleteAccount() {}
 
   bool get loading => user is AsyncLoading || user is AsyncError || _fiatCurrencies is AsyncLoading || _fiatCurrencies is AsyncError || user.data?.value == null;
 
