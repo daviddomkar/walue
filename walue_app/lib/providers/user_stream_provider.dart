@@ -20,6 +20,7 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
               id: user.uid,
               email: user.email!,
               displayName: user.displayName!,
+              photoUrl: user.photoURL!,
               fiatCurrency: Currency(
                 symbol: data['fiat_currency']['symbol'] as String,
                 name: data['fiat_currency']['name'] as String,
@@ -32,21 +33,7 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
             id: user.uid,
             email: user.email!,
             displayName: user.displayName!,
+            photoUrl: user.photoURL!,
           );
         }));
-});
-
-final uuidStreamProvider = Provider.autoDispose<String?>((ref) {
-  final user = ref.watch(userStreamProvider);
-  return user.data?.value?.id;
-});
-
-final fiatCurrencyStreamProvider = Provider.autoDispose<Currency?>((ref) {
-  final user = ref.watch(userStreamProvider);
-  return user.data?.value?.fiatCurrency;
-});
-
-final favouriteCurrencyIdsStreamProvider = Provider.autoDispose<List<String>?>((ref) {
-  final user = ref.watch(userStreamProvider);
-  return user.data?.value?.favouriteCurrencyIds;
 });
