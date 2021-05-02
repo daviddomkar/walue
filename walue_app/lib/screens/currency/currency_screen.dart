@@ -13,6 +13,7 @@ import 'currency_view_model.dart';
 final currencyViewModelProvider = ChangeNotifierProvider.autoDispose.family<CurrencyViewModel, String>((ref, id) {
   final userRepository = ref.watch(userRepositoryProvider);
   final user = ref.watch(userStreamProvider);
+  final fiatCurrencies = ref.watch(fiatCurrenciesStreamProvider);
   final currency = ref.watch(cryptoCurrencyStreamProvider(id));
   final portfolioRecord = ref.watch(portfolioRecordStreamProvider(id));
 
@@ -21,6 +22,7 @@ final currencyViewModelProvider = ChangeNotifierProvider.autoDispose.family<Curr
     user: user,
     currency: currency,
     portfolioRecord: portfolioRecord,
+    fiatCurrencies: fiatCurrencies,
   );
 });
 
@@ -348,8 +350,10 @@ class CurrencyScreen extends ConsumerWidget {
                               showDialog(
                                 context: context,
                                 builder: (_) => BuyRecordDialog(
-                                  onAddRecord: (buyPrice, amount) {
-                                    viewModel.addBuyRecord(buyPrice, amount);
+                                  fiatCurrencies: viewModel.fiatCurrencies,
+                                  selectedCurrency: viewModel.fiatCurrency,
+                                  onAddRecord: (buyPrice, amount, currency) {
+                                    viewModel.addBuyRecord(buyPrice, amount, currency);
                                     Navigator.of(context, rootNavigator: true).pop(context);
                                   },
                                 ),

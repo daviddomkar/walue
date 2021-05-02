@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/buy_record.dart';
+import '../models/currency.dart';
 import '../utils/currency_input_formatter.dart';
 import 'basic_button.dart';
 import 'gradient_button.dart';
@@ -9,10 +10,13 @@ import 'w_text_form_field.dart';
 
 class BuyRecordForm extends StatefulWidget {
   final BuyRecord? initialRecord;
+  final Map<String, Currency>? fiatCurrencies;
+  final Currency? selectedCurrency;
 
   final void Function(
     double buyPrice,
     double amount,
+    Currency currency,
   )? onAddRecord;
 
   final void Function(
@@ -26,6 +30,8 @@ class BuyRecordForm extends StatefulWidget {
   const BuyRecordForm({
     Key? key,
     this.initialRecord,
+    this.fiatCurrencies,
+    this.selectedCurrency,
     this.onAddRecord,
     this.onEditRecord,
     this.onDeleteRecord,
@@ -41,6 +47,17 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
   var _buyPrice = '';
   var _amount = '';
 
+  late Currency _currency;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.selectedCurrency != null) {
+      _currency = widget.selectedCurrency!;
+    }
+  }
+
   void addRecord() {
     if (_formKey.currentState == null) {
       return;
@@ -50,6 +67,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
       widget.onAddRecord!(
         double.parse(_buyPrice.replaceAll(',', '')),
         double.parse(_amount.replaceAll(',', '')),
+        _currency,
       );
     }
   }
@@ -59,9 +77,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
       return;
     }
 
-    if (widget.onEditRecord != null &&
-        widget.initialRecord != null &&
-        _formKey.currentState!.validate()) {
+    if (widget.onEditRecord != null && widget.initialRecord != null && _formKey.currentState!.validate()) {
       widget.onEditRecord!(
         widget.initialRecord!.id,
         double.tryParse(_buyPrice.replaceAll(',', '')),
@@ -88,9 +104,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
             child: Text(
-              widget.initialRecord != null
-                  ? 'Edit buy record'
-                  : 'Add new buy record',
+              widget.initialRecord != null ? 'Edit buy record' : 'Add new buy record',
               style: Theme.of(context).textTheme.headline6,
               textAlign: TextAlign.center,
             ),
@@ -98,8 +112,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: WTextFormField(
-              initialValue: CurrencyInputFormatter.valueToString(
-                  widget.initialRecord?.buyPrice),
+              initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.buyPrice),
               autofocus: widget.initialRecord == null,
               hintText: 'Buy price',
               keyboardType: TextInputType.number,
@@ -125,8 +138,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: WTextFormField(
-              initialValue: CurrencyInputFormatter.valueToString(
-                  widget.initialRecord?.amount),
+              initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.amount),
               hintText: 'Amount',
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
@@ -156,6 +168,46 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
               },
             ),
           ),
+          if (widget.fiatCurrencies != null && widget.selectedCurrency != null && widget.onAddRecord != null && widget.initialRecord == null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0, left: 4.0, right: 4.0),
+              child: DropdownButtonFormField<String>(
+                isExpanded: true,
+                value: _currency.symbol,
+                style: TextStyle(
+                  color: const Color(0xFF222222),
+                  fontSize: 18.0,
+                  fontFamily: Theme.of(context).textTheme.bodyText1!.fontFamily,
+                ),
+                decoration: const InputDecoration(
+                  isDense: true,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                ),
+                iconDisabledColor: const Color(0xFF222222),
+                iconEnabledColor: const Color(0xFF222222),
+                onChanged: (String? newValue) {
+                  _currency = widget.fiatCurrencies![newValue]!;
+                },
+                items: widget.fiatCurrencies!.keys.map((symbol) {
+                  return DropdownMenuItem<String>(
+                    value: symbol,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(widget.fiatCurrencies![symbol]!.name),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Text(widget.fiatCurrencies![symbol]!.symbol.toUpperCase()),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
           if (widget.initialRecord == null)
             GradientButton(
               onPressed: addRecord,

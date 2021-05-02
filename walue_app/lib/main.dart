@@ -12,6 +12,18 @@ import 'locations.dart';
 import 'repositories/crypto_repository.dart';
 import 'repositories/fiat_repository.dart';
 
+/*
+class Logger extends ProviderObserver {
+  @override
+  void didUpdateProvider(ProviderBase provider, Object? newValue) {
+    print('''
+{
+  "provider": "${provider.name ?? provider.runtimeType}",
+  "newValue": "$newValue"
+}''');
+  }
+}
+*/
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -33,6 +45,7 @@ Future<void> main() async {
         cryptoRepositoryProvider.overrideWithValue(CoinGeckoCryptoRepository(cacheStore: cacheStore)),
         fiatRepositoryProvider.overrideWithValue(ExchangeRateHostFiatRepository(cacheStore: cacheStore)),
       ],
+      // observers: [Logger()],
       child: WalueApp(),
     ),
   );

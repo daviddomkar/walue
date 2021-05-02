@@ -35,3 +35,18 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
           );
         }));
 });
+
+final uuidStreamProvider = Provider.autoDispose<String?>((ref) {
+  final user = ref.watch(userStreamProvider);
+  return user.data?.value?.id;
+});
+
+final fiatCurrencyStreamProvider = Provider.autoDispose<Currency?>((ref) {
+  final user = ref.watch(userStreamProvider);
+  return user.data?.value?.fiatCurrency;
+});
+
+final favouriteCurrencyIdsStreamProvider = Provider.autoDispose<List<String>?>((ref) {
+  final user = ref.watch(userStreamProvider);
+  return user.data?.value?.favouriteCurrencyIds;
+});

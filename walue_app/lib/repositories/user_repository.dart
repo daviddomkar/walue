@@ -15,7 +15,7 @@ abstract class UserRepository {
   Future<void> changeFiatCurrency(Currency currency);
   Future<void> addCryptoCurrencyToFavourites(CryptoCurrency currency);
   Future<void> deleteCryptoCurrencyFromFavourites(CryptoCurrency currency);
-  Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount);
+  Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount, Currency fiatCurrency);
   Future<void> editCryptoCurrencyBuyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount);
   Future<void> deleteCryptoCurrencyBuyRecord(CryptoCurrency currency, String id);
 }
@@ -96,11 +96,10 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   @override
-  Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount) async {
+  Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount, Currency fiatCurrency) async {
     await _firestore.runTransaction((transaction) async {
       final uuid = read(userStreamProvider).data?.value?.id;
-      final fiatCurrency = read(userStreamProvider).data?.value?.fiatCurrency;
-      final symbol = fiatCurrency?.symbol;
+      final symbol = fiatCurrency.symbol;
 
       final currencyDocumentReference = _firestore.collection('users').doc(uuid).collection('portfolio').doc(currency.id);
       final currencyRecordDocumentReference = _firestore.collection('users').doc(uuid).collection('portfolio').doc(currency.id).collection('buy_records').doc();
@@ -163,7 +162,7 @@ class FirebaseUserRepository extends UserRepository {
         'amount': amount,
         'timestamp': FieldValue.serverTimestamp(),
         'fiat_currency': {
-          'name': fiatCurrency?.name,
+          'name': fiatCurrency.name,
           'symbol': symbol,
         },
       });

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/currency.dart';
 
-final fiatCurrenciesStreamProvider = StreamProvider.autoDispose<Map<String, Currency>>((ref) {
+final fiatCurrenciesStreamProvider = StreamProvider<Map<String, Currency>>((ref) {
   final _firestore = FirebaseFirestore.instance;
 
   return _firestore.collection('system').doc('fiat').snapshots().map((snapshot) {
