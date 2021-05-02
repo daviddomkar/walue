@@ -95,7 +95,7 @@ class HomeScreen extends ConsumerWidget {
                                 child: IconButton(
                                   padding: EdgeInsets.zero,
                                   onPressed: () {
-                                    context.beamToNamed('/settings');
+                                    context.beamToNamed('/settings', popToNamed: '/');
                                   },
                                   icon: const FaIcon(
                                     FontAwesomeIcons.userCog,
@@ -219,7 +219,7 @@ class HomeScreen extends ConsumerWidget {
                                                           onTap: () {
                                                             final id = viewModel.favouriteCurrencyIds![index];
 
-                                                            context.beamToNamed('/currency/$id');
+                                                            context.beamToNamed('/currency/$id', popToNamed: '/');
                                                           },
                                                           child: Padding(
                                                             padding: const EdgeInsets.all(8.0),
@@ -352,7 +352,7 @@ class HomeScreen extends ConsumerWidget {
                                                         if (viewModel.ownedCurrencies!.containsKey(viewModel.portfolioRecords![i].id))
                                                           InkWell(
                                                             onTap: () {
-                                                              context.beamToNamed('/currency/${viewModel.portfolioRecords![i].id}');
+                                                              context.beamToNamed('/currency/${viewModel.portfolioRecords![i].id}', popToNamed: '/');
                                                             },
                                                             child: Container(
                                                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -481,7 +481,10 @@ class HomeScreen extends ConsumerWidget {
                                   ),
                                 ),
                                 builder: (context) => CryptoSelectSheet(
-                                  onCryptoCurrencySelected: (currency) => context.beamToNamed('/currency/${currency.id}'),
+                                  onCryptoCurrencySelected: (currency) {
+                                    Navigator.of(context).pop(context);
+                                    context.beamToNamed('/currency/${currency.id}', popToNamed: '/');
+                                  },
                                 ),
                               );
                             },

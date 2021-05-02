@@ -135,7 +135,7 @@ class CurrencyScreen extends ConsumerWidget {
                                     IconButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
-                                        context.beamBack();
+                                        context.beamToNamed('/', replaceCurrent: true);
                                       },
                                       icon: const FaIcon(
                                         FontAwesomeIcons.arrowLeft,

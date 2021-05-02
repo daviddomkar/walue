@@ -68,7 +68,7 @@ class SettingsScreen extends ConsumerWidget {
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               onPressed: () {
-                                context.beamBack();
+                                context.beamToNamed('/', replaceCurrent: true);
                               },
                               icon: const FaIcon(
                                 FontAwesomeIcons.arrowLeft,
@@ -152,7 +152,6 @@ class SettingsScreen extends ConsumerWidget {
                                     IconButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
-                                        context.beamBack();
                                         viewModel.signOut();
                                       },
                                       icon: const FaIcon(

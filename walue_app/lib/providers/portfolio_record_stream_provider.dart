@@ -75,5 +75,5 @@ final portfolioRecordStreamProvider = StreamProvider.autoDispose.family<Portfoli
     }
 
     return PortfolioRecord(id: id, buyRecords: buyRecords);
-  });
+  }).handleError((e, _) => {});
 });

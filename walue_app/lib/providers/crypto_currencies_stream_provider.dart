@@ -21,5 +21,5 @@ final cryptoCurrenciesStreamProvider = StreamProvider.autoDispose<List<CryptoCur
     }
 
     throw 'Crypto currency data are not available!';
-  });
+  }).handleError((e, _) => {});
 });
