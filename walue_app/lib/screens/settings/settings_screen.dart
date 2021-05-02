@@ -189,62 +189,24 @@ class SettingsScreen extends ConsumerWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Container(
-                                padding: const EdgeInsets.all(16.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
+                                clipBehavior: Clip.hardEdge,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(
                                     Radius.circular(16.0),
                                   ),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Theme.of(context).primaryColor,
-                                      Theme.of(context).accentColor,
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 4.0,
+                                      color: Color(0x32000000),
+                                    ),
+                                  ],
                                 ),
-                                child: Row(
+                                child: Column(
                                   children: [
-                                    Container(
-                                      width: 48.0,
-                                      height: 48.0,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(image: NetworkImage(viewModel.photoUrl!), fit: BoxFit.contain),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 16.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              viewModel.displayName!,
-                                              style: Theme.of(context).textTheme.headline4!.copyWith(
-                                                    fontSize: 18.0,
-                                                    color: Colors.white,
-                                                  ),
-                                            ),
-                                            Text(
-                                              viewModel.email!,
-                                              style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                                    color: Colors.white,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () {
-                                        viewModel.signOut();
-                                      },
-                                      icon: const FaIcon(
-                                        FontAwesomeIcons.signOutAlt,
-                                        color: Colors.white,
-                                      ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 64.0,
                                     ),
                                   ],
                                 ),
@@ -275,71 +237,41 @@ class SettingsScreen extends ConsumerWidget {
                               ),
                             ],
                           ),
-                          if (!viewModel.loading)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Container(
-                                padding: const EdgeInsets.all(16.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(16.0),
-                                  ),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Theme.of(context).primaryColor,
-                                      Theme.of(context).accentColor,
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Container(
+                              height: 48.0,
+                              clipBehavior: Clip.hardEdge,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(16.0),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 48.0,
-                                      height: 48.0,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(image: NetworkImage(viewModel.photoUrl!), fit: BoxFit.contain),
-                                      ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 4.0,
+                                    color: Color(0x32000000),
+                                  ),
+                                ],
+                              ),
+                              child: Material(
+                                color: Colors.white,
+                                child: InkWell(
+                                  onTap: () {
+                                    viewModel.deleteAccount();
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      'Delete account',
+                                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                            color: const Color(0xFFD90D00),
+                                          ),
                                     ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 16.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              viewModel.displayName!,
-                                              style: Theme.of(context).textTheme.headline4!.copyWith(
-                                                    fontSize: 18.0,
-                                                    color: Colors.white,
-                                                  ),
-                                            ),
-                                            Text(
-                                              viewModel.email!,
-                                              style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                                    color: Colors.white,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () {
-                                        viewModel.signOut();
-                                      },
-                                      icon: const FaIcon(
-                                        FontAwesomeIcons.signOutAlt,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),
+                          ),
                         ],
                       ),
                     ),
