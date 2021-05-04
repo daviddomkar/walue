@@ -82,7 +82,14 @@ class RootLocation extends BeamLocation {
             if (state.pathBlueprintSegments.contains('currency'))
               NoTransitionPage(
                 key: ValueKey('currency-${state.pathParameters['currencyId']!}'),
-                child: CurrencyScreen(id: state.pathParameters['currencyId']!),
+                child: CurrencyScreen(
+                  id: state.pathParameters['currencyId']!,
+                  currencyImageUrl: state.data['currencyImageUrl'] != null ? state.data['currencyImageUrl'] as String : null,
+                  currencyName: state.data['currencyName'] != null ? state.data['currencyName'] as String : null,
+                  totalFiatAmount: state.data['totalFiatAmount'] != null ? state.data['totalFiatAmount'] as String : null,
+                  totalAmount: state.data['totalAmount'] != null ? state.data['totalAmount'] as String : null,
+                  increasePercentage: state.data['increasePercentage'] != null ? state.data['increasePercentage'] as String : null,
+                ),
               ),
             if (state.pathBlueprintSegments.contains('settings'))
               NoTransitionPage(

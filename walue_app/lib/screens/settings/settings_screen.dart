@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:walue_app/models/currency.dart';
+import 'package:walue_app/widgets/fiat_currencies_dialog.dart';
 
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
@@ -204,9 +206,28 @@ class SettingsScreen extends ConsumerWidget {
                                 ),
                                 child: Column(
                                   children: [
-                                    SizedBox(
-                                      width: double.infinity,
-                                      height: 64.0,
+                                    PreferenceItem(
+                                      title: 'Fiat currency',
+                                      subtitle: 'Currency in which your stats are displayed',
+                                      value: viewModel.fiatCurrency!.symbol.toUpperCase(),
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) => FiatCurrenciesDialog(
+                                            currencies: viewModel.fiatCurrencies!.values.where((currency) => currency.symbol != viewModel.fiatCurrency!.symbol).toList(),
+                                            onCurrencySelected: (currency) {
+                                              viewModel.changeFiatCurrency(currency);
+                                              Navigator.of(context, rootNavigator: true).pop(context);
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    PreferenceItem(
+                                      title: 'Theme',
+                                      subtitle: 'visual style of the app',
+                                      value: 'System',
+                                      onTap: () {},
                                     ),
                                   ],
                                 ),
@@ -281,6 +302,64 @@ class SettingsScreen extends ConsumerWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class PreferenceItem extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final String value;
+
+  final void Function() onTap;
+
+  const PreferenceItem({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Material(
+        color: Colors.white,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            fontSize: 12.0,
+                            color: const Color(0x80222222),
+                          ),
+                    ),
+                  ],
+                ),
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

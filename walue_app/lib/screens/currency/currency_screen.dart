@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,7 +30,21 @@ final currencyViewModelProvider = ChangeNotifierProvider.autoDispose.family<Curr
 class CurrencyScreen extends ConsumerWidget {
   final String id;
 
-  const CurrencyScreen({Key? key, required this.id}) : super(key: key);
+  final String? currencyImageUrl;
+  final String? currencyName;
+  final String? totalFiatAmount;
+  final String? totalAmount;
+  final String? increasePercentage;
+
+  const CurrencyScreen({
+    Key? key,
+    required this.id,
+    this.currencyImageUrl,
+    this.currencyName,
+    this.totalFiatAmount,
+    this.totalAmount,
+    this.increasePercentage,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
@@ -91,7 +106,7 @@ class CurrencyScreen extends ConsumerWidget {
                                           width: 24.0,
                                           height: 24.0,
                                           decoration: BoxDecoration(
-                                            image: viewModel.currencyImageUrl != null ? DecorationImage(image: NetworkImage(viewModel.currencyImageUrl!), fit: BoxFit.contain) : null,
+                                            image: viewModel.currencyImageUrl != null || currencyImageUrl != null ? DecorationImage(image: NetworkImage(viewModel.currencyImageUrl ?? currencyImageUrl!), fit: BoxFit.contain) : null,
                                           ),
                                         ),
                                         Padding(
@@ -99,7 +114,7 @@ class CurrencyScreen extends ConsumerWidget {
                                           child: LimitedBox(
                                             maxWidth: 200.0,
                                             child: Text(
-                                              viewModel.currencyName ?? '',
+                                              viewModel.currencyName ?? currencyName ?? '',
                                               style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color(0xCCFFFFFF)),
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -111,19 +126,24 @@ class CurrencyScreen extends ConsumerWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 12.0),
                                     child: Text(
-                                      viewModel.totalFiatAmount ?? '',
+                                      viewModel.totalFiatAmount ?? (viewModel.buyRecords == null || viewModel.buyRecords!.isEmpty ? null : totalFiatAmount) ?? '',
                                       style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white),
                                     ),
                                   ),
                                   Text(
-                                    viewModel.totalAmount ?? '',
+                                    viewModel.totalAmount ?? (viewModel.buyRecords == null || viewModel.buyRecords!.isEmpty ? null : totalAmount) ?? '',
                                     style: Theme.of(context).textTheme.subtitle2!.copyWith(color: Colors.white),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 12.0, bottom: 96.0),
-                                    child: Text(
-                                      viewModel.increasePercentage ?? '',
-                                      style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white),
+                                    padding: const EdgeInsets.only(top: 12.0, bottom: 90.0),
+                                    child: SizedBox(
+                                      width: 200.0,
+                                      height: 48.0,
+                                      child: AutoSizeText(
+                                        viewModel.increasePercentage ?? (viewModel.buyRecords == null || viewModel.buyRecords!.isEmpty ? null : increasePercentage) ?? '',
+                                        style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white),
+                                        maxLines: 1,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -209,79 +229,25 @@ class CurrencyScreen extends ConsumerWidget {
                                                   strokeWidth: 2.0,
                                                 ),
                                               )
-                                            : Container(
-                                                constraints: const BoxConstraints.expand(),
-                                                child: Material(
-                                                  color: Colors.white,
-                                                  child: Column(
-                                                    children: [
-                                                      Container(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                        height: 56.0,
-                                                        child: Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 120.0,
-                                                              child: Text(
-                                                                'Buy price',
-                                                                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                                                      fontSize: 14.0,
-                                                                    ),
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Text(
-                                                                'Amount',
-                                                                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                                                      color: const Color(0x80222222),
-                                                                    ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 90.0,
-                                                              child: Text(
-                                                                'Profit',
-                                                                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                                                      fontSize: 14.0,
-                                                                    ),
-                                                                textAlign: TextAlign.right,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const Divider(
-                                                        height: 1,
-                                                        thickness: 1,
-                                                        color: Color(0x20000000),
-                                                      ),
-                                                      for (var i = 0; i < viewModel.buyRecords!.length; i++) ...[
-                                                        InkWell(
-                                                          onTap: () {
-                                                            showDialog(
-                                                              context: context,
-                                                              builder: (_) => BuyRecordDialog(
-                                                                initialRecord: viewModel.buyRecords![i],
-                                                                onEditRecord: (id, buyPrice, amount) {
-                                                                  viewModel.editBuyRecord(id, buyPrice, amount);
-                                                                  Navigator.of(context, rootNavigator: true).pop(context);
-                                                                },
-                                                                onDeleteRecord: (id) {
-                                                                  viewModel.deleteBuyRecord(id);
-                                                                  Navigator.of(context, rootNavigator: true).pop(context);
-                                                                },
-                                                              ),
-                                                            );
-                                                          },
-                                                          child: Container(
+                                            : viewModel.buyRecords!.isEmpty
+                                                ? Center(
+                                                    child: Text('No buy records found'),
+                                                  )
+                                                : Container(
+                                                    constraints: const BoxConstraints.expand(),
+                                                    child: Material(
+                                                      color: Colors.white,
+                                                      child: Column(
+                                                        children: [
+                                                          Container(
                                                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                            height: 48.0,
+                                                            height: 56.0,
                                                             child: Row(
                                                               children: [
                                                                 SizedBox(
                                                                   width: 120.0,
                                                                   child: Text(
-                                                                    viewModel.buyRecords![i].formattedBuyPrice,
+                                                                    'Buy price',
                                                                     style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                                                           fontSize: 14.0,
                                                                         ),
@@ -289,7 +255,7 @@ class CurrencyScreen extends ConsumerWidget {
                                                                 ),
                                                                 Expanded(
                                                                   child: Text(
-                                                                    viewModel.buyRecords![i].formattedAmount,
+                                                                    'Amount',
                                                                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                                                           color: const Color(0x80222222),
                                                                         ),
@@ -297,44 +263,102 @@ class CurrencyScreen extends ConsumerWidget {
                                                                 ),
                                                                 SizedBox(
                                                                   width: 90.0,
-                                                                  child: (() {
-                                                                    final record = viewModel.buyRecords![i];
-
-                                                                    final profit = record.calculateProfit(viewModel.currency.data!.value.additionalFiatPrices![record.fiatCurrency.symbol]!);
-                                                                    final profitText = record.calculateformattedProfit(viewModel.currency.data!.value.additionalFiatPrices![record.fiatCurrency.symbol]!);
-
-                                                                    var color = const Color(0xFF222222);
-
-                                                                    if (profit > 0) {
-                                                                      color = const Color(0xFF54D790);
-                                                                    } else if (profit < 0) {
-                                                                      color = const Color(0xFFD90D00);
-                                                                    }
-
-                                                                    return Text(
-                                                                      profitText,
-                                                                      textAlign: TextAlign.right,
-                                                                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                                                            color: color,
-                                                                          ),
-                                                                      maxLines: 1,
-                                                                    );
-                                                                  })(),
+                                                                  child: Text(
+                                                                    'Profit',
+                                                                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                                          fontSize: 14.0,
+                                                                        ),
+                                                                    textAlign: TextAlign.right,
+                                                                  ),
                                                                 ),
                                                               ],
                                                             ),
                                                           ),
-                                                        ),
-                                                        const Divider(
-                                                          height: 1,
-                                                          thickness: 1,
-                                                          color: Color(0x20000000),
-                                                        ),
-                                                      ],
-                                                    ],
+                                                          const Divider(
+                                                            height: 1,
+                                                            thickness: 1,
+                                                            color: Color(0x20000000),
+                                                          ),
+                                                          for (var i = 0; i < viewModel.buyRecords!.length; i++) ...[
+                                                            InkWell(
+                                                              onTap: () {
+                                                                showDialog(
+                                                                  context: context,
+                                                                  builder: (_) => BuyRecordDialog(
+                                                                    initialRecord: viewModel.buyRecords![i],
+                                                                    onEditRecord: (id, buyPrice, amount) {
+                                                                      viewModel.editBuyRecord(id, buyPrice, amount);
+                                                                      Navigator.of(context, rootNavigator: true).pop(context);
+                                                                    },
+                                                                    onDeleteRecord: (id) {
+                                                                      viewModel.deleteBuyRecord(id);
+                                                                      Navigator.of(context, rootNavigator: true).pop(context);
+                                                                    },
+                                                                  ),
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                                height: 48.0,
+                                                                child: Row(
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width: 120.0,
+                                                                      child: Text(
+                                                                        viewModel.buyRecords![i].formattedBuyPrice,
+                                                                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                                              fontSize: 14.0,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        viewModel.buyRecords![i].formattedAmount,
+                                                                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                                                              color: const Color(0x80222222),
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 90.0,
+                                                                      child: (() {
+                                                                        final record = viewModel.buyRecords![i];
+
+                                                                        final profit = record.calculateProfit(viewModel.currency.data!.value.additionalFiatPrices![record.fiatCurrency.symbol]!);
+                                                                        final profitText = record.calculateformattedProfit(viewModel.currency.data!.value.additionalFiatPrices![record.fiatCurrency.symbol]!);
+
+                                                                        var color = const Color(0xFF222222);
+
+                                                                        if (profit > 0) {
+                                                                          color = const Color(0xFF54D790);
+                                                                        } else if (profit < 0) {
+                                                                          color = const Color(0xFFD90D00);
+                                                                        }
+
+                                                                        return Text(
+                                                                          profitText,
+                                                                          textAlign: TextAlign.right,
+                                                                          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                                                                color: color,
+                                                                              ),
+                                                                          maxLines: 1,
+                                                                        );
+                                                                      })(),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            const Divider(
+                                                              height: 1,
+                                                              thickness: 1,
+                                                              color: Color(0x20000000),
+                                                            ),
+                                                          ],
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
                                       ),
                                     ),
                                   ),
