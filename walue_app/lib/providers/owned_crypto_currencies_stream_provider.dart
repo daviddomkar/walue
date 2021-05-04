@@ -6,16 +6,20 @@ import '../models/crypto_currency.dart';
 import '../providers.dart';
 import '../repositories/crypto_repository.dart';
 
-final ownedCryptoCurrenciesStreamProvider = StreamProvider.autoDispose<Map<String, CryptoCurrency>>((ref) {
+final ownedCryptoCurrenciesStreamProvider = StreamProvider.autoDispose<Map<String, CryptoCurrency>?>((ref) {
   final cryptoRepository = ref.watch(cryptoRepositoryProvider);
 
   final user = ref.watch(userStreamProvider);
 
   final portfolioRecords = ref.watch(portfolioRecordsStreamProvider);
 
-  final favouriteCurrencyIds = user.data?.value?.favouriteCurrencyIds ?? [];
+  final favouriteCurrencyIds = user.data?.value?.favouriteCurrencyIds;
 
-  final cryptoCurrencyIds = portfolioRecords.data?.value.map((record) => record.id) ?? [];
+  final cryptoCurrencyIds = portfolioRecords.data?.value?.map((record) => record.id);
+
+  if (favouriteCurrencyIds == null || cryptoCurrencyIds == null) {
+    return Stream.value(null);
+  }
 
   final currencyIds = quiver.concat([favouriteCurrencyIds, cryptoCurrencyIds]).toSet().toList();
 

@@ -10,35 +10,32 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
 
-  return _auth
-      .authStateChanges()
-      .switchMap((user) => user == null
-          ? Stream.value(null)
-          : _firestore.collection('users').doc(user.uid).snapshots().map((snapshot) {
-              if (snapshot.exists) {
-                final data = snapshot.data()!;
+  return _auth.authStateChanges().switchMap((user) => user == null
+      ? Stream.value(null)
+      : _firestore.collection('users').doc(user.uid).snapshots().map((snapshot) {
+          if (snapshot.exists) {
+            final data = snapshot.data()!;
 
-                return User(
-                  id: user.uid,
-                  email: user.email!,
-                  displayName: user.displayName!,
-                  photoUrl: user.photoURL!,
-                  fiatCurrency: data.containsKey('fiat_currency')
-                      ? Currency(
-                          symbol: data['fiat_currency']['symbol'] as String,
-                          name: data['fiat_currency']['name'] as String,
-                        )
-                      : null,
-                  favouriteCurrencyIds: (data['favourite_currency_ids'] as List<dynamic>?)?.cast<String>() ?? [],
-                );
-              }
+            return User(
+              id: user.uid,
+              email: user.email!,
+              displayName: user.displayName!,
+              photoUrl: user.photoURL!,
+              fiatCurrency: data.containsKey('fiat_currency')
+                  ? Currency(
+                      symbol: data['fiat_currency']['symbol'] as String,
+                      name: data['fiat_currency']['name'] as String,
+                    )
+                  : null,
+              favouriteCurrencyIds: (data['favourite_currency_ids'] as List<dynamic>?)?.cast<String>() ?? [],
+            );
+          }
 
-              return User(
-                id: user.uid,
-                email: user.email!,
-                displayName: user.displayName!,
-                photoUrl: user.photoURL!,
-              );
-            }))
-      .handleError((e, _) => {});
+          return User(
+            id: user.uid,
+            email: user.email!,
+            displayName: user.displayName!,
+            photoUrl: user.photoURL!,
+          );
+        }));
 });

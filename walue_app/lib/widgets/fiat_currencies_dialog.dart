@@ -30,11 +30,11 @@ class FiatCurrenciesDialog extends StatelessWidget {
                   children: [
                     Text(
                       currency.name,
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 16.0),
+                      style: Theme.of(context).textTheme.subtitle1,
                     ),
                     Text(
                       currency.symbol.toUpperCase(),
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 16.0),
+                      style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ],
                 ),

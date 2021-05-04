@@ -324,8 +324,8 @@ class CurrencyScreen extends ConsumerWidget {
                                                                       child: (() {
                                                                         final record = viewModel.buyRecords![i];
 
-                                                                        final profit = record.calculateProfit(viewModel.currency.data!.value.additionalFiatPrices![record.fiatCurrency.symbol]!);
-                                                                        final profitText = record.calculateformattedProfit(viewModel.currency.data!.value.additionalFiatPrices![record.fiatCurrency.symbol]!);
+                                                                        final profit = record.calculateProfit(viewModel.currency.data!.value!.additionalFiatPrices![record.fiatCurrency.symbol]!);
+                                                                        final profitText = record.calculateformattedProfit(viewModel.currency.data!.value!.additionalFiatPrices![record.fiatCurrency.symbol]!);
 
                                                                         var color = const Color(0xFF222222);
 
