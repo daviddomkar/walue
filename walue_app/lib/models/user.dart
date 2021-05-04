@@ -8,7 +8,7 @@ class User {
 
   final Currency? fiatCurrency;
 
-  final List<String>? favouriteCurrencyIds;
+  final List<String> favouriteCurrencyIds;
 
   User({
     required this.id,
@@ -16,6 +16,6 @@ class User {
     required this.displayName,
     required this.photoUrl,
     this.fiatCurrency,
-    this.favouriteCurrencyIds,
+    this.favouriteCurrencyIds = const [],
   });
 }

@@ -24,7 +24,16 @@ class CryptoSelectSheet extends ConsumerWidget {
           color: Colors.white,
           child: cryptoCurrencies.when(
             data: (data) {
-              data = data.where((currency) => ownedCurrencies.indexWhere((ownedCurrency) => currency.id == ownedCurrency.id) == -1).toList();
+              data = data?.where((currency) => ownedCurrencies.indexWhere((ownedCurrency) => currency.id == ownedCurrency.id) == -1).toList();
+
+              if (data == null) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                    strokeWidth: 2.0,
+                  ),
+                );
+              }
 
               return CustomScrollView(
                 controller: controller,
@@ -41,13 +50,13 @@ class CryptoSelectSheet extends ConsumerWidget {
                             width: 40.0,
                             height: 40.0,
                             decoration: BoxDecoration(
-                              image: DecorationImage(image: NetworkImage(data[index].imageUrl), fit: BoxFit.contain),
+                              image: DecorationImage(image: NetworkImage(data![index].imageUrl), fit: BoxFit.contain),
                             ),
                           ),
                           title: Text(data[index].name),
                           subtitle: Text(data[index].symbol.toUpperCase()),
                           onTap: () {
-                            onCryptoCurrencySelected(data[index]);
+                            onCryptoCurrencySelected(data![index]);
                           },
                         );
                       },
