@@ -1,19 +1,21 @@
-import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:walue_app/models/currency.dart';
-import 'package:walue_app/widgets/fiat_currencies_dialog.dart';
 
+import '../../models/currency.dart';
+import '../../models/user.dart';
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
+import '../../widgets/fiat_currencies_dialog.dart';
 import '../../widgets/logo.dart';
 import 'settings_view_model.dart';
 
 final settingsViewModelProvider = ChangeNotifierProvider.autoDispose<SettingsViewModel>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final userRepository = ref.watch(userRepositoryProvider);
+
   final user = ref.watch(userStreamProvider);
   final fiatCurrencies = ref.watch(fiatCurrenciesStreamProvider);
 

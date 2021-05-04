@@ -14,10 +14,8 @@ final portfolioRecordStreamProvider = StreamProvider.autoDispose.family<Portfoli
   final fiatCurrenciesAsyncValue = ref.watch(fiatCurrenciesStreamProvider);
   final fiatRepository = ref.watch(fiatRepositoryProvider);
 
-  final userAsyncValue = ref.watch(userStreamProvider);
-
-  final uuid = userAsyncValue.data?.value?.id;
-  final fiatCurrency = userAsyncValue.data?.value?.fiatCurrency;
+  final uuid = ref.watch(uuidStreamProvider);
+  final fiatCurrency = ref.watch(fiatCurrencyStreamProvider);
   final symbol = fiatCurrency?.symbol;
 
   final fiatCurrencies = fiatCurrenciesAsyncValue.data?.value;

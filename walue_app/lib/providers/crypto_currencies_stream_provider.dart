@@ -9,23 +9,20 @@ final cryptoCurrenciesStreamProvider = StreamProvider.autoDispose<List<CryptoCur
   final _firestore = FirebaseFirestore.instance;
 
   final cryptoRepository = ref.watch(cryptoRepositoryProvider);
-  final user = ref.watch(userStreamProvider);
 
-  final uuid = user.data?.value?.id;
+  final fiatCurrency = ref.watch(fiatCurrencyStreamProvider);
 
-  return uuid == null
+  return fiatCurrency == null
       ? Stream.value(null)
       : _firestore.collection('system').doc('crypto').snapshots().asyncMap((snapshot) async {
           if (snapshot.exists) {
             final currencyIds = snapshot.data()!['currencies'] as List<dynamic>;
 
-            final cryptoCurrencies = await cryptoRepository.getCryptoCurrencies(currencyIds.map((e) => e as String).toList(), user.data!.value!.fiatCurrency!, cache: true);
+            final cryptoCurrencies = await cryptoRepository.getCryptoCurrencies(currencyIds.map((e) => e as String).toList(), fiatCurrency, cache: true);
 
             return cryptoCurrencies;
           }
 
           throw 'Crypto currency data are not available!';
-        }).handleError((e, _) {
-          print('Ignoring error ' + e.toString());
-        }, test: (e) => true);
+        });
 });

@@ -7,9 +7,7 @@ import '../providers.dart';
 final fiatCurrenciesStreamProvider = StreamProvider.autoDispose<Map<String, Currency>?>((ref) {
   final _firestore = FirebaseFirestore.instance;
 
-  final user = ref.watch(userStreamProvider);
-
-  final uuid = user.data?.value?.id;
+  final uuid = ref.watch(uuidStreamProvider);
 
   return uuid == null
       ? Stream.value(null)
@@ -24,7 +22,5 @@ final fiatCurrenciesStreamProvider = StreamProvider.autoDispose<Map<String, Curr
           }
 
           throw 'Fiat currency data are not available!';
-        }).handleError((e, _) {
-          print('Ignoring error ' + e.toString());
-        }, test: (e) => true);
+        });
 });
