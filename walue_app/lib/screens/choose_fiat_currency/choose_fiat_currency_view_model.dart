@@ -16,15 +16,12 @@ class ChooseFiatCurrencyViewModel extends ChangeNotifier {
 
   Currency _currency;
 
-  ChooseFiatCurrencyViewModel(
-      {required this.authRepository,
-      required this.userRepository,
-      required this.fiatCurrencies})
+  ChooseFiatCurrencyViewModel({required this.authRepository, required this.userRepository, required this.fiatCurrencies})
       : _loading = false,
         _currency = Currency(name: 'United States Dollar', symbol: 'usd');
 
-  Future<void> signOut() async {
-    await authRepository.signOut();
+  void signOut() {
+    authRepository.signOut();
   }
 
   Future<void> chooseFiatCurrency() async {

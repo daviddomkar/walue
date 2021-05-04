@@ -26,6 +26,10 @@ class SettingsViewModel extends ChangeNotifier {
 
   void deleteAccount() {}
 
+  void changeFiatCurrency(Currency currency) {
+    userRepository.changeFiatCurrency(currency);
+  }
+
   bool get loading => user is AsyncLoading || user is AsyncError || _fiatCurrencies is AsyncLoading || _fiatCurrencies is AsyncError || user.data?.value == null;
 
   String? get photoUrl => user.data?.value?.photoUrl;

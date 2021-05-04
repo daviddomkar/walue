@@ -23,10 +23,12 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
                   email: user.email!,
                   displayName: user.displayName!,
                   photoUrl: user.photoURL!,
-                  fiatCurrency: Currency(
-                    symbol: data['fiat_currency']['symbol'] as String,
-                    name: data['fiat_currency']['name'] as String,
-                  ),
+                  fiatCurrency: data.containsKey('fiat_currency')
+                      ? Currency(
+                          symbol: data['fiat_currency']['symbol'] as String,
+                          name: data['fiat_currency']['name'] as String,
+                        )
+                      : null,
                   favouriteCurrencyIds: (data['favourite_currency_ids'] as List<dynamic>?)?.cast<String>() ?? [],
                 );
               }

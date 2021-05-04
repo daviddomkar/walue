@@ -5,26 +5,45 @@ import '../../repositories/auth_repository.dart';
 class LogInViewModel extends ChangeNotifier {
   final AuthRepository authRepository;
 
-  bool _loading;
+  bool _googleLoading;
+  bool _appleLoading;
   String? _error;
 
-  LogInViewModel({required this.authRepository}) : _loading = false;
+  LogInViewModel({required this.authRepository})
+      : _googleLoading = false,
+        _appleLoading = false;
 
-  Future<void> continueWithGoogle() async {
-    _loading = true;
+  Future<void> signInWithGoogle() async {
+    _googleLoading = true;
     notifyListeners();
 
     try {
       await authRepository.signInWithGoogle();
     } catch (error) {
       _error = 'Could not sign in with Google';
-      _loading = false;
+      _googleLoading = false;
       notifyListeners();
       rethrow;
     }
   }
 
-  bool get loading => _loading;
+  Future<void> signInWithApple() async {
+    _appleLoading = true;
+    notifyListeners();
+
+    try {
+      await Future.delayed(const Duration(seconds: 1));
+      throw 'test';
+    } catch (error) {
+      _error = 'Could not sign in with Apple';
+      _appleLoading = false;
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  bool get googleLoading => _googleLoading;
+  bool get appleLoading => _appleLoading;
 
   String? get error => _error;
 }

@@ -29,11 +29,33 @@ class FirebaseUserRepository extends UserRepository {
 
   @override
   Future<void> chooseFiatCurrency(Currency currency) async {
-    await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).set({
-      'fiat_currency': {
-        'symbol': currency.symbol,
-        'name': currency.name,
-      },
+    await _firestore.runTransaction((transaction) async {
+      final userDocumentReference = _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id);
+      final userDocument = await transaction.get(userDocumentReference);
+
+      if (!userDocument.exists) {
+        transaction.set(userDocumentReference, {
+          'fiat_currency': {
+            'symbol': currency.symbol,
+            'name': currency.name,
+          },
+        });
+
+        return;
+      }
+
+      final userDocumentData = userDocument.data()!;
+
+      if (!userDocumentData.containsKey('fiat_currency')) {
+        transaction.update(userDocumentReference, {
+          'fiat_currency': {
+            'symbol': currency.symbol,
+            'name': currency.name,
+          },
+        });
+      } else {
+        throw 'Fiat currency already choosen';
+      }
     });
   }
 
