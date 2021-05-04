@@ -9,15 +9,13 @@ import '../repositories/crypto_repository.dart';
 final ownedCryptoCurrenciesStreamProvider = StreamProvider.autoDispose<Map<String, CryptoCurrency>?>((ref) {
   final cryptoRepository = ref.watch(cryptoRepositoryProvider);
 
-  final user = ref.watch(userStreamProvider);
-
   final portfolioRecords = ref.watch(portfolioRecordsStreamProvider);
-
-  final favouriteCurrencyIds = user.data?.value?.favouriteCurrencyIds;
+  final favouriteCurrencyIds = ref.watch(favouriteCurrencyIdsStreamProvider);
+  final fiatCurrency = ref.watch(fiatCurrencyStreamProvider);
 
   final cryptoCurrencyIds = portfolioRecords.data?.value?.map((record) => record.id);
 
-  if (favouriteCurrencyIds == null || cryptoCurrencyIds == null) {
+  if (favouriteCurrencyIds == null || cryptoCurrencyIds == null || fiatCurrency == null) {
     return Stream.value(null);
   }
 
@@ -25,10 +23,10 @@ final ownedCryptoCurrenciesStreamProvider = StreamProvider.autoDispose<Map<Strin
 
   return Stream.periodic(const Duration(minutes: 1))
       .asyncMap(
-        (_) => cryptoRepository.getCryptoCurrencies(currencyIds, user.data!.value!.fiatCurrency!),
+        (_) => cryptoRepository.getCryptoCurrencies(currencyIds, fiatCurrency),
       )
       .startWithStream(
-        Stream.fromFuture(cryptoRepository.getCryptoCurrencies(currencyIds, user.data!.value!.fiatCurrency!)),
+        Stream.fromFuture(cryptoRepository.getCryptoCurrencies(currencyIds, fiatCurrency)),
       )
       .map((currencies) => {for (final currency in currencies) currency.id: currency});
 });

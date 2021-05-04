@@ -7,9 +7,8 @@ import '../repositories/crypto_repository.dart';
 
 final cryptoCurrencyStreamProvider = StreamProvider.autoDispose.family<CryptoCurrency?, String>((ref, id) {
   final cryptoRepository = ref.watch(cryptoRepositoryProvider);
-  final user = ref.watch(userStreamProvider);
 
-  final fiatCurrency = user.data?.value?.fiatCurrency;
+  final fiatCurrency = ref.watch(fiatCurrencyStreamProvider);
 
   return fiatCurrency == null
       ? Stream.value(null)
