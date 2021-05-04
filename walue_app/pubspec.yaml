@@ -48,6 +48,8 @@ dependencies:
   auto_size_text: 3.0.0-nullsafety.0
 
 dev_dependencies:
+  flutter_launcher_icons: 0.9.0
+
   flutter_test:
     sdk: flutter
 
@@ -57,3 +59,11 @@ flutter:
   assets:
     - assets/icons/
     - google_fonts/
+
+flutter_icons:
+  image_path: "../walue_branding/icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  adaptive_icon_background: "../walue_branding/icon_background.png"
+  adaptive_icon_foreground: "../walue_branding/icon_foreground.png"
