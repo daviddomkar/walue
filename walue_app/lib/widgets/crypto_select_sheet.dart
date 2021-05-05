@@ -5,11 +5,11 @@ import '../models/crypto_currency.dart';
 import '../providers.dart';
 
 class CryptoSelectSheet extends ConsumerWidget {
-  final List<CryptoCurrency> ownedCurrencies;
+  final List<String> ownedCurrencyIds;
 
   final void Function(CryptoCurrency) onCryptoCurrencySelected;
 
-  const CryptoSelectSheet({required this.ownedCurrencies, required this.onCryptoCurrencySelected, Key? key}) : super(key: key);
+  const CryptoSelectSheet({required this.ownedCurrencyIds, required this.onCryptoCurrencySelected, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
@@ -24,7 +24,7 @@ class CryptoSelectSheet extends ConsumerWidget {
           color: Colors.white,
           child: cryptoCurrencies.when(
             data: (data) {
-              data = data?.where((currency) => ownedCurrencies.indexWhere((ownedCurrency) => currency.id == ownedCurrency.id) == -1).toList();
+              data = data?.where((currency) => ownedCurrencyIds.indexWhere((id) => currency.id == id) == -1).toList();
 
               if (data == null) {
                 return Center(
