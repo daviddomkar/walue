@@ -1,6 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,18 +14,6 @@ import 'repositories/crypto_repository.dart';
 import 'repositories/fiat_repository.dart';
 import 'utils/no_glow_scroll_behavior.dart';
 
-/*
-class Logger extends ProviderObserver {
-  @override
-  void didUpdateProvider(ProviderBase provider, Object? newValue) {
-    print('''
-{
-  "provider": "${provider.name ?? provider.runtimeType}",
-  "newValue": "$newValue"
-}''');
-  }
-}
-*/
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -40,13 +29,16 @@ Future<void> main() async {
 
   final cacheStore = HiveCacheStore(databaseDirectory.path);
 
+  if (kDebugMode) {
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  }
+
   runApp(
     ProviderScope(
       overrides: [
         cryptoRepositoryProvider.overrideWithValue(CoinGeckoCryptoRepository(cacheStore: cacheStore)),
         fiatRepositoryProvider.overrideWithValue(ExchangeRateHostFiatRepository(cacheStore: cacheStore)),
       ],
-      // observers: [Logger()],
       child: WalueApp(),
     ),
   );

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/portfolio_record.dart';
@@ -56,5 +57,14 @@ final portfolioRecordsStreamProvider = StreamProvider.autoDispose<List<Portfolio
               totalAmount: (data['total_amount'] as num).toDouble(),
             );
           }));
+        }).handleError((Object e, StackTrace s) {
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            s,
+            reason: 'Portfolio records stream provider error',
+          );
+
+          throw e;
         });
+  ;
 });

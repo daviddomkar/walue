@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/crypto_currency.dart';
@@ -24,5 +25,13 @@ final cryptoCurrenciesStreamProvider = StreamProvider.autoDispose<List<CryptoCur
           }
 
           throw 'Crypto currency data are not available!';
+        }).handleError((Object e, StackTrace s) {
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            s,
+            reason: 'Crypto currencies stream provider error',
+          );
+
+          throw e;
         });
 });

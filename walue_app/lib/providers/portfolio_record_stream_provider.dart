@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stream_transform/stream_transform.dart';
 
@@ -75,7 +76,13 @@ final portfolioRecordStreamProvider = StreamProvider.autoDispose.family<Portfoli
           }
 
           return PortfolioRecord(id: id, buyRecords: buyRecords);
-        }).handleError((e, s) {
-          print('error portfolioRecordStreamProvider');
+        }).handleError((Object e, StackTrace s) {
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            s,
+            reason: 'Portfolio record stream provider error',
+          );
+
+          throw e;
         });
 });
