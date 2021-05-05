@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 
@@ -35,11 +36,15 @@ class PortfolioRecordListItem extends StatelessWidget {
         height: 64.0,
         child: Row(
           children: [
-            Container(
+            CachedNetworkImage(
               width: 32.0,
               height: 32.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(image: NetworkImage(currency.imageUrl), fit: BoxFit.contain),
+              imageUrl: currency.imageUrl,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+                ),
               ),
             ),
             Expanded(
