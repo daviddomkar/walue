@@ -22,11 +22,11 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
 
   late CacheOptions _options;
 
-  CoinGeckoCryptoRepository({required this.cacheStore}) : _dio = Dio(BaseOptions(baseUrl: 'https://api.coingecko.com/api/v3')) {
+  CoinGeckoCryptoRepository({required this.cacheStore}) : _dio = Dio() {
     _options = CacheOptions(
       store: cacheStore,
-      policy: CachePolicy.forceCache,
-      maxStale: const Duration(seconds: 30),
+      policy: CachePolicy.refreshForceCache,
+      maxStale: const Duration(days: 365),
     );
 
     _dio.interceptors.add(
@@ -40,21 +40,49 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
   Future<List<CryptoCurrency>> getCryptoCurrencies(List<String> ids, Currency versusCurrency, {bool cache = false}) async {
     final partitionedIds = quiver.partition(ids, 100).toList();
 
-    final requests = partitionedIds.asMap().entries.map(
-          (entry) => _dio.get<List<dynamic>>(
-            '/coins/markets',
-            queryParameters: {
-              'vs_currency': versusCurrency.symbol,
-              'order': 'market_cap_desc',
-              'ids': entry.value.join(','),
-            },
-            options: cache ? _options.copyWith(maxStale: const Duration(days: 7)).toOptions() : _options.toOptions(),
-          ),
-        );
+    final cacheEnabled = cache;
+
+    final requests = partitionedIds.asMap().entries.map((entry) {
+      return (() async {
+        final options = RequestOptions(method: 'GET', baseUrl: 'https://api.coingecko.com/api/v3', path: '/coins/markets', queryParameters: {
+          'vs_currency': versusCurrency.symbol,
+          'order': 'market_cap_desc',
+          'ids': entry.value.join(','),
+        });
+
+        Response<dynamic>? response;
+
+        final cache = await cacheStore.get(_options.keyBuilder(options));
+
+        if (cacheEnabled) {
+          if (cache?.date != null && DateTime.now().difference(cache!.date!).inDays < 7) {
+            response = cache.toResponse(options);
+          }
+        } else {
+          if (cache?.date != null && DateTime.now().difference(cache!.date!).inSeconds < 30) {
+            response = cache.toResponse(options);
+          }
+        }
+
+        if (response == null) {
+          try {
+            response = await _dio.fetch(options);
+          } catch (_) {
+            response = cache?.toResponse(options);
+
+            if (response == null) {
+              rethrow;
+            }
+          }
+        }
+
+        return response;
+      })();
+    });
 
     final responses = await Future.wait(requests);
 
-    final currencies = quiver.concat(responses.map((response) => response.data!));
+    final currencies = quiver.concat(responses.map((response) => response.data! as List<dynamic>));
 
     return currencies.map((currency) {
       return CryptoCurrency(
@@ -69,7 +97,7 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
 
   @override
   Future<CryptoCurrency> getCryptoCurrency(String id, Currency versusCurrency) async {
-    final response = await _dio.get<Map<String, dynamic>>('/coins/$id', queryParameters: {
+    final options = RequestOptions(method: 'GET', baseUrl: 'https://api.coingecko.com/api/v3', path: '/coins/$id', queryParameters: {
       'localization': false,
       'tickers': false,
       'market_data': true,
@@ -77,6 +105,26 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
       'developer_data': false,
       'sparkline': false,
     });
+
+    Response<dynamic>? response;
+
+    final cache = await cacheStore.get(_options.keyBuilder(options));
+
+    if (cache?.date != null && DateTime.now().difference(cache!.date!).inSeconds < 30) {
+      response = cache.toResponse(options);
+    }
+
+    if (response == null) {
+      try {
+        response = await _dio.fetch(options);
+      } catch (_) {
+        response = cache?.toResponse(options);
+
+        if (response == null) {
+          rethrow;
+        }
+      }
+    }
 
     final currency = response.data!;
 

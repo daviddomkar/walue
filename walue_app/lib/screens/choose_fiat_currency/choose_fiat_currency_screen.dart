@@ -55,7 +55,7 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
               style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),
-            if (fiatCurrencies.data != null) ...[
+            if (fiatCurrencies.data?.value != null) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0),
                 child: Theme(
@@ -104,7 +104,23 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
                 loading: viewModel.loading,
                 onPressed: () {
                   viewModel.chooseFiatCurrency().onError((error, stackTrace) {
-                    final snackBar = SnackBar(content: Text(viewModel.error!));
+                    final snackBar = SnackBar(
+                      backgroundColor: const Color(0xFFD90D00),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16.0),
+                          topRight: Radius.circular(16.0),
+                        ),
+                      ),
+                      content: Text(
+                        viewModel.error!,
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                              fontSize: 16.0,
+                              color: Colors.white,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
 
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   });

@@ -3,9 +3,24 @@
   "version": "0.0.1",
   "private": true,
   "workspaces": [
-    "walue_scripts"
+    "walue_scripts",
+    "walue_functions"
   ],
   "devDependencies": {
+    "@commitlint/cli": "12.0.1",
+    "@commitlint/config-conventional": "12.0.1",
+    "@typescript-eslint/eslint-plugin": "4.20.0",
+    "@typescript-eslint/parser": "4.20.0",
+    "eslint": "7.23.0",
+    "eslint-config-prettier": "8.1.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-prettier": "3.3.1",
+    "husky": "5.2.0",
+    "lint-staged": "10.5.4",
+    "prettier": "2.2.1",
+    "stylelint": "13.12.0",
+    "stylelint-config-prettier": "8.0.2",
+    "stylelint-config-standard": "21.0.0",
     "typescript": "4.2.4"
   }
 }

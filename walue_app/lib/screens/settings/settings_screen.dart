@@ -3,9 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:walue_app/widgets/basic_button.dart';
 
-import '../../models/currency.dart';
-import '../../models/user.dart';
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
@@ -285,7 +284,36 @@ class SettingsScreen extends ConsumerWidget {
                                 color: Colors.white,
                                 child: InkWell(
                                   onTap: () {
-                                    viewModel.deleteAccount();
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => DeleteAccountDialog(onDeleteAccount: () {
+                                        viewModel.deleteAccount().then((value) => Navigator.of(context, rootNavigator: true).pop()).onError((error, stackTrace) {
+                                          Navigator.of(context, rootNavigator: true).pop();
+
+                                          print(error.toString());
+
+                                          final snackBar = SnackBar(
+                                            backgroundColor: const Color(0xFFD90D00),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(16.0),
+                                                topRight: Radius.circular(16.0),
+                                              ),
+                                            ),
+                                            content: Text(
+                                              'An error occurred',
+                                              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                    fontSize: 16.0,
+                                                    color: Colors.white,
+                                                  ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          );
+
+                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                        });
+                                      }),
+                                    );
                                   },
                                   child: Center(
                                     child: Text(
@@ -364,6 +392,79 @@ class PreferenceItem extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DeleteAccountDialog extends StatefulWidget {
+  final void Function() onDeleteAccount;
+
+  const DeleteAccountDialog({
+    required this.onDeleteAccount,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _DeleteAccountDialogState createState() => _DeleteAccountDialogState();
+}
+
+class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
+  bool _loading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      clipBehavior: Clip.hardEdge,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(16.0),
+        ),
+      ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text(
+                  'Warning',
+                  style: Theme.of(context).textTheme.headline4!.copyWith(color: const Color(0xFFD90D00), fontSize: 24.0),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text(
+                  'Your account and all of its associated data will be deleted. Are you sure you want continue?',
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: const Color(0xFF222222)),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              BasicButton(
+                loading: _loading,
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+                onPressed: () {
+                  setState(() {
+                    _loading = true;
+                  });
+
+                  widget.onDeleteAccount();
+                },
+                child: const Text(
+                  'Delete account',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ),
         ),
       ),

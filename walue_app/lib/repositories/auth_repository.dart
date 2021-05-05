@@ -1,27 +1,28 @@
 import 'dart:async';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-final authRepositoryProvider =
-    Provider<AuthRepository>((ref) => FirebaseAuthRepository());
+final authRepositoryProvider = Provider<AuthRepository>((ref) => FirebaseAuthRepository());
 
 abstract class AuthRepository {
   Future<void> signInWithGoogle();
   Future<void> signOut();
+  Future<void> deleteAccount();
 }
 
 class FirebaseAuthRepository extends AuthRepository {
   final _auth = FirebaseAuth.instance;
+  final _functions = FirebaseFunctions.instanceFor(region: 'europe-west1');
 
   @override
   Future<void> signInWithGoogle() async {
     final googleUser = await GoogleSignIn().signIn();
 
     if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -36,6 +37,12 @@ class FirebaseAuthRepository extends AuthRepository {
 
   @override
   Future<void> signOut() async {
+    await _auth.signOut();
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    await _functions.httpsCallable('deleteAccount')();
     await _auth.signOut();
   }
 }

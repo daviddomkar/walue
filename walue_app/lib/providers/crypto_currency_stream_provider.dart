@@ -18,5 +18,9 @@ final cryptoCurrencyStreamProvider = StreamProvider.autoDispose.family<CryptoCur
           )
           .startWithStream(
             Stream.fromFuture(cryptoRepository.getCryptoCurrency(id, fiatCurrency)),
-          );
+          )
+          .handleError((e, s) {
+          print(e.toString());
+        });
+  ;
 });

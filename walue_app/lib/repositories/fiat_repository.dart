@@ -18,11 +18,11 @@ class ExchangeRateHostFiatRepository extends FiatRepository {
 
   late CacheOptions _options;
 
-  ExchangeRateHostFiatRepository({required this.cacheStore}) : _dio = Dio(BaseOptions(baseUrl: 'https://api.exchangerate.host')) {
+  ExchangeRateHostFiatRepository({required this.cacheStore}) : _dio = Dio() {
     _options = CacheOptions(
       store: cacheStore,
-      policy: CachePolicy.forceCache,
-      maxStale: const Duration(hours: 4),
+      policy: CachePolicy.refreshForceCache,
+      maxStale: const Duration(days: 365),
     );
 
     _dio.interceptors.add(
@@ -34,12 +34,32 @@ class ExchangeRateHostFiatRepository extends FiatRepository {
 
   @override
   Future<double> getExchangeRate(Currency from, Currency to) async {
-    final response = await _dio.get('/convert', queryParameters: {
+    final options = RequestOptions(method: 'GET', baseUrl: 'https://api.exchangerate.host', path: '/convert', queryParameters: {
       'from': from.symbol.toUpperCase(),
       'to': to.symbol.toUpperCase(),
     });
 
-    final data = response.data! as Map<String, dynamic>;
+    Response<dynamic>? response;
+
+    final cache = await cacheStore.get(_options.keyBuilder(options));
+
+    if (cache?.date != null && DateTime.now().difference(cache!.date!).inHours < 4) {
+      response = cache.toResponse(options);
+    }
+
+    if (response == null) {
+      try {
+        response = await _dio.fetch(options);
+      } catch (_) {
+        response = cache?.toResponse(options);
+
+        if (response == null) {
+          rethrow;
+        }
+      }
+    }
+
+    final data = response.data as Map<String, dynamic>;
 
     return (data['result'] as num).toDouble();
   }

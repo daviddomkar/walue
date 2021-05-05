@@ -116,7 +116,7 @@ class HomeScreen extends ConsumerWidget {
                                 ],
                               ),
                               FavouriteList(
-                                onAddFavourite: (currency) => viewModel.addCryptoCurrencyToFavourites(currency),
+                                onAddFavourite: (currency) => viewModel.addCryptoCurrencyToFavourites(currency.id),
                               ),
                             ],
                           ),
@@ -451,7 +451,7 @@ class PortfolioRecordList extends HookWidget {
         child: error
             ? Center(
                 child: Text(
-                  'An error occured while fetching records, check your connection and try again!',
+                  'An error occured while fetching records, Walue will attempt another fetch in a moment!',
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(
                         color: const Color(0xFFD90D00),
                       ),

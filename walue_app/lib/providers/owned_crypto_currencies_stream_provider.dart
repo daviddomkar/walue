@@ -28,5 +28,8 @@ final ownedCryptoCurrenciesStreamProvider = StreamProvider.autoDispose<Map<Strin
       .startWithStream(
         Stream.fromFuture(cryptoRepository.getCryptoCurrencies(currencyIds, fiatCurrency)),
       )
-      .map((currencies) => {for (final currency in currencies) currency.id: currency});
+      .map((currencies) => {for (final currency in currencies) currency.id: currency})
+      .handleError((e, s) {
+    print('error ownedCryptoCurrenciesStreamProvider');
+  });
 });
