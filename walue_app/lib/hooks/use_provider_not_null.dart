@@ -1,19 +1,18 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// useProviderCached returns the freshest non-loading [AsyncValue] from a
 /// [ProviderListenable].
-AsyncValue<T> useProviderCached<T>(ProviderListenable<AsyncValue<T>> provider) {
+T? useProviderNotNull<T>(ProviderListenable<T?> provider) {
   final value = useProvider(provider);
-  final cache = useState<AsyncValue<T>>(value);
+  final cache = useState<T?>(value);
 
-  if (value is! AsyncLoading && value.data?.value != null) {
+  if (value != null) {
     cache.value = value;
     return value;
   }
 
-  if (cache.value is! AsyncLoading && cache.value.data?.value != null) {
+  if (cache.value != null) {
     return cache.value;
   }
 
