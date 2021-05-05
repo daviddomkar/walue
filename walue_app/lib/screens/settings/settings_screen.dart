@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -122,12 +123,15 @@ class SettingsScreen extends ConsumerWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    Container(
+                                    CachedNetworkImage(
                                       width: 48.0,
                                       height: 48.0,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(image: NetworkImage(viewModel.photoUrl!), fit: BoxFit.contain),
+                                      imageUrl: viewModel.photoUrl!,
+                                      imageBuilder: (context, imageProvider) => Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+                                        ),
                                       ),
                                     ),
                                     Expanded(

@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -230,6 +231,7 @@ class FavouriteList extends HookWidget {
 
     final _ownedCurrencies = useProviderCached(ownedCryptoCurrenciesStreamProvider);
 
+    final error = _ownedCurrencies is AsyncError;
     final loading = _ownedCurrencies is AsyncLoading || favouriteCurrencyIds == null || fiatCurrency == null;
 
     final ownedCurrencies = _ownedCurrencies.data?.value;
@@ -240,7 +242,7 @@ class FavouriteList extends HookWidget {
         padding: const EdgeInsets.symmetric(horizontal: 32.0),
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          final itemCount = loading ? 1 : favouriteCurrencyIds!.length + 1;
+          final itemCount = error || loading ? 1 : favouriteCurrencyIds!.length + 1;
 
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -274,6 +276,8 @@ class FavouriteList extends HookWidget {
                               )
                             : InkWell(
                                 onTap: () {
+                                  if (error) return;
+
                                   showModalBottomSheet(
                                     clipBehavior: Clip.hardEdge,
                                     context: context,
@@ -342,11 +346,15 @@ class FavouriteList extends HookWidget {
                                     children: [
                                       Row(
                                         children: [
-                                          Container(
+                                          CachedNetworkImage(
                                             width: 32.0,
                                             height: 32.0,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(image: NetworkImage(ownedCurrencies[favouriteCurrencyIds[index]]!.imageUrl), fit: BoxFit.contain),
+                                            imageUrl: ownedCurrencies[favouriteCurrencyIds[index]]!.imageUrl,
+                                            imageBuilder: (context, imageProvider) => Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+                                              ),
                                             ),
                                           ),
                                           Padding(
@@ -403,7 +411,7 @@ class FavouriteList extends HookWidget {
             width: 16.0,
           );
         },
-        itemCount: loading ? 1 : favouriteCurrencyIds!.length + 1,
+        itemCount: error || loading ? 1 : favouriteCurrencyIds!.length + 1,
       ),
     );
   }
