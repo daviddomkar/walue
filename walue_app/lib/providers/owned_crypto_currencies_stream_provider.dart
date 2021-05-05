@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:quiver/iterables.dart' as quiver;
@@ -29,7 +30,13 @@ final ownedCryptoCurrenciesStreamProvider = StreamProvider.autoDispose<Map<Strin
         Stream.fromFuture(cryptoRepository.getCryptoCurrencies(currencyIds, fiatCurrency)),
       )
       .map((currencies) => {for (final currency in currencies) currency.id: currency})
-      .handleError((e, s) {
-    print('error ownedCryptoCurrenciesStreamProvider');
+      .handleError((Object e, StackTrace s) {
+    FirebaseCrashlytics.instance.recordError(
+      e,
+      s,
+      reason: 'Owned currencies stream provider error',
+    );
+
+    throw e;
   });
 });

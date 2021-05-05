@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stream_transform/stream_transform.dart';
 
@@ -19,8 +20,13 @@ final cryptoCurrencyStreamProvider = StreamProvider.autoDispose.family<CryptoCur
           .startWithStream(
             Stream.fromFuture(cryptoRepository.getCryptoCurrency(id, fiatCurrency)),
           )
-          .handleError((e, s) {
-          print(e.toString());
+          .handleError((Object e, StackTrace s) {
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            s,
+            reason: 'Crypto currency stream provider error',
+          );
+
+          throw e;
         });
-  ;
 });
