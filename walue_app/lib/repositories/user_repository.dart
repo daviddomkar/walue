@@ -13,8 +13,8 @@ final userRepositoryProvider = Provider<UserRepository>((ref) => FirebaseUserRep
 abstract class UserRepository {
   Future<void> chooseFiatCurrency(Currency currency);
   Future<void> changeFiatCurrency(Currency currency);
-  Future<void> addCryptoCurrencyToFavourites(CryptoCurrency currency);
-  Future<void> deleteCryptoCurrencyFromFavourites(CryptoCurrency currency);
+  Future<void> addCryptoCurrencyToFavourites(String id);
+  Future<void> deleteCryptoCurrencyFromFavourites(String id);
   Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount, Currency fiatCurrency);
   Future<void> editCryptoCurrencyBuyRecord(CryptoCurrency currency, String id, double? buyPrice, double? amount);
   Future<void> deleteCryptoCurrencyBuyRecord(CryptoCurrency currency, String id);
@@ -70,7 +70,7 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   @override
-  Future<void> addCryptoCurrencyToFavourites(CryptoCurrency currency) async {
+  Future<void> addCryptoCurrencyToFavourites(String id) async {
     await _firestore.runTransaction((transaction) async {
       final uuid = read(userStreamProvider).data?.value?.id;
       final userDocumentReference = _firestore.collection('users').doc(uuid);
@@ -81,18 +81,18 @@ class FirebaseUserRepository extends UserRepository {
 
       if (userDocumentData.containsKey('favourite_currency_ids')) {
         transaction.update(userDocumentReference, {
-          'favourite_currency_ids': FieldValue.arrayUnion([currency.id]),
+          'favourite_currency_ids': FieldValue.arrayUnion([id]),
         });
       } else {
         transaction.update(userDocumentReference, {
-          'favourite_currency_ids': [currency.id],
+          'favourite_currency_ids': [id],
         });
       }
     });
   }
 
   @override
-  Future<void> deleteCryptoCurrencyFromFavourites(CryptoCurrency currency) async {
+  Future<void> deleteCryptoCurrencyFromFavourites(String id) async {
     await _firestore.runTransaction((transaction) async {
       final uuid = read(userStreamProvider).data?.value?.id;
       final userDocumentReference = _firestore.collection('users').doc(uuid);
@@ -103,7 +103,7 @@ class FirebaseUserRepository extends UserRepository {
 
       final favouriteCurrencyIds = userDocumentData['favourite_currency_ids'] as List<dynamic>;
 
-      favouriteCurrencyIds.remove(currency.id);
+      favouriteCurrencyIds.remove(id);
 
       if (favouriteCurrencyIds.isEmpty) {
         transaction.update(userDocumentReference, {
@@ -111,7 +111,7 @@ class FirebaseUserRepository extends UserRepository {
         });
       } else {
         transaction.update(userDocumentReference, {
-          'favourite_currency_ids': FieldValue.arrayRemove([currency.id]),
+          'favourite_currency_ids': FieldValue.arrayRemove([id]),
         });
       }
     });

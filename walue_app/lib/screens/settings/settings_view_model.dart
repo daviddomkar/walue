@@ -24,13 +24,15 @@ class SettingsViewModel extends ChangeNotifier {
     authRepository.signOut();
   }
 
-  void deleteAccount() {}
+  Future<void> deleteAccount() async {
+    await authRepository.deleteAccount();
+  }
 
   void changeFiatCurrency(Currency currency) {
     userRepository.changeFiatCurrency(currency);
   }
 
-  bool get loading => user is AsyncLoading || user is AsyncError || _fiatCurrencies is AsyncLoading || _fiatCurrencies is AsyncError || user.data?.value == null;
+  bool get loading => user is AsyncLoading || user is AsyncError || _fiatCurrencies is AsyncLoading || _fiatCurrencies is AsyncError || user.data?.value == null || _fiatCurrencies.data?.value == null;
 
   String? get photoUrl => user.data?.value?.photoUrl;
   String? get displayName => user.data?.value?.displayName;
