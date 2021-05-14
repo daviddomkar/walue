@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:walue_app/widgets/w_text_form_field.dart';
 
 import '../hooks/use_provider_cached.dart';
 import '../models/crypto_currency.dart';
@@ -16,6 +17,7 @@ class CryptoSelectSheet extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final cryptoCurrencies = useProviderCached(cryptoCurrenciesStreamProvider);
+    final searchText = useState('');
 
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
@@ -26,7 +28,12 @@ class CryptoSelectSheet extends HookWidget {
           color: Colors.white,
           child: cryptoCurrencies.when(
             data: (data) {
-              data = data?.where((currency) => ownedCurrencyIds.indexWhere((id) => currency.id == id) == -1).toList();
+              data = data
+                  ?.where((currency) => ownedCurrencyIds.indexWhere((id) => currency.id == id) == -1)
+                  .where(
+                    (currency) => searchText.value == '' || currency.name.toLowerCase().startsWith(searchText.value) || currency.symbol.startsWith(searchText.value),
+                  )
+                  .toList();
 
               if (data == null) {
                 return Center(
@@ -41,7 +48,7 @@ class CryptoSelectSheet extends HookWidget {
                 controller: controller,
                 slivers: [
                   SliverPersistentHeader(
-                    delegate: CryptoSelectSheetHeaderDelegate(),
+                    delegate: CryptoSelectSheetHeaderDelegate(onSearch: (search) => searchText.value = search),
                     pinned: true,
                   ),
                   SliverList(
@@ -96,23 +103,54 @@ class CryptoSelectSheet extends HookWidget {
   }
 }
 
+class CryptoCurrencySearchTextField extends StatelessWidget {
+  final void Function(String searchText) onSearch;
+
+  const CryptoCurrencySearchTextField({required this.onSearch, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return WTextFormField(
+      hintText: 'Search',
+      onChanged: (value) => onSearch(value.toLowerCase()),
+    );
+  }
+}
+
 class CryptoSelectSheetHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final void Function(String searchText) onSearch;
+
+  CryptoSelectSheetHeaderDelegate({required this.onSearch});
+
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      height: 64.0,
       color: Colors.white,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Text('Choose a crypto currency', style: Theme.of(context).textTheme.headline6),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 32.0),
+            child: CryptoCurrencySearchTextField(onSearch: onSearch),
+          ),
+        ],
+      ),
+      /*
       child: Center(
         child: Text('Choose a crypto currency', style: Theme.of(context).textTheme.headline6),
       ),
+      */
     );
   }
 
   @override
-  double get maxExtent => 64.0;
+  double get maxExtent => 128.0;
 
   @override
-  double get minExtent => 64.0;
+  double get minExtent => 128.0;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
