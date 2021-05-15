@@ -32,7 +32,7 @@ class LogInViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      await authRepository.signInWithApple();
       throw 'test';
     } catch (error) {
       _error = 'Could not sign in with Apple';
