@@ -69,7 +69,8 @@ flutter:
     - google_fonts/
 
 flutter_icons:
-  image_path: "../walue_branding/icon.png"
+  image_path_android: "../walue_branding/icon.png"
+  image_path_ios: "../walue_branding/icon_512.png"
   android: true
   ios: true
   remove_alpha_ios: true
