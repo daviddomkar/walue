@@ -5,11 +5,15 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'locations.dart';
+import 'providers.dart';
 import 'repositories/crypto_repository.dart';
 import 'repositories/fiat_repository.dart';
 import 'utils/no_glow_scroll_behavior.dart';
@@ -34,9 +38,12 @@ Future<void> main() async {
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   }
 
+  final sharedPreferences = await SharedPreferences.getInstance();
+
   runApp(
     ProviderScope(
       overrides: [
+        themeProvider.overrideWithValue(ThemeNotifier(sharedPreferences: sharedPreferences)),
         cryptoRepositoryProvider.overrideWithValue(CoinGeckoCryptoRepository(cacheStore: cacheStore)),
         fiatRepositoryProvider.overrideWithValue(ExchangeRateHostFiatRepository(cacheStore: cacheStore)),
       ],
@@ -61,7 +68,7 @@ void _licenceFonts() {
   });
 }
 
-class WalueApp extends StatelessWidget {
+class WalueApp extends HookWidget {
   final routerDelegate = BeamerRouterDelegate(
     locationBuilder: BeamerLocationBuilder(
       beamLocations: [
@@ -72,7 +79,10 @@ class WalueApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = useProvider(themeProvider);
+
     return MaterialApp.router(
+      themeMode: themeMode,
       builder: (context, child) {
         return ScrollConfiguration(
           behavior: NoGlowScrollBehavior(),

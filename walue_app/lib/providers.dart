@@ -5,3 +5,4 @@ export 'providers/owned_crypto_currencies_stream_provider.dart';
 export 'providers/portfolio_record_stream_provider.dart';
 export 'providers/portfolio_records_stream_provider.dart';
 export 'providers/user_stream_provider.dart';
+export 'providers/theme_provider.dart';
