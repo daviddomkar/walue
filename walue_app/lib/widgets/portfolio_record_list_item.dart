@@ -26,8 +26,8 @@ class PortfolioRecordListItem extends StatelessWidget {
         context.beamToNamed('/currency/${record.id}', popToNamed: '/', data: {
           'currencyImageUrl': currency.imageUrl,
           'currencyName': currency.name,
-          'totalFiatAmount': record.computeTotalFiatAmount(currency.fiatPrice, fiatCurrency.symbol),
-          'totalAmount': record.computeTotalAmount(),
+          'totalFiatAmount': record.computeTotalFiatAmount(currency.fiatPrice, fiatCurrency.symbol, 100000000000000),
+          'totalAmount': record.computeTotalAmount(currency.symbol, 100000000000000),
           'increasePercentage': record.computeIncreasePercentage(currency.fiatPrice),
         });
       },
@@ -55,28 +55,30 @@ class PortfolioRecordListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         LimitedBox(
                           maxWidth: 80.0,
                           child: Text(
                             currency.name,
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        LimitedBox(
-                          maxWidth: 80.0,
-                          child: Text(
+                        Expanded(
+                          child: AutoSizeText(
                             record.computeTotalFiatAmount(
                               currency.fiatPrice,
                               fiatCurrency.symbol,
                             )!,
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                ),
                             textAlign: TextAlign.right,
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            minFontSize: 8.0,
                           ),
                         ),
                       ],
@@ -84,12 +86,27 @@ class PortfolioRecordListItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          currency.symbol.toUpperCase(),
+                        LimitedBox(
+                          maxWidth: 80.0,
+                          child: Text(
+                            currency.symbol.toUpperCase(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                            ),
+                          ),
                         ),
-                        Text(
-                          record.computeTotalAmount()!,
-                          textAlign: TextAlign.right,
+                        Expanded(
+                          child: AutoSizeText(
+                            record.computeTotalAmount(null, 10000, true)!,
+                            textAlign: TextAlign.right,
+                            maxLines: 1,
+                            minFontSize: 8.0,
+                            style: TextStyle(
+                              color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -98,7 +115,7 @@ class PortfolioRecordListItem extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 90.0,
+              width: 80.0,
               child: AutoSizeText(
                 record.computeIncreasePercentage(
                   currency.fiatPrice,
@@ -110,12 +127,12 @@ class PortfolioRecordListItem extends StatelessWidget {
                       currency.fiatPrice,
                     )!;
 
-                    var color = const Color(0xFF222222);
+                    var color = Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white;
 
                     if (profitText.startsWith('+')) {
-                      color = const Color(0xFF54D790);
+                      color = const Color(0xFF00D964);
                     } else if (profitText.startsWith('-')) {
-                      color = const Color(0xFFD90D00);
+                      color = Colors.red;
                     }
 
                     return color;

@@ -105,7 +105,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
             padding: const EdgeInsets.only(bottom: 24.0),
             child: Text(
               widget.initialRecord != null ? 'Edit buy record' : 'Add new buy record',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
               textAlign: TextAlign.center,
             ),
           ),

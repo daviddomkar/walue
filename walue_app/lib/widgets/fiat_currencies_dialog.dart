@@ -16,6 +16,7 @@ class FiatCurrenciesDialog extends StatelessWidget {
           Radius.circular(16.0),
         ),
       ),
+      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
       child: SingleChildScrollView(
         child: Column(
           children: currencies.map((currency) {
@@ -30,11 +31,11 @@ class FiatCurrenciesDialog extends StatelessWidget {
                   children: [
                     Text(
                       currency.name,
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                     ),
                     Text(
                       currency.symbol.toUpperCase(),
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                     ),
                   ],
                 ),

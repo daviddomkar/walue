@@ -15,6 +15,7 @@ import '../../providers.dart';
 import '../../repositories/user_repository.dart';
 import '../../widgets/buy_record_dialog.dart';
 import '../../widgets/gradient_button.dart';
+import '../../widgets/header_background.dart';
 import '../../widgets/logo.dart';
 
 class CurrencyScreen extends HookWidget {
@@ -50,7 +51,7 @@ class CurrencyScreen extends HookWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF000000),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
@@ -59,27 +60,7 @@ class CurrencyScreen extends HookWidget {
               child: IntrinsicHeight(
                 child: Stack(
                   children: [
-                    Transform(
-                      transform: Matrix4.rotationZ(0.4)..translate(-150.0, -96.0),
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: 400.0,
-                        height: 400.0,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(40.0),
-                          ),
-                          gradient: LinearGradient(
-                            colors: [
-                              Theme.of(context).primaryColor,
-                              Theme.of(context).accentColor,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                      ),
-                    ),
+                    const HeaderBackground(),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -89,8 +70,8 @@ class CurrencyScreen extends HookWidget {
                             id: id,
                             currencyName: currency?.name ?? currencyName ?? '',
                             currencyImageUrl: currency?.imageUrl ?? currencyImageUrl ?? '',
-                            totalFiatAmount: portfolioRecord?.computeTotalFiatAmount(currency?.fiatPrice, fiatCurrency?.symbol) ?? (buyRecords == null || buyRecords.isEmpty ? null : totalFiatAmount) ?? '',
-                            totalAmount: (currency?.symbol != null ? portfolioRecord?.computeTotalAmount(currency?.symbol) : null) ?? (buyRecords == null || buyRecords.isEmpty ? null : totalAmount) ?? '',
+                            totalFiatAmount: portfolioRecord?.computeTotalFiatAmount(currency?.fiatPrice, fiatCurrency?.symbol, 100000000000000) ?? (buyRecords == null || buyRecords.isEmpty ? null : totalFiatAmount) ?? '',
+                            totalAmount: (currency?.symbol != null ? portfolioRecord?.computeTotalAmount(currency?.symbol, 100000000000000) : null) ?? (buyRecords == null || buyRecords.isEmpty ? null : totalAmount) ?? '',
                             increasePercentage: portfolioRecord?.computeIncreasePercentage(currency?.fiatPrice) ?? (buyRecords == null || buyRecords.isEmpty ? null : increasePercentage) ?? '',
                             onAddToFavourites: () {
                               context.read(userRepositoryProvider).addCryptoCurrencyToFavourites(id);
@@ -107,16 +88,19 @@ class CurrencyScreen extends HookWidget {
                               children: [
                                 Row(
                                   children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 4.0),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 4.0),
                                       child: FaIcon(
                                         FontAwesomeIcons.dollarSign,
-                                        color: Color(0xFF222222),
+                                        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                       ),
                                     ),
                                     Text(
                                       'Buy Records',
-                                      style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0),
+                                      style: Theme.of(context).textTheme.headline4!.copyWith(
+                                            fontSize: 24.0,
+                                            color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -253,17 +237,27 @@ class CurrencyScreenHeader extends HookWidget {
               child: SizedBox(
                 width: 200.0,
                 height: 48.0,
-                child: AutoSizeText(
-                  increasePercentage,
-                  style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white),
-                  maxLines: 1,
-                ),
+                child: (() {
+                  var color = Colors.white;
+
+                  if (increasePercentage.startsWith('+')) {
+                    color = const Color(0xFF00D964);
+                  } else if (increasePercentage.startsWith('-')) {
+                    color = Colors.red;
+                  }
+
+                  return AutoSizeText(
+                    increasePercentage,
+                    style: Theme.of(context).textTheme.headline4!.copyWith(color: color),
+                    maxLines: 1,
+                  );
+                })(),
               ),
             ),
           ],
         ),
         Transform.translate(
-          offset: const Offset(8.0, -8.0),
+          offset: const Offset(8.0, 0.0),
           child: Column(
             children: [
               IconButton(
@@ -273,7 +267,7 @@ class CurrencyScreenHeader extends HookWidget {
                 },
                 icon: const FaIcon(
                   FontAwesomeIcons.arrowLeft,
-                  color: Color(0xFF222222),
+                  color: Colors.white,
                 ),
               ),
               if (favouriteCurrencyIds != null)
@@ -288,7 +282,7 @@ class CurrencyScreenHeader extends HookWidget {
                   },
                   icon: FaIcon(
                     favouriteCurrencyIds.contains(id) ? FontAwesomeIcons.solidStar : FontAwesomeIcons.star,
-                    color: favouriteCurrencyIds.contains(id) ? Colors.amber : const Color(0xFF222222),
+                    color: favouriteCurrencyIds.contains(id) ? Colors.amber : Colors.white,
                   ),
                 ),
             ],
@@ -320,12 +314,12 @@ class BuyRecordList extends HookWidget {
 
     return Container(
       clipBehavior: Clip.hardEdge,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+        borderRadius: const BorderRadius.all(
           Radius.circular(16.0),
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             blurRadius: 4.0,
             color: Color(0x32000000),
@@ -339,7 +333,7 @@ class BuyRecordList extends HookWidget {
                 child: Text(
                   'An error occured while fetching records, Walue will attempt another fetch in a moment!',
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        color: const Color(0xFFD90D00),
+                        color: Colors.red,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -347,18 +341,23 @@ class BuyRecordList extends HookWidget {
             : loading
                 ? Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                      valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
                       strokeWidth: 2.0,
                     ),
                   )
                 : buyRecords!.isEmpty
-                    ? const Center(
-                        child: Text('No buy records found'),
+                    ? Center(
+                        child: Text(
+                          'No buy records found',
+                          style: TextStyle(
+                            color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                          ),
+                        ),
                       )
                     : Container(
                         constraints: const BoxConstraints.expand(),
                         child: Material(
-                          color: Colors.white,
+                          color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
                           child: Column(
                             children: [
                               Container(
@@ -372,15 +371,17 @@ class BuyRecordList extends HookWidget {
                                         'Buy price',
                                         style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                               fontSize: 14.0,
+                                              color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                             ),
                                       ),
                                     ),
                                     Expanded(
                                       child: Text(
                                         'Amount',
-                                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                              color: const Color(0x80222222),
-                                            ),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                                        ),
                                       ),
                                     ),
                                     SizedBox(
@@ -389,6 +390,7 @@ class BuyRecordList extends HookWidget {
                                         'Profit',
                                         style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                               fontSize: 14.0,
+                                              color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                             ),
                                         textAlign: TextAlign.right,
                                       ),
@@ -396,10 +398,10 @@ class BuyRecordList extends HookWidget {
                                   ],
                                 ),
                               ),
-                              const Divider(
+                              Divider(
                                 height: 1,
                                 thickness: 1,
-                                color: Color(0x20000000),
+                                color: Theme.of(context).brightness == Brightness.light ? const Color(0x20000000) : const Color(0x20FFFFFF),
                               ),
                               for (var i = 0; i < buyRecords.length; i++) ...[
                                 BuyRecordListItem(
@@ -412,10 +414,10 @@ class BuyRecordList extends HookWidget {
                                     context.read(userRepositoryProvider).deleteCryptoCurrencyBuyRecord(currency, id);
                                   },
                                 ),
-                                const Divider(
+                                Divider(
                                   height: 1,
                                   thickness: 1,
-                                  color: Color(0x20000000),
+                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0x20000000) : const Color(0x20FFFFFF),
                                 ),
                               ],
                             ],
@@ -472,15 +474,16 @@ class BuyRecordListItem extends StatelessWidget {
                 record.formattedBuyPrice,
                 style: Theme.of(context).textTheme.subtitle1!.copyWith(
                       fontSize: 14.0,
+                      color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                     ),
               ),
             ),
             Expanded(
               child: Text(
                 record.formattedAmount,
-                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      color: const Color(0x80222222),
-                    ),
+                style: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                ),
               ),
             ),
             SizedBox(
@@ -489,12 +492,12 @@ class BuyRecordListItem extends StatelessWidget {
                 final profit = record.calculateProfit(currency.additionalFiatPrices![record.fiatCurrency.symbol]!);
                 final profitText = record.calculateformattedProfit(currency.additionalFiatPrices![record.fiatCurrency.symbol]!);
 
-                var color = const Color(0xFF222222);
+                var color = Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white;
 
                 if (profit > 0) {
-                  color = const Color(0xFF54D790);
+                  color = const Color(0xFF00D964);
                 } else if (profit < 0) {
-                  color = const Color(0xFFD90D00);
+                  color = Colors.red;
                 }
 
                 return Text(

@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:walue_app/widgets/w_text_form_field.dart';
 
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
@@ -11,6 +10,7 @@ import '../../repositories/user_repository.dart';
 import '../../widgets/basic_button.dart';
 import '../../widgets/fiat_currencies_dialog.dart';
 import '../../widgets/logo.dart';
+import '../../widgets/w_text_form_field.dart';
 import 'settings_view_model.dart';
 
 final settingsViewModelProvider = ChangeNotifierProvider.autoDispose<SettingsViewModel>((ref) {
@@ -37,7 +37,7 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF000000),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
@@ -55,29 +55,29 @@ class SettingsScreen extends ConsumerWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Logo(
-                                color: Color(0xFF222222),
+                              Logo(
+                                color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                 small: true,
                               ),
                               Transform.translate(
                                 offset: const Offset(0.0, -10.0),
                                 child: Text(
                                   'Settings',
-                                  style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color(0xFF222222)),
+                                  style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                                 ),
                               ),
                             ],
                           ),
                           Transform.translate(
-                            offset: const Offset(8.0, -8.0),
+                            offset: const Offset(8.0, 0.0),
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               onPressed: () {
                                 context.beamToNamed('/', replaceCurrent: true);
                               },
-                              icon: const FaIcon(
+                              icon: FaIcon(
                                 FontAwesomeIcons.arrowLeft,
-                                color: Color(0xFF222222),
+                                color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                               ),
                             ),
                           ),
@@ -90,16 +90,16 @@ class SettingsScreen extends ConsumerWidget {
                         children: [
                           Row(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(right: 4.0),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
                                 child: FaIcon(
                                   FontAwesomeIcons.solidUser,
-                                  color: Color(0xFF222222),
+                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                 ),
                               ),
                               Text(
                                 'Account',
-                                style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0),
+                                style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0, color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                               ),
                             ],
                           ),
@@ -180,16 +180,19 @@ class SettingsScreen extends ConsumerWidget {
                         children: [
                           Row(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(right: 4.0),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
                                 child: FaIcon(
                                   FontAwesomeIcons.cog,
-                                  color: Color(0xFF222222),
+                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                 ),
                               ),
                               Text(
                                 'Preferences',
-                                style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0),
+                                style: Theme.of(context).textTheme.headline4!.copyWith(
+                                      fontSize: 24.0,
+                                      color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                    ),
                               ),
                             ],
                           ),
@@ -198,12 +201,12 @@ class SettingsScreen extends ConsumerWidget {
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Container(
                                 clipBehavior: Clip.hardEdge,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                                  borderRadius: const BorderRadius.all(
                                     Radius.circular(16.0),
                                   ),
-                                  boxShadow: [
+                                  boxShadow: const [
                                     BoxShadow(
                                       blurRadius: 4.0,
                                       color: Color(0x32000000),
@@ -214,7 +217,7 @@ class SettingsScreen extends ConsumerWidget {
                                   children: [
                                     PreferenceItem(
                                       title: 'Fiat currency',
-                                      subtitle: 'Currency in which your stats are displayed',
+                                      subtitle: 'Stats display currency',
                                       value: viewModel.fiatCurrency!.symbol.toUpperCase(),
                                       onTap: () {
                                         showDialog(
@@ -252,14 +255,14 @@ class SettingsScreen extends ConsumerWidget {
                                 padding: EdgeInsets.only(right: 4.0),
                                 child: FaIcon(
                                   FontAwesomeIcons.exclamationTriangle,
-                                  color: Color(0xFFD90D00),
+                                  color: Colors.red,
                                 ),
                               ),
                               Text(
                                 'Danger zone',
                                 style: Theme.of(context).textTheme.headline4!.copyWith(
                                       fontSize: 24.0,
-                                      color: const Color(0xFFD90D00),
+                                      color: Colors.red,
                                     ),
                               ),
                             ],
@@ -269,12 +272,12 @@ class SettingsScreen extends ConsumerWidget {
                             child: Container(
                               height: 48.0,
                               clipBehavior: Clip.hardEdge,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(16.0),
                                 ),
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
                                     blurRadius: 4.0,
                                     color: Color(0x32000000),
@@ -282,7 +285,7 @@ class SettingsScreen extends ConsumerWidget {
                                 ],
                               ),
                               child: Material(
-                                color: Colors.white,
+                                color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
                                 child: InkWell(
                                   onTap: () {
                                     showDialog(
@@ -292,7 +295,7 @@ class SettingsScreen extends ConsumerWidget {
                                           Navigator.of(context, rootNavigator: true).pop();
 
                                           final snackBar = SnackBar(
-                                            backgroundColor: const Color(0xFFD90D00),
+                                            backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.red : const Color(0xFFEE5349),
                                             shape: const RoundedRectangleBorder(
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(16.0),
@@ -318,7 +321,7 @@ class SettingsScreen extends ConsumerWidget {
                                     child: Text(
                                       'Delete account',
                                       style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                            color: const Color(0xFFD90D00),
+                                            color: Colors.red,
                                           ),
                                     ),
                                   ),
@@ -360,34 +363,39 @@ class PreferenceItem extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Material(
-        color: Colors.white,
+        color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
         child: InkWell(
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.subtitle1,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title,
+                          style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
+                        ),
+                        Text(
+                          subtitle,
+                          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                fontSize: 12.0,
+                                color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                              ),
+                          maxLines: 1,
+                        ),
+                      ],
                     ),
-                    Text(
-                      subtitle,
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontSize: 12.0,
-                            color: const Color(0x80222222),
-                          ),
-                    ),
-                  ],
+                  ),
                 ),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                 ),
               ],
             ),
@@ -420,6 +428,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
           Radius.circular(16.0),
         ),
       ),
+      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -430,7 +439,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
                   'Warning',
-                  style: Theme.of(context).textTheme.headline4!.copyWith(color: const Color(0xFFD90D00), fontSize: 24.0),
+                  style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.red, fontSize: 24.0),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -438,7 +447,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
                   'Your account and all of its associated data will be deleted. Are you sure you want continue?',
-                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: const Color(0xFF222222)),
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -486,7 +495,6 @@ class _DeleteAccountConfirmationDialogState extends State<DeleteAccountConfirmat
   final _formKey = GlobalKey<FormState>();
 
   bool _loading = false;
-  String _deleteText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -497,6 +505,7 @@ class _DeleteAccountConfirmationDialogState extends State<DeleteAccountConfirmat
           Radius.circular(16.0),
         ),
       ),
+      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -507,7 +516,7 @@ class _DeleteAccountConfirmationDialogState extends State<DeleteAccountConfirmat
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
                   'Confirm delete',
-                  style: Theme.of(context).textTheme.headline4!.copyWith(color: const Color(0xFFD90D00), fontSize: 24.0),
+                  style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.red, fontSize: 24.0),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -526,7 +535,6 @@ class _DeleteAccountConfirmationDialogState extends State<DeleteAccountConfirmat
                   child: WTextFormField(
                     autofocus: true,
                     hintText: 'DELETE',
-                    onChanged: (value) => _deleteText = value,
                     validator: (value) => value == 'DELETE' ? null : 'Invalid input',
                   ),
                 ),

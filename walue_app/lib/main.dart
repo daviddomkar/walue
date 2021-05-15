@@ -19,6 +19,7 @@ Future<void> main() async {
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
+    statusBarBrightness: Brightness.light,
   ));
 
   _licenceFonts();
@@ -83,6 +84,23 @@ class WalueApp extends StatelessWidget {
       routerDelegate: routerDelegate,
       backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
       theme: ThemeData(
+        brightness: Brightness.light,
+        textTheme: GoogleFonts.latoTextTheme().copyWith(
+          headline2: GoogleFonts.fredokaOne(fontSize: 64.0, color: const Color(0xFF222222)),
+          headline3: GoogleFonts.fredokaOne(fontSize: 48.0, color: const Color(0xFF222222)),
+          headline4: GoogleFonts.lato(fontSize: 36.0, fontWeight: FontWeight.w700, color: const Color(0xFF222222)),
+          headline5: GoogleFonts.lato(fontSize: 24.0, fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
+          headline6: GoogleFonts.lato(fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
+          subtitle1: GoogleFonts.lato(fontSize: 18.0, color: const Color(0xFF222222)),
+          subtitle2: GoogleFonts.lato(fontSize: 14.0, fontWeight: FontWeight.w300, color: const Color(0xFF222222)),
+          bodyText1: GoogleFonts.lato(fontSize: 14.0, color: const Color(0xFF222222)),
+          bodyText2: GoogleFonts.lato(fontSize: 14.0, fontWeight: FontWeight.w300, color: const Color(0x80222222)),
+        ),
+        primaryColor: const Color(0xFF0054F6),
+        accentColor: const Color(0xFF00D1FF),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
         textTheme: GoogleFonts.latoTextTheme().copyWith(
           headline2: GoogleFonts.fredokaOne(fontSize: 64.0, color: const Color(0xFF222222)),
           headline3: GoogleFonts.fredokaOne(fontSize: 48.0, color: const Color(0xFF222222)),

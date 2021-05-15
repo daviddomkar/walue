@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
@@ -20,12 +21,12 @@ final chooseFiatCurrencyViewModelProvider = ChangeNotifierProvider.autoDispose<C
   );
 });
 
-class ChooseFiatCurrencyScreen extends ConsumerWidget {
+class ChooseFiatCurrencyScreen extends HookWidget {
   const ChooseFiatCurrencyScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final viewModel = watch(chooseFiatCurrencyViewModelProvider);
+  Widget build(BuildContext context) {
+    final viewModel = useProvider(chooseFiatCurrencyViewModelProvider);
 
     final fiatCurrencies = viewModel.fiatCurrencies;
 
@@ -105,7 +106,7 @@ class ChooseFiatCurrencyScreen extends ConsumerWidget {
                 onPressed: () {
                   viewModel.chooseFiatCurrency().onError((error, stackTrace) {
                     final snackBar = SnackBar(
-                      backgroundColor: const Color(0xFFD90D00),
+                      backgroundColor: Colors.red,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(16.0),
