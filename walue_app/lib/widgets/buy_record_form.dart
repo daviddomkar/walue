@@ -175,7 +175,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
                 isExpanded: true,
                 value: _currency.symbol,
                 style: TextStyle(
-                  color: const Color(0xFF222222),
+                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                   fontSize: 18.0,
                   fontFamily: Theme.of(context).textTheme.bodyText1!.fontFamily,
                 ),
@@ -186,11 +186,12 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
                 ),
-                iconDisabledColor: const Color(0xFF222222),
-                iconEnabledColor: const Color(0xFF222222),
+                iconDisabledColor: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                iconEnabledColor: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                 onChanged: (String? newValue) {
                   _currency = widget.fiatCurrencies![newValue]!;
                 },
+                dropdownColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
                 items: widget.fiatCurrencies!.keys.map((symbol) {
                   return DropdownMenuItem<String>(
                     value: symbol,
