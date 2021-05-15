@@ -62,11 +62,6 @@ class RootLocation extends BeamLocation {
 
     final viewModel = container.read(_rootLocationViewModelProvider);
 
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-    ));
-
     return viewModel.user.when(
       data: (user) {
         return [
@@ -98,17 +93,10 @@ class RootLocation extends BeamLocation {
                 ),
               ),
             if (state.pathBlueprintSegments.contains('settings'))
-              (() {
-                SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent,
-                  statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-                ));
-
-                return NoTransitionPage(
-                  key: const ValueKey('settings'),
-                  child: const SettingsScreen(),
-                );
-              })(),
+              NoTransitionPage(
+                key: const ValueKey('settings'),
+                child: const SettingsScreen(),
+              ),
           ]
         ];
       },

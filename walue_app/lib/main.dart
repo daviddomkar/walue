@@ -21,11 +21,6 @@ import 'utils/no_glow_scroll_behavior.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarBrightness: Brightness.light,
-  ));
-
   _licenceFonts();
 
   await _initFirebase();

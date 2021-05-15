@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:beamer/beamer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -49,106 +50,113 @@ class CurrencyScreen extends HookWidget {
     final portfolioRecord = _portfolioRecord.data?.value;
     final buyRecords = portfolioRecord?.buyRecords;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF000000),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: Stack(
-                  children: [
-                    const HeaderBackground(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
-                          child: CurrencyScreenHeader(
-                            id: id,
-                            currencyName: currency?.name ?? currencyName ?? '',
-                            currencyImageUrl: currency?.imageUrl ?? currencyImageUrl ?? '',
-                            totalFiatAmount: portfolioRecord?.computeTotalFiatAmount(currency?.fiatPrice, fiatCurrency?.symbol, 100000000000000) ?? (buyRecords == null || buyRecords.isEmpty ? null : totalFiatAmount) ?? '',
-                            totalAmount: (currency?.symbol != null ? portfolioRecord?.computeTotalAmount(currency?.symbol, 100000000000000) : null) ?? (buyRecords == null || buyRecords.isEmpty ? null : totalAmount) ?? '',
-                            increasePercentage: portfolioRecord?.computeIncreasePercentage(currency?.fiatPrice) ?? (buyRecords == null || buyRecords.isEmpty ? null : increasePercentage) ?? '',
-                            onAddToFavourites: () {
-                              context.read(userRepositoryProvider).addCryptoCurrencyToFavourites(id);
-                            },
-                            onDeleteFromFavourites: () {
-                              context.read(userRepositoryProvider).deleteCryptoCurrencyFromFavourites(id);
-                            },
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF000000),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Stack(
+                    children: [
+                      const HeaderBackground(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
+                            child: CurrencyScreenHeader(
+                              id: id,
+                              currencyName: currency?.name ?? currencyName ?? '',
+                              currencyImageUrl: currency?.imageUrl ?? currencyImageUrl ?? '',
+                              totalFiatAmount: portfolioRecord?.computeTotalFiatAmount(currency?.fiatPrice, fiatCurrency?.symbol, 100000000000000) ?? (buyRecords == null || buyRecords.isEmpty ? null : totalFiatAmount) ?? '',
+                              totalAmount: (currency?.symbol != null ? portfolioRecord?.computeTotalAmount(currency?.symbol, 100000000000000) : null) ?? (buyRecords == null || buyRecords.isEmpty ? null : totalAmount) ?? '',
+                              increasePercentage: portfolioRecord?.computeIncreasePercentage(currency?.fiatPrice) ?? (buyRecords == null || buyRecords.isEmpty ? null : increasePercentage) ?? '',
+                              onAddToFavourites: () {
+                                context.read(userRepositoryProvider).addCryptoCurrencyToFavourites(id);
+                              },
+                              onDeleteFromFavourites: () {
+                                context.read(userRepositoryProvider).deleteCryptoCurrencyFromFavourites(id);
+                              },
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 4.0),
-                                      child: FaIcon(
-                                        FontAwesomeIcons.dollarSign,
-                                        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 4.0),
+                                        child: FaIcon(
+                                          FontAwesomeIcons.dollarSign,
+                                          color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      'Buy Records',
-                                      style: Theme.of(context).textTheme.headline4!.copyWith(
-                                            fontSize: 24.0,
-                                            color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 16.0, top: 8.0),
-                                    child: BuyRecordList(id: id),
+                                      Text(
+                                        'Buy Records',
+                                        style: Theme.of(context).textTheme.headline4!.copyWith(
+                                              fontSize: 24.0,
+                                              color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                            ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 32.0, left: 32.0, right: 32.0),
-                          child: GradientButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (_) => BuyRecordDialog(
-                                  fiatCurrencies: fiatCurrencies.data?.value,
-                                  selectedCurrency: fiatCurrency,
-                                  onAddRecord: (buyPrice, amount, fiatCurrency) {
-                                    if (currency != null) {
-                                      context.read(userRepositoryProvider).addCryptoCurrencyBuyRecord(currency, buyPrice, amount, fiatCurrency);
-                                      Navigator.of(context, rootNavigator: true).pop(context);
-                                    }
-                                  },
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              'Add new buy record',
-                              style: TextStyle(
-                                fontSize: 18.0,
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(bottom: 16.0, top: 8.0),
+                                      child: BuyRecordList(id: id),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ],
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 32.0, left: 32.0, right: 32.0),
+                            child: GradientButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => BuyRecordDialog(
+                                    fiatCurrencies: fiatCurrencies.data?.value,
+                                    selectedCurrency: fiatCurrency,
+                                    onAddRecord: (buyPrice, amount, fiatCurrency) {
+                                      if (currency != null) {
+                                        context.read(userRepositoryProvider).addCryptoCurrencyBuyRecord(currency, buyPrice, amount, fiatCurrency);
+                                        Navigator.of(context, rootNavigator: true).pop(context);
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                'Add new buy record',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
