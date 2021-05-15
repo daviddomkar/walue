@@ -2,6 +2,7 @@ import 'package:beamer/beamer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,19 +15,20 @@ import '../../providers.dart';
 import '../../repositories/user_repository.dart';
 import '../../widgets/crypto_select_sheet.dart';
 import '../../widgets/gradient_button.dart';
+import '../../widgets/header_background.dart';
 import '../../widgets/logo.dart';
 import '../../widgets/portfolio_record_list_item.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends HookWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final viewModel = watch(userRepositoryProvider);
+  Widget build(BuildContext context) {
+    final viewModel = useProvider(userRepositoryProvider);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF000000),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
@@ -35,27 +37,7 @@ class HomeScreen extends ConsumerWidget {
               child: IntrinsicHeight(
                 child: Stack(
                   children: [
-                    Transform(
-                      transform: Matrix4.rotationZ(0.4)..translate(-150.0, -96.0),
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: 400.0,
-                        height: 400.0,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(40.0),
-                          ),
-                          gradient: LinearGradient(
-                            colors: [
-                              Theme.of(context).primaryColor,
-                              Theme.of(context).accentColor,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                      ),
-                    ),
+                    const HeaderBackground(),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -81,7 +63,7 @@ class HomeScreen extends ConsumerWidget {
                                 ],
                               ),
                               Transform.translate(
-                                offset: const Offset(8.0, -8.0),
+                                offset: const Offset(8.0, 0.0),
                                 child: IconButton(
                                   padding: EdgeInsets.zero,
                                   onPressed: () {
@@ -89,7 +71,7 @@ class HomeScreen extends ConsumerWidget {
                                   },
                                   icon: const FaIcon(
                                     FontAwesomeIcons.userCog,
-                                    color: Color(0xFF222222),
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -128,16 +110,19 @@ class HomeScreen extends ConsumerWidget {
                               children: [
                                 Row(
                                   children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 4.0),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 4.0),
                                       child: FaIcon(
                                         FontAwesomeIcons.list,
-                                        color: Color(0xFF222222),
+                                        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                       ),
                                     ),
                                     Text(
                                       'Portfolio',
-                                      style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0),
+                                      style: Theme.of(context).textTheme.headline4!.copyWith(
+                                            fontSize: 24.0,
+                                            color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -185,7 +170,7 @@ class AddNewCryptoButton extends HookWidget {
             clipBehavior: Clip.hardEdge,
             context: context,
             isScrollControlled: true,
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40.0),
@@ -250,12 +235,12 @@ class FavouriteList extends HookWidget {
               width: 128.0,
               height: 128.0,
               clipBehavior: Clip.hardEdge,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(
+              decoration: BoxDecoration(
+                color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                borderRadius: const BorderRadius.all(
                   Radius.circular(16.0),
                 ),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     blurRadius: 4.0,
                     color: Color(0x32000000),
@@ -263,14 +248,14 @@ class FavouriteList extends HookWidget {
                 ],
               ),
               child: Material(
-                color: Colors.white,
+                color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
                 child: index == itemCount - 1
                     ? AnimatedSwitcher(
                         duration: const Duration(milliseconds: 250),
                         child: loading
                             ? Center(
                                 child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                                  valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
                                   strokeWidth: 2.0,
                                 ),
                               )
@@ -282,7 +267,7 @@ class FavouriteList extends HookWidget {
                                     clipBehavior: Clip.hardEdge,
                                     context: context,
                                     isScrollControlled: true,
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
                                     shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(40.0),
@@ -302,9 +287,9 @@ class FavouriteList extends HookWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const FaIcon(
+                                      FaIcon(
                                         FontAwesomeIcons.plus,
-                                        color: Color(0xFF222222),
+                                        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(top: 8.0),
@@ -312,6 +297,7 @@ class FavouriteList extends HookWidget {
                                           'Add favourite',
                                           style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                                 fontSize: 14.0,
+                                                color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                               ),
                                         ),
                                       ),
@@ -325,7 +311,7 @@ class FavouriteList extends HookWidget {
                         child: ownedCurrencies == null || !ownedCurrencies.containsKey(favouriteCurrencyIds![index])
                             ? Center(
                                 child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                                  valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
                                   strokeWidth: 2.0,
                                 ),
                               )
@@ -366,14 +352,19 @@ class FavouriteList extends HookWidget {
                                                   maxWidth: 70.0,
                                                   child: Text(
                                                     ownedCurrencies[favouriteCurrencyIds[index]]!.name,
-                                                    style: Theme.of(context).textTheme.bodyText1,
+                                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                                          color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                                        ),
                                                     maxLines: 1,
                                                     overflow: TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                                 Text(
                                                   ownedCurrencies[favouriteCurrencyIds[index]]!.symbol.toUpperCase(),
-                                                  style: const TextStyle(height: 0.9),
+                                                  style: TextStyle(
+                                                    height: 0.9,
+                                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                                                  ),
                                                 )
                                               ],
                                             ),
@@ -385,13 +376,17 @@ class FavouriteList extends HookWidget {
                                         children: [
                                           Text(
                                             'Market Price',
-                                            style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 12.0),
+                                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                                  fontSize: 12.0,
+                                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                                ),
                                             textAlign: TextAlign.right,
                                           ),
                                           Text(
                                             ownedCurrencies[favouriteCurrencyIds[index]]!.calculateFormattedFiatPrice(fiatCurrency!.symbol)!,
                                             style: Theme.of(context).textTheme.subtitle2!.copyWith(
                                                   fontSize: 18.0,
+                                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                                 ),
                                             textAlign: TextAlign.right,
                                           ),
@@ -434,12 +429,12 @@ class PortfolioRecordList extends HookWidget {
 
     return Container(
       clipBehavior: Clip.hardEdge,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+        borderRadius: const BorderRadius.all(
           Radius.circular(16.0),
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             blurRadius: 4.0,
             color: Color(0x32000000),
@@ -453,7 +448,7 @@ class PortfolioRecordList extends HookWidget {
                 child: Text(
                   'An error occured while fetching records, Walue will attempt another fetch in a moment!',
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        color: const Color(0xFFD90D00),
+                        color: Colors.red,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -461,18 +456,23 @@ class PortfolioRecordList extends HookWidget {
             : loading
                 ? Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                      valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
                       strokeWidth: 2.0,
                     ),
                   )
                 : portfolioRecords.data!.value!.isEmpty
-                    ? const Center(
-                        child: Text('No portfolio records found'),
+                    ? Center(
+                        child: Text(
+                          'No portfolio records found',
+                          style: TextStyle(
+                            color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                          ),
+                        ),
                       )
                     : Container(
                         constraints: const BoxConstraints.expand(),
                         child: Material(
-                          color: Colors.white,
+                          color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
                           child: Column(
                             children: [
                               for (var i = 0; i < portfolioRecords.data!.value!.length; i++) ...[
@@ -482,10 +482,10 @@ class PortfolioRecordList extends HookWidget {
                                     currency: ownedCurrencies.data!.value![portfolioRecords.data!.value![i].id]!,
                                     fiatCurrency: fiatCurrency!,
                                   ),
-                                const Divider(
+                                Divider(
                                   height: 1,
                                   thickness: 1,
-                                  color: Color(0x20000000),
+                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0x20000000) : const Color(0x20FFFFFF),
                                 ),
                               ],
                             ],

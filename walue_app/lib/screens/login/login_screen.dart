@@ -64,7 +64,7 @@ class LogInScreen extends ConsumerWidget {
                                 onPressed: () {
                                   viewModel.signInWithGoogle().onError((error, stackTrace) {
                                     final snackBar = SnackBar(
-                                      backgroundColor: const Color(0xFFD90D00),
+                                      backgroundColor: Colors.red,
                                       shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(16.0),
@@ -93,7 +93,7 @@ class LogInScreen extends ConsumerWidget {
                                 onPressed: () {
                                   viewModel.signInWithApple().onError((error, stackTrace) {
                                     final snackBar = SnackBar(
-                                      backgroundColor: const Color(0xFFD90D00),
+                                      backgroundColor: Colors.red,
                                       shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(16.0),

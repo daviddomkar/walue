@@ -42,6 +42,7 @@ class BuyRecordDialog extends StatelessWidget {
           Radius.circular(16.0),
         ),
       ),
+      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

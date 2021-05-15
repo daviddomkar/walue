@@ -25,7 +25,7 @@ class CryptoSelectSheet extends HookWidget {
       expand: false,
       builder: (context, controller) {
         return Container(
-          color: Colors.white,
+          color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
           child: cryptoCurrencies.when(
             data: (data) {
               data = data
@@ -61,13 +61,20 @@ class CryptoSelectSheet extends HookWidget {
                             imageUrl: data![index].imageUrl,
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
                                 image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
                               ),
                             ),
                           ),
-                          title: Text(data[index].name),
-                          subtitle: Text(data[index].symbol.toUpperCase()),
+                          title: Text(
+                            data[index].name,
+                            style: TextStyle(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
+                          ),
+                          subtitle: Text(
+                            data[index].symbol.toUpperCase(),
+                            style: TextStyle(
+                              color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                            ),
+                          ),
                           onTap: () {
                             onCryptoCurrencySelected(data![index]);
                           },
@@ -81,7 +88,9 @@ class CryptoSelectSheet extends HookWidget {
             },
             loading: () => Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                valueColor: AlwaysStoppedAnimation(
+                  Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).accentColor,
+                ),
                 strokeWidth: 2.0,
               ),
             ),
@@ -90,7 +99,7 @@ class CryptoSelectSheet extends HookWidget {
                 child: Text(
                   'An error occured while fetching crypto currencies, check your connection and try again!',
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        color: const Color(0xFFD90D00),
+                        color: Colors.red,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -125,12 +134,12 @@ class CryptoSelectSheetHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
       child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Text('Choose a crypto currency', style: Theme.of(context).textTheme.headline6),
+            child: Text('Choose a crypto currency', style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 32.0),

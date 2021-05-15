@@ -50,10 +50,7 @@ class _WTextFormFieldState extends State<WTextFormField> {
     _dirty = false;
 
     _focusNode?.addListener(() {
-      if (_focusNode != null &&
-          _dirty != null &&
-          !_focusNode!.hasFocus &&
-          !_dirty!) {
+      if (_focusNode != null && _dirty != null && !_focusNode!.hasFocus && !_dirty!) {
         setState(() {
           _dirty = true;
         });
@@ -72,20 +69,50 @@ class _WTextFormFieldState extends State<WTextFormField> {
     return TextFormField(
       initialValue: widget.initialValue,
       controller: widget.controller,
+      style: TextStyle(
+        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+      ),
       decoration: InputDecoration(
-        border: const OutlineInputBorder(
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF)),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(16.0),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(width: 2.0, color: Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(16.0),
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF)),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(16.0),
+          ),
+        ),
+        errorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.all(
+            Radius.circular(16.0),
+          ),
+        ),
+        focusedErrorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(width: 2.0, color: Colors.red),
           borderRadius: BorderRadius.all(
             Radius.circular(16.0),
           ),
         ),
         isDense: true,
         hintText: widget.hintText,
+        hintStyle: TextStyle(color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF)),
+        errorStyle: const TextStyle(
+          color: Colors.red,
+        ),
       ),
       autofocus: widget.autofocus,
       focusNode: _focusNode,
-      autovalidateMode: _dirty != null && _dirty!
-          ? AutovalidateMode.always
-          : AutovalidateMode.disabled,
+      autovalidateMode: _dirty != null && _dirty! ? AutovalidateMode.always : AutovalidateMode.disabled,
       obscureText: widget.obscureText,
       inputFormatters: widget.inputFormatters,
       validator: widget.validator,
