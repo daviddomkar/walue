@@ -533,7 +533,7 @@ class _DeleteAccountConfirmationDialogState extends State<DeleteAccountConfirmat
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
                   'Type DELETE to the field below to confirm account deletion.',
-                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: const Color(0xFF222222)),
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
