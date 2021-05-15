@@ -1,8 +1,10 @@
 import 'package:beamer/beamer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
@@ -10,6 +12,7 @@ import '../../repositories/user_repository.dart';
 import '../../widgets/basic_button.dart';
 import '../../widgets/fiat_currencies_dialog.dart';
 import '../../widgets/logo.dart';
+import '../../widgets/theme_mode_dialog.dart';
 import '../../widgets/w_text_form_field.dart';
 import 'settings_view_model.dart';
 
@@ -28,12 +31,13 @@ final settingsViewModelProvider = ChangeNotifierProvider.autoDispose<SettingsVie
   );
 });
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends HookWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final viewModel = watch(settingsViewModelProvider);
+  Widget build(BuildContext context) {
+    final viewModel = useProvider(settingsViewModelProvider);
+    final themeMode = useProvider(themeProvider);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -235,8 +239,13 @@ class SettingsScreen extends ConsumerWidget {
                                     PreferenceItem(
                                       title: 'Theme',
                                       subtitle: 'visual style of the app',
-                                      value: 'System',
-                                      onTap: () {},
+                                      value: ThemeModeDialog.getThemeModeName(themeMode),
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) => const ThemeModeDialog(),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
