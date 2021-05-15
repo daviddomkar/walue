@@ -66,5 +66,4 @@ final portfolioRecordsStreamProvider = StreamProvider.autoDispose<List<Portfolio
 
           throw e;
         });
-  ;
 });
