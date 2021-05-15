@@ -1,6 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,171 +40,253 @@ class SettingsScreen extends HookWidget {
     final viewModel = useProvider(settingsViewModelProvider);
     final themeMode = useProvider(themeProvider);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF000000),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Logo(
-                                color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                small: true,
-                              ),
-                              Transform.translate(
-                                offset: const Offset(0.0, -10.0),
-                                child: Text(
-                                  'Settings',
-                                  style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        statusBarBrightness: Theme.of(context).brightness,
+      ),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF000000),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Logo(
+                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                  small: true,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Transform.translate(
-                            offset: const Offset(8.0, 0.0),
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                context.beamToNamed('/', replaceCurrent: true);
-                              },
-                              icon: FaIcon(
-                                FontAwesomeIcons.arrowLeft,
-                                color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                              ),
+                                Transform.translate(
+                                  offset: const Offset(0.0, -10.0),
+                                  child: Text(
+                                    'Settings',
+                                    style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, left: 32.0, right: 32.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: FaIcon(
-                                  FontAwesomeIcons.solidUser,
+                            Transform.translate(
+                              offset: const Offset(8.0, 0.0),
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () {
+                                  context.beamToNamed('/', replaceCurrent: true);
+                                },
+                                icon: FaIcon(
+                                  FontAwesomeIcons.arrowLeft,
                                   color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                 ),
                               ),
-                              Text(
-                                'Account',
-                                style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0, color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
-                              ),
-                            ],
-                          ),
-                          if (!viewModel.loading)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Container(
-                                padding: const EdgeInsets.all(16.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(16.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 32.0, right: 32.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: FaIcon(
+                                    FontAwesomeIcons.solidUser,
+                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                   ),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Theme.of(context).primaryColor,
-                                      Theme.of(context).accentColor,
+                                ),
+                                Text(
+                                  'Account',
+                                  style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0, color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
+                                ),
+                              ],
+                            ),
+                            if (!viewModel.loading)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Container(
+                                  padding: const EdgeInsets.all(16.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(16.0),
+                                    ),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Theme.of(context).primaryColor,
+                                        Theme.of(context).accentColor,
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      CachedNetworkImage(
+                                        width: 48.0,
+                                        height: 48.0,
+                                        imageUrl: viewModel.photoUrl!,
+                                        imageBuilder: (context, imageProvider) => Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 16.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                viewModel.displayName!,
+                                                style: Theme.of(context).textTheme.headline4!.copyWith(
+                                                      fontSize: 18.0,
+                                                      color: Colors.white,
+                                                    ),
+                                              ),
+                                              Text(
+                                                viewModel.email!,
+                                                style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                                      color: Colors.white,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        padding: EdgeInsets.zero,
+                                        onPressed: () {
+                                          viewModel.signOut();
+                                        },
+                                        icon: const FaIcon(
+                                          FontAwesomeIcons.signOutAlt,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
                                   ),
                                 ),
-                                child: Row(
-                                  children: [
-                                    CachedNetworkImage(
-                                      width: 48.0,
-                                      height: 48.0,
-                                      imageUrl: viewModel.photoUrl!,
-                                      imageBuilder: (context, imageProvider) => Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 16.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              viewModel.displayName!,
-                                              style: Theme.of(context).textTheme.headline4!.copyWith(
-                                                    fontSize: 18.0,
-                                                    color: Colors.white,
-                                                  ),
-                                            ),
-                                            Text(
-                                              viewModel.email!,
-                                              style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                                    color: Colors.white,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () {
-                                        viewModel.signOut();
-                                      },
-                                      icon: const FaIcon(
-                                        FontAwesomeIcons.signOutAlt,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: FaIcon(
+                                    FontAwesomeIcons.cog,
+                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  'Preferences',
+                                  style: Theme.of(context).textTheme.headline4!.copyWith(
+                                        fontSize: 24.0,
+                                        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                      ),
+                                ),
+                              ],
+                            ),
+                            if (!viewModel.loading)
                               Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: FaIcon(
-                                  FontAwesomeIcons.cog,
-                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Container(
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(16.0),
+                                    ),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        blurRadius: 4.0,
+                                        color: Color(0x32000000),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      PreferenceItem(
+                                        title: 'Fiat currency',
+                                        subtitle: 'Stats display currency',
+                                        value: viewModel.fiatCurrency!.symbol.toUpperCase(),
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) => FiatCurrenciesDialog(
+                                              currencies: viewModel.fiatCurrencies!.values.where((currency) => currency.symbol != viewModel.fiatCurrency!.symbol).toList(),
+                                              onCurrencySelected: (currency) {
+                                                viewModel.changeFiatCurrency(currency);
+                                                Navigator.of(context, rootNavigator: true).pop(context);
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      PreferenceItem(
+                                        title: 'Theme',
+                                        subtitle: 'visual style of the app',
+                                        value: ThemeModeDialog.getThemeModeName(themeMode),
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) => const ThemeModeDialog(),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              Text(
-                                'Preferences',
-                                style: Theme.of(context).textTheme.headline4!.copyWith(
-                                      fontSize: 24.0,
-                                      color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          if (!viewModel.loading)
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 4.0),
+                                  child: FaIcon(
+                                    FontAwesomeIcons.exclamationTriangle,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                Text(
+                                  'Danger zone',
+                                  style: Theme.of(context).textTheme.headline4!.copyWith(
+                                        fontSize: 24.0,
+                                        color: Colors.red,
+                                      ),
+                                ),
+                              ],
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Container(
+                                height: 48.0,
                                 clipBehavior: Clip.hardEdge,
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
@@ -217,136 +300,61 @@ class SettingsScreen extends HookWidget {
                                     ),
                                   ],
                                 ),
-                                child: Column(
-                                  children: [
-                                    PreferenceItem(
-                                      title: 'Fiat currency',
-                                      subtitle: 'Stats display currency',
-                                      value: viewModel.fiatCurrency!.symbol.toUpperCase(),
-                                      onTap: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (_) => FiatCurrenciesDialog(
-                                            currencies: viewModel.fiatCurrencies!.values.where((currency) => currency.symbol != viewModel.fiatCurrency!.symbol).toList(),
-                                            onCurrencySelected: (currency) {
-                                              viewModel.changeFiatCurrency(currency);
-                                              Navigator.of(context, rootNavigator: true).pop(context);
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    PreferenceItem(
-                                      title: 'Theme',
-                                      subtitle: 'visual style of the app',
-                                      value: ThemeModeDialog.getThemeModeName(themeMode),
-                                      onTap: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (_) => const ThemeModeDialog(),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(right: 4.0),
-                                child: FaIcon(
-                                  FontAwesomeIcons.exclamationTriangle,
-                                  color: Colors.red,
-                                ),
-                              ),
-                              Text(
-                                'Danger zone',
-                                style: Theme.of(context).textTheme.headline4!.copyWith(
-                                      fontSize: 24.0,
-                                      color: Colors.red,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Container(
-                              height: 48.0,
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(16.0),
-                                ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    blurRadius: 4.0,
-                                    color: Color(0x32000000),
-                                  ),
-                                ],
-                              ),
-                              child: Material(
-                                color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
-                                child: InkWell(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => DeleteAccountDialog(onDeleteAccount: () {
-                                        viewModel.deleteAccount().then((value) => Navigator.of(context, rootNavigator: true).pop()).onError((error, stackTrace) {
-                                          Navigator.of(context, rootNavigator: true).pop();
+                                child: Material(
+                                  color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                                  child: InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => DeleteAccountDialog(onDeleteAccount: () {
+                                          viewModel.deleteAccount().then((value) => Navigator.of(context, rootNavigator: true).pop()).onError((error, stackTrace) {
+                                            Navigator.of(context, rootNavigator: true).pop();
 
-                                          final snackBar = SnackBar(
-                                            backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.red : const Color(0xFFEE5349),
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(16.0),
-                                                topRight: Radius.circular(16.0),
+                                            final snackBar = SnackBar(
+                                              backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.red : const Color(0xFFEE5349),
+                                              shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(16.0),
+                                                  topRight: Radius.circular(16.0),
+                                                ),
                                               ),
-                                            ),
-                                            content: Text(
-                                              'An error occurred',
-                                              style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                                    fontSize: 16.0,
-                                                    color: Colors.white,
-                                                  ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          );
+                                              content: Text(
+                                                'An error occurred',
+                                                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                      fontSize: 16.0,
+                                                      color: Colors.white,
+                                                    ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            );
 
-                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                        });
-                                      }),
-                                    );
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      'Delete account',
-                                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                            color: Colors.red,
-                                          ),
+                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                          });
+                                        }),
+                                      );
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        'Delete account',
+                                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                              color: Colors.red,
+                                            ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

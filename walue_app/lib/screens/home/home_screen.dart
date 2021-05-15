@@ -26,128 +26,135 @@ class HomeScreen extends HookWidget {
   Widget build(BuildContext context) {
     final viewModel = useProvider(userRepositoryProvider);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF000000),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: Stack(
-                  children: [
-                    const HeaderBackground(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Logo(
-                                    small: true,
-                                  ),
-                                  Transform.translate(
-                                    offset: const Offset(0.0, -10.0),
-                                    child: Text(
-                                      'Dashboard',
-                                      style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color(0xCCFFFFFF)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Transform.translate(
-                                offset: const Offset(8.0, 0.0),
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () {
-                                    context.beamToNamed('/settings', popToNamed: '/');
-                                  },
-                                  icon: const FaIcon(
-                                    FontAwesomeIcons.userCog,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(right: 4.0, left: 32.0),
-                                    child: FaIcon(
-                                      FontAwesomeIcons.solidStar,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Favourites',
-                                    style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0, color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              FavouriteList(
-                                onAddFavourite: (currency) => viewModel.addCryptoCurrencyToFavourites(currency.id),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                            child: Column(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF000000),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Stack(
+                    children: [
+                      const HeaderBackground(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 4.0),
-                                      child: FaIcon(
-                                        FontAwesomeIcons.list,
-                                        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                      ),
+                                    const Logo(
+                                      small: true,
                                     ),
-                                    Text(
-                                      'Portfolio',
-                                      style: Theme.of(context).textTheme.headline4!.copyWith(
-                                            fontSize: 24.0,
-                                            color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                          ),
+                                    Transform.translate(
+                                      offset: const Offset(0.0, -10.0),
+                                      child: Text(
+                                        'Dashboard',
+                                        style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color(0xCCFFFFFF)),
+                                      ),
                                     ),
                                   ],
                                 ),
-                                const Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(bottom: 16.0, top: 8.0),
-                                    child: PortfolioRecordList(),
+                                Transform.translate(
+                                  offset: const Offset(8.0, 0.0),
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {
+                                      context.beamToNamed('/settings', popToNamed: '/');
+                                    },
+                                    icon: const FaIcon(
+                                      FontAwesomeIcons.userCog,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 32.0, left: 32.0, right: 32.0),
-                          child: AddNewCryptoButton(),
-                        )
-                      ],
-                    ),
-                  ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 4.0, left: 32.0),
+                                      child: FaIcon(
+                                        FontAwesomeIcons.solidStar,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Favourites',
+                                      style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                FavouriteList(
+                                  onAddFavourite: (currency) => viewModel.addCryptoCurrencyToFavourites(currency.id),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 4.0),
+                                        child: FaIcon(
+                                          FontAwesomeIcons.list,
+                                          color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Portfolio',
+                                        style: Theme.of(context).textTheme.headline4!.copyWith(
+                                              fontSize: 24.0,
+                                              color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(bottom: 16.0, top: 8.0),
+                                      child: PortfolioRecordList(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 32.0, left: 32.0, right: 32.0),
+                            child: AddNewCryptoButton(),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
