@@ -3,11 +3,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:walue_app/widgets/basic_button.dart';
+import 'package:walue_app/widgets/w_text_form_field.dart';
 
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
+import '../../widgets/basic_button.dart';
 import '../../widgets/fiat_currencies_dialog.dart';
 import '../../widgets/logo.dart';
 import 'settings_view_model.dart';
@@ -290,8 +291,6 @@ class SettingsScreen extends ConsumerWidget {
                                         viewModel.deleteAccount().then((value) => Navigator.of(context, rootNavigator: true).pop()).onError((error, stackTrace) {
                                           Navigator.of(context, rootNavigator: true).pop();
 
-                                          print(error.toString());
-
                                           final snackBar = SnackBar(
                                             backgroundColor: const Color(0xFFD90D00),
                                             shape: const RoundedRectangleBorder(
@@ -412,8 +411,6 @@ class DeleteAccountDialog extends StatefulWidget {
 }
 
 class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
-  bool _loading = false;
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -446,18 +443,113 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                 ),
               ),
               BasicButton(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  showDialog(
+                    context: context,
+                    builder: (context) => DeleteAccountConfirmationDialog(
+                      onDeleteAccount: widget.onDeleteAccount,
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Delete account',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DeleteAccountConfirmationDialog extends StatefulWidget {
+  final void Function() onDeleteAccount;
+
+  const DeleteAccountConfirmationDialog({
+    required this.onDeleteAccount,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _DeleteAccountConfirmationDialogState createState() => _DeleteAccountConfirmationDialogState();
+}
+
+class _DeleteAccountConfirmationDialogState extends State<DeleteAccountConfirmationDialog> {
+  final _formKey = GlobalKey<FormState>();
+
+  bool _loading = false;
+  String _deleteText = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      clipBehavior: Clip.hardEdge,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(16.0),
+        ),
+      ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text(
+                  'Confirm delete',
+                  style: Theme.of(context).textTheme.headline4!.copyWith(color: const Color(0xFFD90D00), fontSize: 24.0),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text(
+                  'Type DELETE to the field below to confirm account deletion.',
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: const Color(0xFF222222)),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Form(
+                  key: _formKey,
+                  child: WTextFormField(
+                    autofocus: true,
+                    hintText: 'DELETE',
+                    onChanged: (value) => _deleteText = value,
+                    validator: (value) => value == 'DELETE' ? null : 'Invalid input',
+                  ),
+                ),
+              ),
+              BasicButton(
                 loading: _loading,
                 foregroundColor: Colors.white,
                 backgroundColor: Colors.red,
                 onPressed: () {
-                  setState(() {
-                    _loading = true;
-                  });
+                  if (_formKey.currentState == null) {
+                    return;
+                  }
 
-                  widget.onDeleteAccount();
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      _loading = true;
+                    });
+
+                    widget.onDeleteAccount();
+                  }
                 },
                 child: const Text(
-                  'Delete account',
+                  'Confirm',
                   style: TextStyle(
                     fontSize: 18.0,
                   ),
