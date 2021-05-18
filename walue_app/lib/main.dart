@@ -2,6 +2,7 @@ import 'package:beamer/beamer.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,6 +31,7 @@ Future<void> main() async {
   final cacheStore = HiveCacheStore(databaseDirectory.path);
 
   if (kDebugMode) {
+    await FirebasePerformance.instance.setPerformanceCollectionEnabled(false);
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   }
 

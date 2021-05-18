@@ -33,7 +33,6 @@ class LogInViewModel extends ChangeNotifier {
 
     try {
       await authRepository.signInWithApple();
-      throw 'test';
     } catch (error) {
       _error = 'Could not sign in with Apple';
       _appleLoading = false;

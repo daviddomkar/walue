@@ -134,36 +134,38 @@ class SettingsScreen extends HookWidget {
                                   ),
                                   child: Row(
                                     children: [
-                                      CachedNetworkImage(
-                                        width: 48.0,
-                                        height: 48.0,
-                                        imageUrl: viewModel.photoUrl!,
-                                        imageBuilder: (context, imageProvider) => Container(
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+                                      if (viewModel.photoUrl != null)
+                                        CachedNetworkImage(
+                                          width: 48.0,
+                                          height: 48.0,
+                                          imageUrl: viewModel.photoUrl!,
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+                                            ),
                                           ),
                                         ),
-                                      ),
                                       Expanded(
                                         child: Padding(
-                                          padding: const EdgeInsets.only(left: 16.0),
+                                          padding: EdgeInsets.only(left: viewModel.photoUrl != null ? 16.0 : 0.0),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                viewModel.displayName!,
+                                                viewModel.displayName ?? viewModel.email!,
                                                 style: Theme.of(context).textTheme.headline4!.copyWith(
                                                       fontSize: 18.0,
                                                       color: Colors.white,
                                                     ),
                                               ),
-                                              Text(
-                                                viewModel.email!,
-                                                style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                                      color: Colors.white,
-                                                    ),
-                                              ),
+                                              if (viewModel.displayName != null)
+                                                Text(
+                                                  viewModel.email!,
+                                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                                        color: Colors.white,
+                                                      ),
+                                                ),
                                             ],
                                           ),
                                         ),
