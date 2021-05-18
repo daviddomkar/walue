@@ -22,8 +22,8 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
                 return User(
                   id: user.uid,
                   email: user.email!,
-                  displayName: user.displayName!,
-                  photoUrl: user.photoURL!,
+                  displayName: user.displayName == null || user.displayName!.isEmpty ? null : user.displayName,
+                  photoUrl: user.photoURL,
                   fiatCurrency: data.containsKey('fiat_currency')
                       ? Currency(
                           symbol: data['fiat_currency']['symbol'] as String,
@@ -37,8 +37,8 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
               return User(
                 id: user.uid,
                 email: user.email!,
-                displayName: user.displayName!,
-                photoUrl: user.photoURL!,
+                displayName: user.displayName == null || user.displayName!.isEmpty ? null : user.displayName,
+                photoUrl: user.photoURL,
               );
             }))
       .handleError((Object e, StackTrace s) {

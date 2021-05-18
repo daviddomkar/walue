@@ -3,8 +3,8 @@ import 'currency.dart';
 class User {
   final String id;
   final String email;
-  final String displayName;
-  final String photoUrl;
+  final String? displayName;
+  final String? photoUrl;
 
   final Currency? fiatCurrency;
 

@@ -4,3 +4,4 @@ admin.initializeApp();
 
 export * from './auth';
 export * from './callables';
+export * from './https';

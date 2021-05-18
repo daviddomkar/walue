@@ -126,7 +126,7 @@ class CoinGeckoCryptoRepository extends CryptoRepository {
       }
     }
 
-    final currency = response.data!;
+    final currency = response.data;
 
     return CryptoCurrency(
       id: currency['id'] as String,

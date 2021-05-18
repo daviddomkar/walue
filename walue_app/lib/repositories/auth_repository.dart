@@ -52,23 +52,22 @@ class FirebaseAuthRepository extends AuthRepository {
           AppleIDAuthorizationScopes.fullName,
         ],
         webAuthenticationOptions: WebAuthenticationOptions(
-          // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
           clientId: 'eu.kormic.walue.service',
           redirectUri: Uri.parse(
-            'signinwithapple://callback',
+            'https://europe-west1-walue-app.cloudfunctions.net/signInWithAppleCallback',
           ),
         ),
         nonce: nonce,
       );
 
       final oauthCredential = OAuthProvider('apple.com').credential(
+        accessToken: appleCredential.identityToken,
         idToken: appleCredential.identityToken,
         rawNonce: rawNonce,
       );
 
       await FirebaseAuth.instance.signInWithCredential(oauthCredential);
     } catch (e) {
-      print(e);
       throw 'Could not sign in!';
     }
   }
