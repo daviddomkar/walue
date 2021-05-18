@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
@@ -260,6 +261,65 @@ class SettingsScreen extends HookWidget {
                                   ),
                                 ),
                               ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: FaIcon(
+                                    FontAwesomeIcons.bolt,
+                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  'Powered by',
+                                  style: Theme.of(context).textTheme.headline4!.copyWith(
+                                        fontSize: 24.0,
+                                        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                      ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Container(
+                                clipBehavior: Clip.hardEdge,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(16.0),
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      blurRadius: 4.0,
+                                      color: Color(0x32000000),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    PreferenceItem(
+                                      title: 'CoinGecko',
+                                      subtitle: 'Cryptocurrency data API',
+                                      value: 'Explore',
+                                      onTap: () => launch('https://www.coingecko.com/en/api'),
+                                    ),
+                                    PreferenceItem(
+                                      title: 'ExchangeRate.host',
+                                      subtitle: 'Fiat currency exchange API',
+                                      value: 'Explore',
+                                      onTap: () => launch('https://exchangerate.host/'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
