@@ -56,7 +56,7 @@ class RootLocation extends BeamLocation {
   }
 
   @override
-  List<BeamPage> pagesBuilder(BuildContext? context, BeamState state) {
+  List<BeamPage> buildPages(BuildContext? context, BeamState state) {
     final container = ProviderScope.containerOf(context!);
 
     final viewModel = container.read(_rootLocationViewModelProvider);
