@@ -66,7 +66,7 @@ void _licenceFonts() {
 }
 
 class WalueApp extends HookWidget {
-  final routerDelegate = BeamerRouterDelegate(
+  final routerDelegate = BeamerDelegate(
     locationBuilder: BeamerLocationBuilder(
       beamLocations: [
         RootLocation(),
@@ -87,7 +87,7 @@ class WalueApp extends HookWidget {
         );
       },
       debugShowCheckedModeBanner: false,
-      routeInformationParser: BeamerRouteInformationParser(),
+      routeInformationParser: BeamerParser(),
       routerDelegate: routerDelegate,
       backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
       theme: ThemeData(
