@@ -3,7 +3,7 @@ description: An app for tracking the profit from cryptocurrencies.
 
 publish_to: "none"
 
-version: 0.0.5+5
+version: 0.0.6+6
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
