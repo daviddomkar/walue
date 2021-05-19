@@ -47,8 +47,9 @@ class HomeScreen extends HookWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
+                          SafeArea(
+                            bottom: false,
+                            minimum: const EdgeInsets.only(top: 32.0, left: 32.0, right: 32.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,8 +111,10 @@ class HomeScreen extends HookWidget {
                             ),
                           ),
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                            child: SafeArea(
+                              top: false,
+                              bottom: false,
+                              minimum: const EdgeInsets.symmetric(horizontal: 32.0),
                               child: Column(
                                 children: [
                                   Row(
@@ -142,8 +145,9 @@ class HomeScreen extends HookWidget {
                               ),
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(bottom: 32.0, left: 32.0, right: 32.0),
+                          const SafeArea(
+                            top: false,
+                            minimum: EdgeInsets.only(bottom: 32.0, left: 32.0, right: 32.0),
                             child: AddNewCryptoButton(),
                           )
                         ],
@@ -489,11 +493,12 @@ class PortfolioRecordList extends HookWidget {
                                     currency: ownedCurrencies.data!.value![portfolioRecords.data!.value![i].id]!,
                                     fiatCurrency: fiatCurrency!,
                                   ),
-                                Divider(
-                                  height: 1,
-                                  thickness: 1,
-                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0x20000000) : const Color(0x20FFFFFF),
-                                ),
+                                if (i != portfolioRecords.data!.value!.length - 1 && ownedCurrencies.data!.value!.containsKey(portfolioRecords.data!.value![i].id))
+                                  Divider(
+                                    height: 1,
+                                    thickness: 1,
+                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0x20000000) : const Color(0x20FFFFFF),
+                                  ),
                               ],
                             ],
                           ),

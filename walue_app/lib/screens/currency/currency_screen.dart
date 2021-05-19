@@ -68,12 +68,12 @@ class CurrencyScreen extends HookWidget {
                   child: Stack(
                     children: [
                       const HeaderBackground(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
-                            child: CurrencyScreenHeader(
+                      SafeArea(
+                        minimum: const EdgeInsets.all(32.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            CurrencyScreenHeader(
                               id: id,
                               currencyName: currency?.name ?? currencyName ?? '',
                               currencyImageUrl: currency?.imageUrl ?? currencyImageUrl ?? '',
@@ -87,10 +87,7 @@ class CurrencyScreen extends HookWidget {
                                 context.read(userRepositoryProvider).deleteCryptoCurrencyFromFavourites(id);
                               },
                             ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                            Expanded(
                               child: Column(
                                 children: [
                                   Row(
@@ -120,10 +117,7 @@ class CurrencyScreen extends HookWidget {
                                 ],
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 32.0, left: 32.0, right: 32.0),
-                            child: GradientButton(
+                            GradientButton(
                               onPressed: () {
                                 showDialog(
                                   context: context,
@@ -147,8 +141,8 @@ class CurrencyScreen extends HookWidget {
                                 textAlign: TextAlign.center,
                               ),
                             ),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -422,11 +416,12 @@ class BuyRecordList extends HookWidget {
                                     context.read(userRepositoryProvider).deleteCryptoCurrencyBuyRecord(currency, id);
                                   },
                                 ),
-                                Divider(
-                                  height: 1,
-                                  thickness: 1,
-                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0x20000000) : const Color(0x20FFFFFF),
-                                ),
+                                if (i != buyRecords.length - 1)
+                                  Divider(
+                                    height: 1,
+                                    thickness: 1,
+                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0x20000000) : const Color(0x20FFFFFF),
+                                  ),
                               ],
                             ],
                           ),
