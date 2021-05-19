@@ -28,7 +28,7 @@ class HeaderBackground extends StatelessWidget {
       clipper: HeaderBackgroundClipper(),
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: 256.0 + 128.0,
+        height: 256.0 + 128.0 + 8.0,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [

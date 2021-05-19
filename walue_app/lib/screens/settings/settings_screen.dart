@@ -56,11 +56,11 @@ class SettingsScreen extends HookWidget {
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: IntrinsicHeight(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
-                        child: Row(
+                  child: SafeArea(
+                    minimum: const EdgeInsets.all(32.0),
+                    child: Column(
+                      children: [
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -95,122 +95,196 @@ class SettingsScreen extends HookWidget {
                             ),
                           ],
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 32.0, right: 32.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.solidUser,
+                                      color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Account',
+                                    style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0, color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
+                                  ),
+                                ],
+                              ),
+                              if (!viewModel.loading)
                                 Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: FaIcon(
-                                    FontAwesomeIcons.solidUser,
-                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  'Account',
-                                  style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0, color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
-                                ),
-                              ],
-                            ),
-                            if (!viewModel.loading)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Container(
-                                  padding: const EdgeInsets.all(16.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(16.0),
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(16.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(16.0),
+                                      ),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Theme.of(context).primaryColor,
+                                          Theme.of(context).accentColor,
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
                                     ),
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Theme.of(context).primaryColor,
-                                        Theme.of(context).accentColor,
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      if (viewModel.photoUrl != null)
-                                        CachedNetworkImage(
-                                          width: 48.0,
-                                          height: 48.0,
-                                          imageUrl: viewModel.photoUrl!,
-                                          imageBuilder: (context, imageProvider) => Container(
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+                                    child: Row(
+                                      children: [
+                                        if (viewModel.photoUrl != null)
+                                          CachedNetworkImage(
+                                            width: 48.0,
+                                            height: 48.0,
+                                            imageUrl: viewModel.photoUrl!,
+                                            imageBuilder: (context, imageProvider) => Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: viewModel.photoUrl != null ? 16.0 : 0.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                viewModel.displayName ?? viewModel.email!,
-                                                style: Theme.of(context).textTheme.headline4!.copyWith(
-                                                      fontSize: 18.0,
-                                                      color: Colors.white,
-                                                    ),
-                                              ),
-                                              if (viewModel.displayName != null)
+                                        Expanded(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: viewModel.photoUrl != null ? 16.0 : 0.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
                                                 Text(
-                                                  viewModel.email!,
-                                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                                  viewModel.displayName ?? viewModel.email!,
+                                                  style: Theme.of(context).textTheme.headline4!.copyWith(
+                                                        fontSize: 18.0,
                                                         color: Colors.white,
                                                       ),
                                                 ),
-                                            ],
+                                                if (viewModel.displayName != null)
+                                                  Text(
+                                                    viewModel.email!,
+                                                    style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                                          color: Colors.white,
+                                                        ),
+                                                  ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        padding: EdgeInsets.zero,
-                                        onPressed: () {
-                                          viewModel.signOut();
-                                        },
-                                        icon: const FaIcon(
-                                          FontAwesomeIcons.signOutAlt,
-                                          color: Colors.white,
+                                        IconButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {
+                                            viewModel.signOut();
+                                          },
+                                          icon: const FaIcon(
+                                            FontAwesomeIcons.signOutAlt,
+                                            color: Colors.white,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.cog,
+                                      color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Preferences',
+                                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                                          fontSize: 24.0,
+                                          color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              if (!viewModel.loading)
                                 Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: FaIcon(
-                                    FontAwesomeIcons.cog,
-                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Container(
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(16.0),
+                                      ),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          blurRadius: 4.0,
+                                          color: Color(0x32000000),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        PreferenceItem(
+                                          title: 'Fiat currency',
+                                          subtitle: 'Stats display currency',
+                                          value: viewModel.fiatCurrency!.symbol.toUpperCase(),
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (_) => FiatCurrenciesDialog(
+                                                currencies: viewModel.fiatCurrencies!.values.where((currency) => currency.symbol != viewModel.fiatCurrency!.symbol).toList(),
+                                                onCurrencySelected: (currency) {
+                                                  viewModel.changeFiatCurrency(currency);
+                                                  Navigator.of(context, rootNavigator: true).pop(context);
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        PreferenceItem(
+                                          title: 'Theme',
+                                          subtitle: 'visual style of the app',
+                                          value: ThemeModeDialog.getThemeModeName(themeMode),
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (_) => const ThemeModeDialog(),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                Text(
-                                  'Preferences',
-                                  style: Theme.of(context).textTheme.headline4!.copyWith(
-                                        fontSize: 24.0,
-                                        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            if (!viewModel.loading)
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.bolt,
+                                      color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Powered by',
+                                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                                          fontSize: 24.0,
+                                          color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                        ),
+                                  ),
+                                ],
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Container(
@@ -230,187 +304,113 @@ class SettingsScreen extends HookWidget {
                                   child: Column(
                                     children: [
                                       PreferenceItem(
-                                        title: 'Fiat currency',
-                                        subtitle: 'Stats display currency',
-                                        value: viewModel.fiatCurrency!.symbol.toUpperCase(),
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (_) => FiatCurrenciesDialog(
-                                              currencies: viewModel.fiatCurrencies!.values.where((currency) => currency.symbol != viewModel.fiatCurrency!.symbol).toList(),
-                                              onCurrencySelected: (currency) {
-                                                viewModel.changeFiatCurrency(currency);
-                                                Navigator.of(context, rootNavigator: true).pop(context);
-                                              },
-                                            ),
-                                          );
-                                        },
+                                        title: 'CoinGecko',
+                                        subtitle: 'Cryptocurrency data API',
+                                        value: 'Explore',
+                                        onTap: () => launch('https://www.coingecko.com/en/api'),
                                       ),
                                       PreferenceItem(
-                                        title: 'Theme',
-                                        subtitle: 'visual style of the app',
-                                        value: ThemeModeDialog.getThemeModeName(themeMode),
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (_) => const ThemeModeDialog(),
-                                          );
-                                        },
+                                        title: 'ExchangeRate.host',
+                                        subtitle: 'Fiat currency exchange API',
+                                        value: 'Explore',
+                                        onTap: () => launch('https://exchangerate.host/'),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: FaIcon(
-                                    FontAwesomeIcons.bolt,
-                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 4.0),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.exclamationTriangle,
+                                      color: Colors.red,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  'Powered by',
-                                  style: Theme.of(context).textTheme.headline4!.copyWith(
-                                        fontSize: 24.0,
-                                        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Container(
-                                clipBehavior: Clip.hardEdge,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(16.0),
+                                  Text(
+                                    'Danger zone',
+                                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                                          fontSize: 24.0,
+                                          color: Colors.red,
+                                        ),
                                   ),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      blurRadius: 4.0,
-                                      color: Color(0x32000000),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  children: [
-                                    PreferenceItem(
-                                      title: 'CoinGecko',
-                                      subtitle: 'Cryptocurrency data API',
-                                      value: 'Explore',
-                                      onTap: () => launch('https://www.coingecko.com/en/api'),
-                                    ),
-                                    PreferenceItem(
-                                      title: 'ExchangeRate.host',
-                                      subtitle: 'Fiat currency exchange API',
-                                      value: 'Explore',
-                                      onTap: () => launch('https://exchangerate.host/'),
-                                    ),
-                                  ],
-                                ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 24.0, left: 32.0, right: 32.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 4.0),
-                                  child: FaIcon(
-                                    FontAwesomeIcons.exclamationTriangle,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                                Text(
-                                  'Danger zone',
-                                  style: Theme.of(context).textTheme.headline4!.copyWith(
-                                        fontSize: 24.0,
-                                        color: Colors.red,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Container(
-                                height: 48.0,
-                                clipBehavior: Clip.hardEdge,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(16.0),
-                                  ),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      blurRadius: 4.0,
-                                      color: Color(0x32000000),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Container(
+                                  height: 48.0,
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(16.0),
                                     ),
-                                  ],
-                                ),
-                                child: Material(
-                                  color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
-                                  child: InkWell(
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => DeleteAccountDialog(onDeleteAccount: () {
-                                          viewModel.deleteAccount().then((value) => Navigator.of(context, rootNavigator: true).pop()).onError((error, stackTrace) {
-                                            Navigator.of(context, rootNavigator: true).pop();
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        blurRadius: 4.0,
+                                        color: Color(0x32000000),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Material(
+                                    color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                                    child: InkWell(
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => DeleteAccountDialog(onDeleteAccount: () {
+                                            viewModel.deleteAccount().then((value) => Navigator.of(context, rootNavigator: true).pop()).onError((error, stackTrace) {
+                                              Navigator.of(context, rootNavigator: true).pop();
 
-                                            final snackBar = SnackBar(
-                                              backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.red : const Color(0xFFEE5349),
-                                              shape: const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(16.0),
-                                                  topRight: Radius.circular(16.0),
+                                              final snackBar = SnackBar(
+                                                backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.red : const Color(0xFFEE5349),
+                                                shape: const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(16.0),
+                                                    topRight: Radius.circular(16.0),
+                                                  ),
                                                 ),
-                                              ),
-                                              content: Text(
-                                                'An error occurred',
-                                                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                                      fontSize: 16.0,
-                                                      color: Colors.white,
-                                                    ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            );
+                                                content: Text(
+                                                  'An error occurred',
+                                                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                        fontSize: 16.0,
+                                                        color: Colors.white,
+                                                      ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              );
 
-                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                          });
-                                        }),
-                                      );
-                                    },
-                                    child: Center(
-                                      child: Text(
-                                        'Delete account',
-                                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                              color: Colors.red,
-                                            ),
+                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                            });
+                                          }),
+                                        );
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          'Delete account',
+                                          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                color: Colors.red,
+                                              ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
