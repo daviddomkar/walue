@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:beamer/beamer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -148,25 +149,33 @@ class SettingsScreen extends HookWidget {
                                           ),
                                         Expanded(
                                           child: Padding(
-                                            padding: EdgeInsets.only(left: viewModel.photoUrl != null ? 16.0 : 0.0),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  viewModel.displayName ?? viewModel.email!,
-                                                  style: Theme.of(context).textTheme.headline4!.copyWith(
-                                                        fontSize: 18.0,
-                                                        color: Colors.white,
-                                                      ),
-                                                ),
-                                                if (viewModel.displayName != null)
-                                                  Text(
-                                                    viewModel.email!,
-                                                    style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                            padding: EdgeInsets.only(left: viewModel.photoUrl != null ? 16.0 : 0.0, right: 16.0),
+                                            child: SizedBox(
+                                              height: 40.0,
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  AutoSizeText(
+                                                    viewModel.displayName ?? viewModel.email!,
+                                                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                                                          fontSize: 18.0,
                                                           color: Colors.white,
                                                         ),
+                                                    maxLines: 1,
+                                                    minFontSize: 4.0,
                                                   ),
-                                              ],
+                                                  if (viewModel.displayName != null)
+                                                    AutoSizeText(
+                                                      viewModel.email!,
+                                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                                            color: Colors.white,
+                                                          ),
+                                                      maxLines: 1,
+                                                      minFontSize: 4.0,
+                                                    ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),

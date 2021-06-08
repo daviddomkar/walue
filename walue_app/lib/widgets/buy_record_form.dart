@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -95,6 +96,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
   @override
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
+    final autoSizeGroup = AutoSizeGroup();
 
     return Form(
       key: _formKey,
@@ -198,10 +200,19 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.fiatCurrencies![symbol]!.name),
+                        LimitedBox(
+                          maxWidth: 130.0,
+                          child: AutoSizeText(
+                            widget.fiatCurrencies![symbol]!.name,
+                            group: autoSizeGroup,
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
-                          child: Text(widget.fiatCurrencies![symbol]!.symbol.toUpperCase()),
+                          child: AutoSizeText(
+                            widget.fiatCurrencies![symbol]!.symbol.toUpperCase(),
+                            group: autoSizeGroup,
+                          ),
                         ),
                       ],
                     ),

@@ -12,7 +12,9 @@ class PortfolioRecordListItem extends StatelessWidget {
   final CryptoCurrency currency;
   final Currency fiatCurrency;
 
-  const PortfolioRecordListItem({
+  final group = AutoSizeGroup();
+
+  PortfolioRecordListItem({
     Key? key,
     required this.record,
     required this.currency,
@@ -49,22 +51,26 @@ class PortfolioRecordListItem extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.only(left: 16.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        LimitedBox(
-                          maxWidth: 80.0,
-                          child: Text(
-                            currency.name,
-                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: AutoSizeText(
+                              currency.name,
+                              group: group,
+                              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                  ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ),
                         Expanded(
@@ -73,12 +79,12 @@ class PortfolioRecordListItem extends StatelessWidget {
                               currency.fiatPrice,
                               fiatCurrency.symbol,
                             )!,
+                            group: group,
                             style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                   color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                 ),
                             textAlign: TextAlign.right,
                             maxLines: 1,
-                            minFontSize: 8.0,
                           ),
                         ),
                       ],
@@ -86,26 +92,29 @@ class PortfolioRecordListItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        LimitedBox(
-                          maxWidth: 80.0,
-                          child: Text(
-                            currency.symbol.toUpperCase(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: AutoSizeText(
+                              currency.symbol.toUpperCase(),
+                              group: group,
+                              style: TextStyle(
+                                color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
                           ),
                         ),
                         Expanded(
                           child: AutoSizeText(
                             record.computeTotalAmount(null, 10000, true)!,
-                            textAlign: TextAlign.right,
-                            maxLines: 1,
-                            minFontSize: 8.0,
+                            group: group,
                             style: TextStyle(
                               color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
                             ),
+                            textAlign: TextAlign.right,
+                            maxLines: 1,
                           ),
                         ),
                       ],

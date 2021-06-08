@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:beamer/beamer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../hooks/use_provider_cached.dart';
 import '../../hooks/use_provider_not_null.dart';
@@ -25,6 +27,17 @@ class HomeScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = useProvider(userRepositoryProvider);
+
+    final ownedCurrencies = useProviderCached(ownedCryptoCurrenciesStreamProvider);
+    final portfolioRecords = useProviderCached(portfolioRecordsStreamProvider);
+
+    final totalValueNumber = portfolioRecords.data?.value?.map((record) => record.computeTotalFiatAmountValue(ownedCurrencies.data?.value?[record.id]?.fiatPrice)).fold<double>(0.0, (previousValue, element) {
+      return previousValue += element ?? 0;
+    });
+
+    final fiatCurrency = useProviderNotNull(fiatCurrencyStreamProvider);
+
+    final totalValue = NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency?.symbol.toUpperCase()).format(totalValueNumber);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -126,12 +139,31 @@ class HomeScreen extends HookWidget {
                                           color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                         ),
                                       ),
-                                      Text(
-                                        'Portfolio',
-                                        style: Theme.of(context).textTheme.headline4!.copyWith(
-                                              fontSize: 24.0,
-                                              color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 16.0),
+                                        child: Text(
+                                          'Portfolio',
+                                          style: Theme.of(context).textTheme.headline4!.copyWith(
+                                                fontSize: 24.0,
+                                                color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                              ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: SizedBox(
+                                          height: 24.0,
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: AutoSizeText(
+                                              totalValue.toString(),
+                                              style: Theme.of(context).textTheme.headline4!.copyWith(
+                                                    fontSize: 24.0,
+                                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                                  ),
+                                              textAlign: TextAlign.right,
                                             ),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -437,6 +469,8 @@ class PortfolioRecordList extends HookWidget {
 
     final loading = ownedCurrencies is AsyncLoading || portfolioRecords is AsyncLoading || fiatCurrency == null || portfolioRecords.data?.value == null || ownedCurrencies.data?.value == null;
     final error = ownedCurrencies is AsyncError || portfolioRecords is AsyncError;
+
+    // final totalValue = portfolioRecords.data?.value?.map((record) => record.computeTotalFiatAmount(fiatPrice, fiatSymbol))
 
     return Container(
       clipBehavior: Clip.hardEdge,
