@@ -18,6 +18,14 @@ class PortfolioRecord {
     this.buyRecords,
   });
 
+  double? computeTotalFiatAmountValue(double? fiatPrice) {
+    if (fiatPrice != null) {
+      return totalAmount! * fiatPrice;
+    }
+
+    return null;
+  }
+
   String? computeTotalFiatAmount(double? fiatPrice, String? fiatSymbol, [double simpleFormatBreakpoint = 100000]) {
     if (totalAmount != null && fiatPrice != null && fiatSymbol != null) {
       final totalFiatAmount = totalAmount! * fiatPrice;

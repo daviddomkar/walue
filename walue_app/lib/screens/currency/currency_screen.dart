@@ -367,34 +367,38 @@ class BuyRecordList extends HookWidget {
                                 height: 56.0,
                                 child: Row(
                                   children: [
-                                    SizedBox(
-                                      width: 120.0,
-                                      child: Text(
+                                    Expanded(
+                                      child: AutoSizeText(
                                         'Buy price',
                                         style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                               fontSize: 14.0,
                                               color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                             ),
+                                        maxLines: 1,
                                       ),
                                     ),
                                     Expanded(
-                                      child: Text(
-                                        'Amount',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: AutoSizeText(
+                                          'Amount',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                                          ),
+                                          maxLines: 1,
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 90.0,
-                                      child: Text(
+                                    Expanded(
+                                      child: AutoSizeText(
                                         'Profit',
                                         style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                               fontSize: 14.0,
                                               color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                             ),
                                         textAlign: TextAlign.right,
+                                        maxLines: 1,
                                       ),
                                     ),
                                   ],
@@ -471,26 +475,29 @@ class BuyRecordListItem extends StatelessWidget {
         height: 48.0,
         child: Row(
           children: [
-            SizedBox(
-              width: 120.0,
-              child: Text(
+            Expanded(
+              child: AutoSizeText(
                 record.formattedBuyPrice,
                 style: Theme.of(context).textTheme.subtitle1!.copyWith(
                       fontSize: 14.0,
                       color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                     ),
+                maxLines: 1,
               ),
             ),
             Expanded(
-              child: Text(
-                record.formattedAmount,
-                style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: AutoSizeText(
+                  record.formattedAmount,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                  ),
+                  maxLines: 1,
                 ),
               ),
             ),
-            SizedBox(
-              width: 90.0,
+            Expanded(
               child: (() {
                 final profit = record.calculateProfit(currency.additionalFiatPrices![record.fiatCurrency.symbol]!);
                 final profitText = record.calculateformattedProfit(currency.additionalFiatPrices![record.fiatCurrency.symbol]!);
@@ -503,7 +510,7 @@ class BuyRecordListItem extends StatelessWidget {
                   color = Colors.red;
                 }
 
-                return Text(
+                return AutoSizeText(
                   profitText,
                   textAlign: TextAlign.right,
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(

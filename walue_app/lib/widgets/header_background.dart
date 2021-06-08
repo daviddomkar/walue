@@ -6,7 +6,7 @@ class HeaderBackgroundClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path()
-      ..lineTo(0.0, size.height - 160.0)
+      ..lineTo(0.0, size.height - 96.0)
       ..lineTo(size.width, size.height)
       ..lineTo(size.width, 0.0)
       ..close();
@@ -28,7 +28,7 @@ class HeaderBackground extends StatelessWidget {
       clipper: HeaderBackgroundClipper(),
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: 256.0 + 128.0 + 8.0,
+        height: 256.0 + 64.0 + 8.0,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
