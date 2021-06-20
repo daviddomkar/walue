@@ -35,7 +35,7 @@ class PortfolioRecordListItem extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        height: 64.0,
+        height: 72.0,
         child: Row(
           children: [
             CachedNetworkImage(
@@ -54,70 +54,36 @@ class PortfolioRecordListItem extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 16.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: AutoSizeText(
-                              currency.name,
-                              group: group,
-                              style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                  ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
+                    AutoSizeText(
+                      currency.name,
+                      group: group,
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                           ),
-                        ),
-                        Expanded(
-                          child: AutoSizeText(
-                            record.computeTotalFiatAmount(
-                              currency.fiatPrice,
-                              fiatCurrency.symbol,
-                            )!,
-                            group: group,
-                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                ),
-                            textAlign: TextAlign.right,
-                            maxLines: 1,
-                          ),
-                        ),
-                      ],
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: AutoSizeText(
-                              currency.symbol.toUpperCase(),
-                              group: group,
-                              style: TextStyle(
-                                color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
+                    AutoSizeText(
+                      record.computeTotalFiatAmount(
+                        currency.fiatPrice,
+                        fiatCurrency.symbol,
+                      )!,
+                      group: group,
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                           ),
-                        ),
-                        Expanded(
-                          child: AutoSizeText(
-                            record.computeTotalAmount(null, 10000, true)!,
-                            group: group,
-                            style: TextStyle(
-                              color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
-                            ),
-                            textAlign: TextAlign.right,
-                            maxLines: 1,
-                          ),
-                        ),
-                      ],
+                      maxLines: 1,
+                    ),
+                    AutoSizeText(
+                      '${currency.symbol.toUpperCase()} ${record.computeTotalAmount(null, 10000, true)!}',
+                      group: group,
+                      style: TextStyle(
+                        color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ],
                 ),
