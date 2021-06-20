@@ -235,7 +235,7 @@ class CurrencyScreenHeader extends HookWidget {
               style: Theme.of(context).textTheme.subtitle2!.copyWith(color: Colors.white),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 12.0, bottom: 90.0),
+              padding: const EdgeInsets.only(top: 12.0, bottom: 77.0),
               child: SizedBox(
                 width: 200.0,
                 height: 48.0,

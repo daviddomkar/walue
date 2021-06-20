@@ -37,7 +37,7 @@ class HomeScreen extends HookWidget {
 
     final fiatCurrency = useProviderNotNull(fiatCurrencyStreamProvider);
 
-    final totalValue = NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency?.symbol.toUpperCase()).format(totalValueNumber);
+    final totalValue = totalValueNumber != null ? NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency?.symbol.toUpperCase()).format(totalValueNumber) : null;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -73,13 +73,6 @@ class HomeScreen extends HookWidget {
                                     const Logo(
                                       small: true,
                                     ),
-                                    Transform.translate(
-                                      offset: const Offset(0.0, -10.0),
-                                      child: Text(
-                                        'Dashboard',
-                                        style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color(0xCCFFFFFF)),
-                                      ),
-                                    ),
                                   ],
                                 ),
                                 Transform.translate(
@@ -99,7 +92,7 @@ class HomeScreen extends HookWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
+                            padding: const EdgeInsets.only(top: 24.0, bottom: 20.0),
                             child: Column(
                               children: [
                                 Row(
@@ -153,7 +146,7 @@ class HomeScreen extends HookWidget {
                                         child: SizedBox(
                                           height: 24.0,
                                           child: Align(
-                                            alignment: Alignment.centerRight,
+                                            alignment: Alignment.bottomRight,
                                             child: AutoSizeText(
                                               totalValue.toString(),
                                               style: Theme.of(context).textTheme.headline4!.copyWith(
