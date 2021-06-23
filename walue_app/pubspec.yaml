@@ -3,7 +3,7 @@ description: An app for tracking the profit from cryptocurrencies.
 
 publish_to: "none"
 
-version: 0.0.6+6
+version: 0.0.7+7
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -37,6 +37,7 @@ dependencies:
 
   dio: 4.0.0
   dio_cache_interceptor: 3.0.0
+  dio_cache_interceptor_hive_store: 3.0.0
 
   path_provider: 2.0.1
 
