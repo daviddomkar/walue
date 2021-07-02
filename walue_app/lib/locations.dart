@@ -44,7 +44,7 @@ class RootLocation extends BeamLocation {
 
         if (user.data != null && user.data!.value == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
-        } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrency == null) {
+        } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrencySymbol == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
         } else {
           context.currentBeamLocation.update();
@@ -69,12 +69,12 @@ class RootLocation extends BeamLocation {
               key: const ValueKey('login'),
               child: const LogInScreen(),
             ),
-          if (user != null && user.fiatCurrency == null)
+          if (user != null && user.fiatCurrencySymbol == null)
             NoTransitionPage(
               key: const ValueKey('choose-fiat-currency'),
               child: const ChooseFiatCurrencyScreen(),
             ),
-          if (user != null && user.fiatCurrency != null) ...[
+          if (user != null && user.fiatCurrencySymbol != null) ...[
             NoTransitionPage(
               key: const ValueKey('home'),
               child: const HomeScreen(),

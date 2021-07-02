@@ -5,7 +5,7 @@ import 'buy_record.dart';
 class PortfolioRecord {
   final String id;
   final int? amountOfRecords;
-  final double? averageAmountInFiatCurrencyWhenBought;
+  final double? totalAmountInFiatCurrencyWhenBought;
   final double? totalAmount;
 
   final List<BuyRecord>? buyRecords;
@@ -13,7 +13,7 @@ class PortfolioRecord {
   PortfolioRecord({
     required this.id,
     this.amountOfRecords,
-    this.averageAmountInFiatCurrencyWhenBought,
+    this.totalAmountInFiatCurrencyWhenBought,
     this.totalAmount,
     this.buyRecords,
   });
@@ -71,8 +71,10 @@ class PortfolioRecord {
   }
 
   String? computeIncreasePercentage(double? fiatPrice) {
-    if (totalAmount != null && averageAmountInFiatCurrencyWhenBought != null && fiatPrice != null) {
-      final increasePercentage = fiatPrice / averageAmountInFiatCurrencyWhenBought! - 1.0;
+    if (totalAmount != null && totalAmountInFiatCurrencyWhenBought != null && fiatPrice != null) {
+      final totalFiatAmount = totalAmount! * fiatPrice;
+
+      final increasePercentage = totalFiatAmount / totalAmountInFiatCurrencyWhenBought! - 1.0;
 
       return (increasePercentage > 0 ? '+' : '') + NumberFormat.decimalPercentPattern(locale: 'en', decimalDigits: 2).format(increasePercentage);
     }

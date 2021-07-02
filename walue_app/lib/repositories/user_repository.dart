@@ -35,10 +35,7 @@ class FirebaseUserRepository extends UserRepository {
 
       if (!userDocument.exists) {
         transaction.set(userDocumentReference, {
-          'fiat_currency': {
-            'symbol': currency.symbol,
-            'name': currency.name,
-          },
+          'fiat_currency_symbol': currency.symbol,
         });
 
         return;
@@ -46,12 +43,9 @@ class FirebaseUserRepository extends UserRepository {
 
       final userDocumentData = userDocument.data()!;
 
-      if (!userDocumentData.containsKey('fiat_currency')) {
+      if (!userDocumentData.containsKey('fiat_currency_symbol')) {
         transaction.update(userDocumentReference, {
-          'fiat_currency': {
-            'symbol': currency.symbol,
-            'name': currency.name,
-          },
+          'fiat_currency_symbol': currency.symbol,
         });
       } else {
         throw 'Fiat currency already choosen';
@@ -62,10 +56,7 @@ class FirebaseUserRepository extends UserRepository {
   @override
   Future<void> changeFiatCurrency(Currency currency) async {
     await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).update({
-      'fiat_currency': {
-        'symbol': currency.symbol,
-        'name': currency.name,
-      },
+      'fiat_currency_symbol': currency.symbol,
     });
   }
 
@@ -135,7 +126,7 @@ class FirebaseUserRepository extends UserRepository {
           'buy_records_data_by_fiat': {
             // ignore: unnecessary_string_interpolations
             '$symbol': {
-              'average_amount_in_fiat_currency_when_bought': buyPrice * amount,
+              'total_amount_in_fiat_currency_when_bought': buyPrice * amount,
               'total_amount': amount,
               'amount_of_records': 1,
             },
@@ -148,14 +139,14 @@ class FirebaseUserRepository extends UserRepository {
         final amountOfRecords = (data['amount_of_records'] as num).toInt();
 
         if ((data['buy_records_data_by_fiat'] as Map<String, dynamic>).containsKey(symbol)) {
-          final symbolAverageAmountInFiatCurrencyWhenBought = (data['buy_records_data_by_fiat'][symbol]['average_amount_in_fiat_currency_when_bought'] as num).toDouble();
+          final symbolTotalAmountInFiatCurrencyWhenBought = (data['buy_records_data_by_fiat'][symbol]['total_amount_in_fiat_currency_when_bought'] as num).toDouble();
           final symbolTotalAmount = (data['buy_records_data_by_fiat'][symbol]['total_amount'] as num).toDouble();
           final symbolAmountOfRecords = (data['buy_records_data_by_fiat'][symbol]['amount_of_records'] as num).toInt();
 
           transaction.update(currencyDocumentReference, {
             'total_amount': (Decimal.parse(totalAmount.toString()) + Decimal.parse(amount.toString())).toDouble(),
             'amount_of_records': amountOfRecords + 1,
-            'buy_records_data_by_fiat.$symbol.average_amount_in_fiat_currency_when_bought': (symbolAmountOfRecords * symbolAverageAmountInFiatCurrencyWhenBought + buyPrice * amount) / (symbolAmountOfRecords + 1),
+            'buy_records_data_by_fiat.$symbol.total_amount_in_fiat_currency_when_bought': (Decimal.parse(symbolTotalAmountInFiatCurrencyWhenBought.toString()) + Decimal.parse((buyPrice * amount).toString())).toDouble(),
             'buy_records_data_by_fiat.$symbol.total_amount': (Decimal.parse(symbolTotalAmount.toString()) + Decimal.parse(amount.toString())).toDouble(),
             'buy_records_data_by_fiat.$symbol.amount_of_records': symbolAmountOfRecords + 1,
           });
@@ -168,7 +159,7 @@ class FirebaseUserRepository extends UserRepository {
               'buy_records_data_by_fiat': {
                 // ignore: unnecessary_string_interpolations
                 '$symbol': {
-                  'average_amount_in_fiat_currency_when_bought': buyPrice * amount,
+                  'total_amount_in_fiat_currency_when_bought': buyPrice * amount,
                   'total_amount': amount,
                   'amount_of_records': 1,
                 }
@@ -183,10 +174,7 @@ class FirebaseUserRepository extends UserRepository {
         'buy_price': buyPrice,
         'amount': amount,
         'timestamp': FieldValue.serverTimestamp(),
-        'fiat_currency': {
-          'name': fiatCurrency.name,
-          'symbol': symbol,
-        },
+        'fiat_currency_symbol': symbol,
       });
     });
   }
@@ -215,25 +203,25 @@ class FirebaseUserRepository extends UserRepository {
 
       final oldBuyPrice = (currencyRecordDocumentData['buy_price'] as num).toDouble();
       final oldAmount = (currencyRecordDocumentData['amount'] as num).toDouble();
-      final symbol = currencyRecordDocumentData['fiat_currency']['symbol'] as String;
+      final symbol = currencyRecordDocumentData['fiat_currency_symbol'] as String;
 
       final newBuyPrice = buyPrice ?? oldBuyPrice;
       final newAmount = amount ?? oldAmount;
 
-      final oldAmountInFiatCurrencyWhenBought = oldBuyPrice * oldAmount;
-      final newAmountInFiatCurrencyWhenBought = newBuyPrice * newAmount;
+      final oldTotalInFiatCurrencyWhenBought = oldBuyPrice * oldAmount;
+      final newTotaltInFiatCurrencyWhenBought = newBuyPrice * newAmount;
 
       final totalAmount = (currencyDocumentData['total_amount'] as num).toDouble();
 
-      final symbolAverageAmountInFiatCurrencyWhenBought = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['average_amount_in_fiat_currency_when_bought'] as num).toDouble();
+      final symbolTotalAmountInFiatCurrencyWhenBought = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['total_amount_in_fiat_currency_when_bought'] as num).toDouble();
       final symbolTotalAmount = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['total_amount'] as num).toDouble();
-      final symbolAmountOfRecords = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['amount_of_records'] as num).toInt();
 
-      final newAverageAmountInFiatCurrencyWhenBought = (symbolAmountOfRecords * symbolAverageAmountInFiatCurrencyWhenBought - oldAmountInFiatCurrencyWhenBought + newAmountInFiatCurrencyWhenBought) / symbolAmountOfRecords;
+      final newTotalAmountInFiatCurrencyWhenBought =
+          Decimal.parse(symbolTotalAmountInFiatCurrencyWhenBought.toString()) - Decimal.parse(oldTotalInFiatCurrencyWhenBought.toString()) + Decimal.parse(newTotaltInFiatCurrencyWhenBought.toString());
 
       transaction.update(currencyDocumentReference, {
         'total_amount': (Decimal.parse(totalAmount.toString()) + (Decimal.parse(newAmount.toString()) - Decimal.parse(oldAmount.toString()))).toDouble(),
-        'buy_records_data_by_fiat.$symbol.average_amount_in_fiat_currency_when_bought': newAverageAmountInFiatCurrencyWhenBought,
+        'buy_records_data_by_fiat.$symbol.total_amount_in_fiat_currency_when_bought': newTotalAmountInFiatCurrencyWhenBought.toDouble(),
         'buy_records_data_by_fiat.$symbol.total_amount': (Decimal.parse(symbolTotalAmount.toString()) + (Decimal.parse(newAmount.toString()) - Decimal.parse(oldAmount.toString()))).toDouble(),
       });
 
@@ -268,9 +256,9 @@ class FirebaseUserRepository extends UserRepository {
 
       final totalAmount = (currencyDocumentData['total_amount'] as num).toDouble();
       final amountOfRecords = (currencyDocumentData['amount_of_records'] as num).toInt();
-      final symbol = currencyRecordDocumentData['fiat_currency']['symbol'] as String;
+      final symbol = currencyRecordDocumentData['fiat_currency_symbol'] as String;
 
-      final symbolAverageAmountInFiatCurrencyWhenBought = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['average_amount_in_fiat_currency_when_bought'] as num).toDouble();
+      final symbolTotalAmountInFiatCurrencyWhenBought = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['total_amount_in_fiat_currency_when_bought'] as num).toDouble();
       final symbolTotalAmount = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['total_amount'] as num).toDouble();
       final symbolAmountOfRecords = (currencyDocumentData['buy_records_data_by_fiat'][symbol]['amount_of_records'] as num).toInt();
 
@@ -291,7 +279,7 @@ class FirebaseUserRepository extends UserRepository {
         transaction.update(currencyDocumentReference, {
           'total_amount': (Decimal.parse(totalAmount.toString()) - Decimal.parse(amount.toString())).toDouble(),
           'amount_of_records': amountOfRecords - 1,
-          'buy_records_data_by_fiat.$symbol.average_amount_in_fiat_currency_when_bought': (symbolAmountOfRecords * symbolAverageAmountInFiatCurrencyWhenBought - amountInFiatCurrencyWhenBought) / (symbolAmountOfRecords - 1),
+          'buy_records_data_by_fiat.$symbol.total_amount_in_fiat_currency_when_bought': (Decimal.parse(symbolTotalAmountInFiatCurrencyWhenBought.toString()) - Decimal.parse(amountInFiatCurrencyWhenBought.toString())).toDouble(),
           'buy_records_data_by_fiat.$symbol.total_amount': (Decimal.parse(symbolTotalAmount.toString()) - Decimal.parse(amount.toString())).toDouble(),
           'buy_records_data_by_fiat.$symbol.amount_of_records': symbolAmountOfRecords - 1,
         });
