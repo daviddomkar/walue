@@ -38,6 +38,5 @@ class SettingsViewModel extends ChangeNotifier {
   String? get displayName => user.data?.value?.displayName;
   String? get email => user.data?.value?.email;
 
-  Currency? get fiatCurrency => user.data?.value?.fiatCurrency;
   Map<String, Currency>? get fiatCurrencies => _fiatCurrencies.data?.value;
 }

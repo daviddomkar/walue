@@ -24,12 +24,7 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
                   email: user.email!,
                   displayName: user.displayName == null || user.displayName!.isEmpty ? null : user.displayName,
                   photoUrl: user.photoURL,
-                  fiatCurrency: data.containsKey('fiat_currency')
-                      ? Currency(
-                          symbol: data['fiat_currency']['symbol'] as String,
-                          name: data['fiat_currency']['name'] as String,
-                        )
-                      : null,
+                  fiatCurrencySymbol: data.containsKey('fiat_currency_symbol') ? data['fiat_currency_symbol'] as String : null,
                   favouriteCurrencyIds: (data['favourite_currency_ids'] as List<dynamic>?)?.cast<String>() ?? [],
                 );
               }
@@ -56,8 +51,43 @@ final uuidStreamProvider = Provider.autoDispose<String?>((ref) {
   return ref.watch(userStreamProvider).data?.value?.id;
 });
 
+final userFiatCurrencyStreamProvider = StreamProvider.autoDispose<Currency?>((ref) {
+  final _firestore = FirebaseFirestore.instance;
+
+  final symbol = ref.watch(userStreamProvider).data?.value?.fiatCurrencySymbol;
+
+  return symbol == null
+      ? Stream.value(null)
+      : _firestore
+          .collection('system')
+          .doc('fiat')
+          .snapshots()
+          .map((snapshot) {
+            if (snapshot.exists) {
+              final currencies = snapshot.data()!['currencies'] as Map<String, dynamic>;
+
+              return currencies.entries.fold<Map<String, Currency>>({}, (previousValue, element) {
+                previousValue[element.key] = Currency(name: element.value as String, symbol: element.key);
+                return previousValue;
+              });
+            }
+
+            throw 'Fiat currency data are not available!';
+          })
+          .map((currencies) => currencies[symbol] ?? Currency(symbol: symbol, name: symbol))
+          .handleError((Object e, StackTrace s) {
+            FirebaseCrashlytics.instance.recordError(
+              e,
+              s,
+              reason: 'Fiat currencies stream provider error',
+            );
+
+            throw e;
+          });
+});
+
 final fiatCurrencyStreamProvider = Provider.autoDispose<Currency?>((ref) {
-  return ref.watch(userStreamProvider).data?.value?.fiatCurrency;
+  return ref.watch(userFiatCurrencyStreamProvider).data?.value;
 });
 
 final favouriteCurrencyIdsStreamProvider = Provider.autoDispose<List<String>?>((ref) {

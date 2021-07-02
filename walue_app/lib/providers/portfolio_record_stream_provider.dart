@@ -32,10 +32,7 @@ final portfolioRecordStreamProvider = StreamProvider.autoDispose.family<Portfoli
                 id: doc.id,
                 buyPrice: data['buy_price'] as double,
                 amount: data['amount'] as double,
-                fiatCurrency: Currency(
-                  symbol: data['fiat_currency']['symbol'] as String,
-                  name: data['fiat_currency']['name'] as String,
-                ),
+                fiatCurrency: fiatCurrencies[data['fiat_currency_symbol']! as String] ?? Currency(symbol: data['fiat_currency_symbol']! as String, name: data['fiat_currency_symbol']! as String),
               );
             }).toList();
           }), (snapshot, buyRecords) async {
@@ -53,7 +50,7 @@ final portfolioRecordStreamProvider = StreamProvider.autoDispose.family<Portfoli
 
               final entryData = entry.value as Map<String, dynamic>;
 
-              final amount = (entryData['average_amount_in_fiat_currency_when_bought'] as num).toDouble();
+              final amount = (entryData['total_amount_in_fiat_currency_when_bought'] as num).toDouble();
 
               if (entry.key == symbol) {
                 amountFutures.add((() async => amount)());
@@ -64,12 +61,12 @@ final portfolioRecordStreamProvider = StreamProvider.autoDispose.family<Portfoli
 
             final amounts = await Future.wait(amountFutures);
 
-            final averageAmountInFiatCurrencyWhenBought = amounts.reduce((a, b) => a + b);
+            final totalAmountInFiatCurrencyWhenBought = amounts.reduce((a, b) => a + b);
 
             return PortfolioRecord(
               id: id,
               amountOfRecords: (data['amount_of_records'] as num).toInt(),
-              averageAmountInFiatCurrencyWhenBought: averageAmountInFiatCurrencyWhenBought,
+              totalAmountInFiatCurrencyWhenBought: totalAmountInFiatCurrencyWhenBought,
               totalAmount: (data['total_amount'] as num).toDouble(),
               buyRecords: buyRecords,
             );

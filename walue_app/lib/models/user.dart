@@ -5,8 +5,7 @@ class User {
   final String email;
   final String? displayName;
   final String? photoUrl;
-
-  final Currency? fiatCurrency;
+  final String? fiatCurrencySymbol;
 
   final List<String> favouriteCurrencyIds;
 
@@ -15,7 +14,7 @@ class User {
     required this.email,
     required this.displayName,
     required this.photoUrl,
-    this.fiatCurrency,
+    this.fiatCurrencySymbol,
     this.favouriteCurrencyIds = const [],
   });
 }

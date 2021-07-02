@@ -37,7 +37,7 @@ final portfolioRecordsStreamProvider = StreamProvider.autoDispose<List<Portfolio
 
               final entryData = entry.value as Map<String, dynamic>;
 
-              final amount = (entryData['average_amount_in_fiat_currency_when_bought'] as num).toDouble();
+              final amount = (entryData['total_amount_in_fiat_currency_when_bought'] as num).toDouble();
 
               if (entry.key == symbol) {
                 amountFutures.add((() async => amount)());
@@ -48,12 +48,12 @@ final portfolioRecordsStreamProvider = StreamProvider.autoDispose<List<Portfolio
 
             final amounts = await Future.wait(amountFutures);
 
-            final averageAmountInFiatCurrencyWhenBought = amounts.reduce((a, b) => a + b);
+            final totalAmountInFiatCurrencyWhenBought = amounts.reduce((a, b) => a + b);
 
             return PortfolioRecord(
               id: document.id,
               amountOfRecords: (data['amount_of_records'] as num).toInt(),
-              averageAmountInFiatCurrencyWhenBought: averageAmountInFiatCurrencyWhenBought,
+              totalAmountInFiatCurrencyWhenBought: totalAmountInFiatCurrencyWhenBought,
               totalAmount: (data['total_amount'] as num).toDouble(),
             );
           }));

@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../hooks/use_provider_not_null.dart';
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
@@ -41,6 +42,8 @@ class SettingsScreen extends HookWidget {
   Widget build(BuildContext context) {
     final viewModel = useProvider(settingsViewModelProvider);
     final themeMode = useProvider(themeProvider);
+
+    final fiatCurrency = useProviderNotNull(fiatCurrencyStreamProvider);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -240,12 +243,12 @@ class SettingsScreen extends HookWidget {
                                         PreferenceItem(
                                           title: 'Fiat currency',
                                           subtitle: 'Stats display currency',
-                                          value: viewModel.fiatCurrency!.symbol.toUpperCase(),
+                                          value: fiatCurrency!.symbol.toUpperCase(),
                                           onTap: () {
                                             showDialog(
                                               context: context,
                                               builder: (_) => FiatCurrenciesDialog(
-                                                currencies: viewModel.fiatCurrencies!.values.where((currency) => currency.symbol != viewModel.fiatCurrency!.symbol).toList(),
+                                                currencies: viewModel.fiatCurrencies!.values.where((currency) => currency.symbol != fiatCurrency.symbol).toList(),
                                                 onCurrencySelected: (currency) {
                                                   viewModel.changeFiatCurrency(currency);
                                                   Navigator.of(context, rootNavigator: true).pop(context);
