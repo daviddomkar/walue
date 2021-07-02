@@ -70,7 +70,7 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                     data: Theme.of(context).copyWith(canvasColor: Theme.of(context).primaryColor),
                     child: DropdownButtonFormField<String>(
                       isExpanded: true,
-                      value: 'eur',
+                      value: 'usd',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
@@ -104,7 +104,8 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                             ],
                           ),
                         );
-                      }).toList(),
+                      }).toList()
+                        ..sort((item, other) => fiatCurrencies.data!.value![item.value]!.name.compareTo(fiatCurrencies.data!.value![other.value]!.name)),
                     ),
                   ),
                 ),
