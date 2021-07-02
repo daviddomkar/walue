@@ -35,6 +35,8 @@ class CryptoSelectSheet extends HookWidget {
                   )
                   .toList();
 
+              data?.sort((currency, other) => other.fiatPrice.compareTo(currency.fiatPrice));
+
               if (data == null) {
                 return Center(
                   child: CircularProgressIndicator(

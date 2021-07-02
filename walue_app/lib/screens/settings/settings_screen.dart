@@ -247,13 +247,19 @@ class SettingsScreen extends HookWidget {
                                           onTap: () {
                                             showDialog(
                                               context: context,
-                                              builder: (_) => FiatCurrenciesDialog(
-                                                currencies: viewModel.fiatCurrencies!.values.where((currency) => currency.symbol != fiatCurrency.symbol).toList(),
-                                                onCurrencySelected: (currency) {
-                                                  viewModel.changeFiatCurrency(currency);
-                                                  Navigator.of(context, rootNavigator: true).pop(context);
-                                                },
-                                              ),
+                                              builder: (_) {
+                                                final currencies = viewModel.fiatCurrencies!.values.where((currency) => currency.symbol != fiatCurrency.symbol).toList();
+
+                                                currencies.sort((currency, other) => currency.name.compareTo(other.name));
+
+                                                return FiatCurrenciesDialog(
+                                                  currencies: currencies,
+                                                  onCurrencySelected: (currency) {
+                                                    viewModel.changeFiatCurrency(currency);
+                                                    Navigator.of(context, rootNavigator: true).pop(context);
+                                                  },
+                                                );
+                                              },
                                             );
                                           },
                                         ),
