@@ -72,9 +72,7 @@ class PortfolioRecord {
 
   String? computeIncreasePercentage(double? fiatPrice) {
     if (totalAmount != null && averageAmountInFiatCurrencyWhenBought != null && fiatPrice != null) {
-      final totalFiatAmount = totalAmount! * fiatPrice;
-
-      final increasePercentage = ((1.0 / averageAmountInFiatCurrencyWhenBought!) * totalFiatAmount) - 1.0;
+      final increasePercentage = fiatPrice / averageAmountInFiatCurrencyWhenBought! - 1.0;
 
       return (increasePercentage > 0 ? '+' : '') + NumberFormat.decimalPercentPattern(locale: 'en', decimalDigits: 2).format(increasePercentage);
     }
