@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../repositories/auth_repository.dart';
 import '../../widgets/apple_sign_in_button.dart';
@@ -147,7 +148,7 @@ class LogInScreen extends ConsumerWidget {
                                       text: 'Privacy Policy',
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          // TODO: Visit privacy policy
+                                          launch('https://walue.app/privacy-policy.pdf');
                                         },
                                     ),
                                     TextSpan(
@@ -160,10 +161,10 @@ class LogInScreen extends ConsumerWidget {
                                             fontSize: 16.0,
                                             decoration: TextDecoration.underline,
                                           ),
-                                      text: 'Terms of Service',
+                                      text: 'Terms and Conditions',
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          // TODO: Visit terms of service
+                                          launch('https://walue.app/terms-and-conditions.pdf');
                                         },
                                     ),
                                   ],
