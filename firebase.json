@@ -5,5 +5,13 @@
   },
   "functions": {
     "source": "walue_functions"
+  },
+  "hosting": {
+    "public": "walue_website",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
   }
 }
