@@ -37,7 +37,13 @@ class HomeScreen extends HookWidget {
 
     final fiatCurrency = useProviderNotNull(fiatCurrencyStreamProvider);
 
-    final totalValue = totalValueNumber != null ? NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency?.symbol.toUpperCase()).format(totalValueNumber) : null;
+    final currencyFormatter = totalValueNumber != null
+        ? (totalValueNumber >= 100000000000000 || totalValueNumber <= -100000000000000
+            ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatCurrency?.symbol.toUpperCase())
+            : NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency?.symbol.toUpperCase()))
+        : null;
+
+    final totalValue = currencyFormatter?.format(totalValueNumber);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -69,8 +75,8 @@ class HomeScreen extends HookWidget {
                               children: [
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Logo(
+                                  children: const [
+                                    Logo(
                                       small: true,
                                     ),
                                   ],
