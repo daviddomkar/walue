@@ -64,17 +64,20 @@ class PortfolioRecordListItem extends StatelessWidget {
                           ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
+                      minFontSize: 8.0,
                     ),
                     AutoSizeText(
                       record.computeTotalFiatAmount(
                         currency.fiatPrice,
                         fiatCurrency.symbol,
+                        100000000000000,
                       )!,
                       group: group,
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                             color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                           ),
                       maxLines: 1,
+                      minFontSize: 8.0,
                     ),
                     AutoSizeText(
                       '${currency.symbol.toUpperCase()} ${record.computeTotalAmount(null, 10000, true)!}',
@@ -84,6 +87,7 @@ class PortfolioRecordListItem extends StatelessWidget {
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
+                      minFontSize: 8.0,
                     ),
                   ],
                 ),
