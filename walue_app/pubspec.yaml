@@ -26,7 +26,7 @@ dependencies:
   firebase_core: 1.4.0
   firebase_auth: 2.0.0
   firebase_analytics: 8.2.0
-  firebase_crashlytics: 2.0.7
+  firebase_crashlytics: 2.1.0
   firebase_performance: 0.7.0+2
 
   cloud_functions: 2.0.0
