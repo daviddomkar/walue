@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 
 import axios from 'axios';
 
-export const updateCryptocurrencies = functions.region('europe-west1').pubsub.schedule('every day').timeZone('Europe/Prague').onRun(async (context) => {
+export const updateCryptocurrencies = functions.region('europe-west1').pubsub.schedule('every 24 hours').timeZone('Europe/Prague').onRun(async (context) => {
   const intermediateCryptoListDocumentRef = admin.firestore().collection('system').doc('crypto_intermediate');
   const cryptoListDocumentRef = admin.firestore().collection('system').doc('crypto');
 
