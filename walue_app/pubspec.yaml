@@ -57,7 +57,7 @@ dependencies:
 
   flutter_hooks: 0.18.0
 
-  cached_network_image: 3.0.0
+  cached_network_image: 3.1.0
 
   url_launcher: 6.0.9
 
