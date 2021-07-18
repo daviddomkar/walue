@@ -40,6 +40,8 @@ class CurrencyScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+
     final _currency = useProviderCached(cryptoCurrencyStreamProvider(id));
     final fiatCurrency = useProviderNotNull(fiatCurrencyStreamProvider);
     final _portfolioRecord = useProviderCached(portfolioRecordStreamProvider(id));
@@ -77,8 +79,12 @@ class CurrencyScreen extends HookWidget {
                               id: id,
                               currencyName: currency?.name ?? currencyName ?? '',
                               currencyImageUrl: currency?.imageUrl ?? currencyImageUrl ?? '',
-                              totalFiatAmount: portfolioRecord?.computeTotalFiatAmount(currency?.fiatPrice, fiatCurrency?.symbol, 100000000000000) ?? (buyRecords == null || buyRecords.isEmpty ? null : totalFiatAmount) ?? '',
-                              totalAmount: (currency?.symbol != null ? portfolioRecord?.computeTotalAmount(currency?.symbol, 100000000000000) : null) ?? (buyRecords == null || buyRecords.isEmpty ? null : totalAmount) ?? '',
+                              totalFiatAmount: portfolioRecord?.computeTotalFiatAmount(currency?.fiatPrice, fiatCurrency?.symbol, isLandscape ? 1000000000000000000 : 100000000000000) ??
+                                  (buyRecords == null || buyRecords.isEmpty ? null : totalFiatAmount) ??
+                                  '',
+                              totalAmount: (currency?.symbol != null ? portfolioRecord?.computeTotalAmount(currency?.symbol, isLandscape ? 1000000000000000000 : 100000000000000) : null) ??
+                                  (buyRecords == null || buyRecords.isEmpty ? null : totalAmount) ??
+                                  '',
                               increasePercentage: portfolioRecord?.computeIncreasePercentage(currency?.fiatPrice) ?? (buyRecords == null || buyRecords.isEmpty ? null : increasePercentage) ?? '',
                               onAddToFavourites: () {
                                 context.read(userRepositoryProvider).addCryptoCurrencyToFavourites(id);
@@ -453,6 +459,8 @@ class BuyRecordListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+
     return InkWell(
       onTap: () {
         showDialog(
@@ -477,7 +485,7 @@ class BuyRecordListItem extends StatelessWidget {
           children: [
             Expanded(
               child: AutoSizeText(
-                record.formattedBuyPrice,
+                record.calucalteFormattedBuyPrice(isLandscape ? 1000000000000000000 : 1000000000),
                 style: Theme.of(context).textTheme.subtitle1!.copyWith(
                       fontSize: 14.0,
                       color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
@@ -489,7 +497,7 @@ class BuyRecordListItem extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: AutoSizeText(
-                  record.formattedAmount,
+                  record.calculateFormattedAmount(isLandscape ? 1000000000000000000 : 1000000000),
                   style: TextStyle(
                     color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
                   ),
@@ -500,7 +508,7 @@ class BuyRecordListItem extends StatelessWidget {
             Expanded(
               child: (() {
                 final profit = record.calculateProfit(currency.additionalFiatPrices![record.fiatCurrency.symbol]!);
-                final profitText = record.calculateformattedProfit(currency.additionalFiatPrices![record.fiatCurrency.symbol]!);
+                final profitText = record.calculateformattedProfit(currency.additionalFiatPrices![record.fiatCurrency.symbol]!, isLandscape ? 1000000000000000000 : 1000000000);
 
                 var color = Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white;
 

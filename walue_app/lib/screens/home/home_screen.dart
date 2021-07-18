@@ -37,8 +37,10 @@ class HomeScreen extends HookWidget {
 
     final fiatCurrency = useProviderNotNull(fiatCurrencyStreamProvider);
 
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+
     final currencyFormatter = totalValueNumber != null
-        ? (totalValueNumber >= 100000000000000 || totalValueNumber <= -100000000000000
+        ? (totalValueNumber >= (isLandscape ? 1000000000000000000 : 1000000000000) || totalValueNumber <= -(isLandscape ? 1000000000000000000 : 1000000000)
             ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatCurrency?.symbol.toUpperCase())
             : NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency?.symbol.toUpperCase()))
         : null;

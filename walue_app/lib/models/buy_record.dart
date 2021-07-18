@@ -11,11 +11,12 @@ class BuyRecord {
 
   double calculateProfit(double currentPrice) => (currentPrice * amount) - (buyPrice * amount);
 
-  String calculateformattedProfit(double currentPrice) {
+  String calculateformattedProfit(double currentPrice, [double simpleFormatBreakpoint = 100000]) {
     final profit = calculateProfit(currentPrice);
 
-    final currencyFormatter =
-        profit >= 100000 || profit <= -100000 ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase()) : NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase());
+    final currencyFormatter = profit >= simpleFormatBreakpoint || profit <= -simpleFormatBreakpoint
+        ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase())
+        : NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase());
 
     if (profit > 0) {
       return '+${currencyFormatter.format(profit)}';
@@ -24,14 +25,15 @@ class BuyRecord {
     return currencyFormatter.format(profit);
   }
 
-  String get formattedBuyPrice {
-    final currencyFormatter =
-        buyPrice >= 100000 || buyPrice <= -100000 ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase()) : NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase());
+  String calucalteFormattedBuyPrice([double simpleFormatBreakpoint = 100000]) {
+    final currencyFormatter = buyPrice >= simpleFormatBreakpoint || buyPrice <= -simpleFormatBreakpoint
+        ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase())
+        : NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase());
 
     return currencyFormatter.format(buyPrice);
   }
 
-  String get formattedAmount {
+  String calculateFormattedAmount([double simpleFormatBreakpoint = 100000]) {
     var amountText = amount.toString().split('.')[1].length > 8 ? amount.toStringAsFixed(8) : amount.toString();
 
     if (amountText.endsWith('.0')) {
@@ -39,7 +41,7 @@ class BuyRecord {
     }
 
     if (amount > 999 || amount < -999) {
-      final currencyFormatter = amount >= 100000 || amount <= -100000 ? NumberFormat.compactSimpleCurrency(locale: 'en', name: '') : NumberFormat.simpleCurrency(locale: 'en', name: '');
+      final currencyFormatter = amount >= simpleFormatBreakpoint || amount <= -simpleFormatBreakpoint ? NumberFormat.compactSimpleCurrency(locale: 'en', name: '') : NumberFormat.simpleCurrency(locale: 'en', name: '');
       amountText = currencyFormatter.format(amount);
     }
 

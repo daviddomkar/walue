@@ -23,13 +23,15 @@ class PortfolioRecordListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+
     return InkWell(
       onTap: () {
         context.beamToNamed('/currency/${record.id}', popToNamed: '/', data: {
           'currencyImageUrl': currency.imageUrl,
           'currencyName': currency.name,
-          'totalFiatAmount': record.computeTotalFiatAmount(currency.fiatPrice, fiatCurrency.symbol, 100000000000000),
-          'totalAmount': record.computeTotalAmount(currency.symbol, 100000000000000),
+          'totalFiatAmount': record.computeTotalFiatAmount(currency.fiatPrice, fiatCurrency.symbol, isLandscape ? 1000000000000000000 : 1000000000000),
+          'totalAmount': record.computeTotalAmount(currency.symbol, isLandscape ? 1000000000000000 : 1000000000),
           'increasePercentage': record.computeIncreasePercentage(currency.fiatPrice),
         });
       },
@@ -70,7 +72,7 @@ class PortfolioRecordListItem extends StatelessWidget {
                       record.computeTotalFiatAmount(
                         currency.fiatPrice,
                         fiatCurrency.symbol,
-                        100000000000000,
+                        isLandscape ? 1000000000000000000 : 1000000000000,
                       )!,
                       group: group,
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
@@ -80,7 +82,7 @@ class PortfolioRecordListItem extends StatelessWidget {
                       minFontSize: 8.0,
                     ),
                     AutoSizeText(
-                      '${currency.symbol.toUpperCase()} ${record.computeTotalAmount(null, 10000, true)!}',
+                      '${currency.symbol.toUpperCase()} ${record.computeTotalAmount(null, isLandscape ? 1000000000000000 : 1000000000, true)!}',
                       group: group,
                       style: TextStyle(
                         color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
