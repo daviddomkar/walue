@@ -3,7 +3,7 @@ description: An app for tracking the profit from cryptocurrencies.
 
 publish_to: "none"
 
-version: 0.0.9+9
+version: 0.1.0+10
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -24,12 +24,12 @@ dependencies:
   stream_transform: 2.0.0
 
   firebase_core: 1.4.0
-  firebase_auth: 2.0.0
+  firebase_auth: 3.0.1
   firebase_analytics: 8.2.0
   firebase_crashlytics: 2.1.1
   firebase_performance: 0.7.0+2
 
-  cloud_functions: 2.0.0
+  cloud_functions: 3.0.0
   cloud_firestore: 2.4.0
 
   google_sign_in: 5.0.3
