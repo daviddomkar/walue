@@ -26,12 +26,19 @@ class CurrencyInputFormatter extends TextInputFormatter {
 
     var text = newValue.text;
 
-    if (Platform.isIOS && text.contains(',')) {
-      text.replaceAll(',', '.');
+    text = text.replaceAll(RegExp('[^0-9.,]'), '');
+
+    if (text.endsWith(',')) {
+      text = '${text.substring(0, text.length - 1)}.';
     }
 
     if ((text.endsWith('.') && text.split('.').length == 2) || text.isEmpty) {
-      return newValue;
+      return newValue.copyWith(
+          text: text,
+          selection: TextSelection(
+            baseOffset: oldValue.text.length > newValue.text.length ? newValue.selection.baseOffset.clamp(0, text.length) : text.length,
+            extentOffset: oldValue.text.length > newValue.text.length ? newValue.selection.extentOffset.clamp(0, text.length) : text.length,
+          ));
     } else if (text.contains('.')) {
       final splitted = text.split('.');
 
@@ -52,12 +59,11 @@ class CurrencyInputFormatter extends TextInputFormatter {
       text = _formatter.format(double.parse(text));
     }
 
-    return TextEditingValue(
-      text: text,
-      selection: TextSelection(
-        baseOffset: oldValue.text.length > newValue.text.length ? newValue.selection.baseOffset.clamp(0, text.length) : text.length,
-        extentOffset: oldValue.text.length > newValue.text.length ? newValue.selection.extentOffset.clamp(0, text.length) : text.length,
-      ),
-    );
+    return newValue.copyWith(
+        text: text,
+        selection: TextSelection(
+          baseOffset: oldValue.text.length > newValue.text.length ? newValue.selection.baseOffset.clamp(0, text.length) : text.length,
+          extentOffset: oldValue.text.length > newValue.text.length ? newValue.selection.extentOffset.clamp(0, text.length) : text.length,
+        ));
   }
 }

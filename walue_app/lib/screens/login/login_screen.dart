@@ -167,6 +167,10 @@ class LogInScreen extends ConsumerWidget {
                                           launch('https://walue.app/terms-and-conditions.pdf');
                                         },
                                     ),
+                                    TextSpan(
+                                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white, fontSize: 16.0),
+                                      text: '.',
+                                    ),
                                   ],
                                 ),
                               ),
