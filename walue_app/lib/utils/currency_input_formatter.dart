@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
@@ -23,6 +25,10 @@ class CurrencyInputFormatter extends TextInputFormatter {
     }
 
     var text = newValue.text;
+
+    if (Platform.isIOS && text.contains(',')) {
+      text.replaceAll(',', '.');
+    }
 
     if ((text.endsWith('.') && text.split('.').length == 2) || text.isEmpty) {
       return newValue;
