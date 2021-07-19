@@ -117,7 +117,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
               initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.buyPrice),
               autofocus: widget.initialRecord == null,
               hintText: 'Buy price',
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
               textInputAction: TextInputAction.next,
               onEditingComplete: () => node.nextFocus(),
               inputFormatters: [
@@ -142,7 +142,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
             child: WTextFormField(
               initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.amount),
               hintText: 'Amount',
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) {
                 node.unfocus();
