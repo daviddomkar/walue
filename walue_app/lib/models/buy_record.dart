@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 import 'currency.dart';
 
@@ -34,17 +35,18 @@ class BuyRecord {
   }
 
   String calculateFormattedAmount([double simpleFormatBreakpoint = 100000]) {
-    var amountText = amount.toString().split('.')[1].length > 8 ? amount.toStringAsFixed(8) : amount.toString();
+    var amountText = Decimal.parse(amount.toString()).toString();
 
     if (amountText.endsWith('.0')) {
-      amountText = amountText.substring(0, amountText.length - 2);
+      amountText = '${amountText}0';
     }
 
-    if (amount > 999 || amount < -999) {
-      final currencyFormatter = amount >= simpleFormatBreakpoint || amount <= -simpleFormatBreakpoint ? NumberFormat.compactSimpleCurrency(locale: 'en', name: '') : NumberFormat.simpleCurrency(locale: 'en', name: '');
-      amountText = currencyFormatter.format(amount);
+    if (amount > simpleFormatBreakpoint || amount < -simpleFormatBreakpoint) {
+      return NumberFormat.compactSimpleCurrency(locale: 'en', name: '').format(amount);
     }
 
-    return amountText;
+    final currencyFormatter = NumberFormat.simpleCurrency(locale: 'en', name: '');
+
+    return '${currencyFormatter.format(amount).split('.')[0]}.${amountText.split('.')[1]}';
   }
 }
