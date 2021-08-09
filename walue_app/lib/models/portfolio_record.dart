@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 
 import 'buy_record.dart';
@@ -43,7 +44,7 @@ class PortfolioRecord {
   // ignore: avoid_positional_boolean_parameters
   String? computeTotalAmount([String? symbol, double simpleFormatBreakpoint = 100000, bool cutLastZeros = false]) {
     if (totalAmount != null) {
-      var totalAmountText = totalAmount!.toString().split('.')[1].length > 8 ? totalAmount!.toStringAsFixed(8) : '${totalAmount!}';
+      var totalAmountText = Decimal.parse(totalAmount!.toString()).toString();
 
       if (totalAmountText.endsWith('.0')) {
         totalAmountText = '${totalAmountText}0';
