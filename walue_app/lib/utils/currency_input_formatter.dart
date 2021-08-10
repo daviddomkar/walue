@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:decimal/decimal.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
@@ -9,7 +10,18 @@ class CurrencyInputFormatter extends TextInputFormatter {
   static String? valueToString(double? value) {
     if (value == null) return null;
 
-    var text = '${_formatter.format(value).split('.')[0]}.${value.toString().split('.')[1]}';
+    final decimal = Decimal.parse(value.toString()).toString();
+
+    var decimalPart = '0';
+
+    for (var i = 0; i < decimal.length; i++) {
+      if (decimal[i] == '.') {
+        decimalPart = decimal.substring(i + 1);
+        break;
+      }
+    }
+
+    var text = '${_formatter.format(value).split('.')[0]}.$decimalPart';
 
     if (text.endsWith('.0')) {
       text = text.substring(0, text.length - 2);
