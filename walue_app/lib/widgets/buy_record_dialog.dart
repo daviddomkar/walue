@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../models/buy_record.dart';
+import '../models/crypto_currency.dart';
 import '../models/currency.dart';
 import 'buy_record_form.dart';
 
 class BuyRecordDialog extends StatelessWidget {
   final BuyRecord? initialRecord;
   final Map<String, Currency>? fiatCurrencies;
+  final CryptoCurrency? cryptoCurrency;
   final Currency? selectedCurrency;
 
   final void Function(
@@ -27,6 +29,7 @@ class BuyRecordDialog extends StatelessWidget {
     Key? key,
     this.initialRecord,
     this.fiatCurrencies,
+    this.cryptoCurrency,
     this.selectedCurrency,
     this.onAddRecord,
     this.onEditRecord,
@@ -49,6 +52,7 @@ class BuyRecordDialog extends StatelessWidget {
           child: BuyRecordForm(
             initialRecord: initialRecord,
             fiatCurrencies: fiatCurrencies,
+            cryptoCurrency: cryptoCurrency,
             selectedCurrency: selectedCurrency,
             onAddRecord: onAddRecord,
             onEditRecord: onEditRecord,

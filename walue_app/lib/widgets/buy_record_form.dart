@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/buy_record.dart';
+import '../models/crypto_currency.dart';
 import '../models/currency.dart';
 import '../utils/currency_input_formatter.dart';
 import 'basic_button.dart';
@@ -12,6 +13,7 @@ import 'w_text_form_field.dart';
 class BuyRecordForm extends StatefulWidget {
   final BuyRecord? initialRecord;
   final Map<String, Currency>? fiatCurrencies;
+  final CryptoCurrency? cryptoCurrency;
   final Currency? selectedCurrency;
 
   final void Function(
@@ -32,6 +34,7 @@ class BuyRecordForm extends StatefulWidget {
     Key? key,
     this.initialRecord,
     this.fiatCurrencies,
+    this.cryptoCurrency,
     this.selectedCurrency,
     this.onAddRecord,
     this.onEditRecord,
@@ -114,7 +117,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: WTextFormField(
-              initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.buyPrice),
+              initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice),
               autofocus: widget.initialRecord == null,
               hintText: 'Buy price',
               keyboardType: const TextInputType.numberWithOptions(decimal: true),

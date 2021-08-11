@@ -129,6 +129,7 @@ class CurrencyScreen extends HookWidget {
                                   context: context,
                                   builder: (_) => BuyRecordDialog(
                                     fiatCurrencies: fiatCurrencies.data?.value,
+                                    cryptoCurrency: currency,
                                     selectedCurrency: fiatCurrency,
                                     onAddRecord: (buyPrice, amount, fiatCurrency) {
                                       if (currency != null) {
@@ -466,6 +467,7 @@ class BuyRecordListItem extends StatelessWidget {
         showDialog(
           context: context,
           builder: (_) => BuyRecordDialog(
+            cryptoCurrency: currency,
             initialRecord: record,
             onEditRecord: (id, buyPrice, amount) {
               onEditBuyRecord(id, buyPrice, amount);
@@ -491,6 +493,7 @@ class BuyRecordListItem extends StatelessWidget {
                       color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                     ),
                 maxLines: 1,
+                minFontSize: 8.0,
               ),
             ),
             Expanded(
@@ -502,6 +505,7 @@ class BuyRecordListItem extends StatelessWidget {
                     color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
                   ),
                   maxLines: 1,
+                  minFontSize: 8.0,
                 ),
               ),
             ),
@@ -525,6 +529,7 @@ class BuyRecordListItem extends StatelessWidget {
                         color: color,
                       ),
                   maxLines: 1,
+                  minFontSize: 8.0,
                 );
               })(),
             ),
