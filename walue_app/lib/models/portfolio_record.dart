@@ -50,6 +50,10 @@ class PortfolioRecord {
         totalAmountText = '${totalAmountText}0';
       }
 
+      if (!totalAmountText.contains('.')) {
+        totalAmountText = '$totalAmountText.00';
+      }
+
       if (totalAmount! >= simpleFormatBreakpoint || totalAmount! <= -simpleFormatBreakpoint) {
         totalAmountText = NumberFormat.compactSimpleCurrency(locale: 'en', name: '').format(totalAmount);
 

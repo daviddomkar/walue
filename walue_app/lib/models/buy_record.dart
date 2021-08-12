@@ -41,6 +41,10 @@ class BuyRecord {
       amountText = '${amountText}0';
     }
 
+    if (!amountText.contains('.')) {
+      amountText = '$amountText.00';
+    }
+
     if (amount > simpleFormatBreakpoint || amount < -simpleFormatBreakpoint) {
       return NumberFormat.compactSimpleCurrency(locale: 'en', name: '').format(amount);
     }
