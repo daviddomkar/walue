@@ -61,9 +61,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
       _currency = widget.selectedCurrency!;
     }
 
-    if (widget.cryptoCurrency != null) {
-      _buyPrice = CurrencyInputFormatter.valueToString(widget.cryptoCurrency!.fiatPrice)!;
-    }
+    _buyPrice = CurrencyInputFormatter.valueToString(widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice) ?? '';
   }
 
   void addRecord() {
