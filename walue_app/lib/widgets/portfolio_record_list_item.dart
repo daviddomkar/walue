@@ -82,7 +82,7 @@ class PortfolioRecordListItem extends StatelessWidget {
                       minFontSize: 8.0,
                     ),
                     AutoSizeText(
-                      '${currency.symbol.toUpperCase()} ${record.computeTotalAmount(null, isLandscape ? 1000000000000000 : 1000000000, true)!}',
+                      '${currency.symbol.toUpperCase()} ${record.computeTotalAmount(null, isLandscape ? 1000000000000000 : 1000000000)!}',
                       group: group,
                       style: TextStyle(
                         color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
