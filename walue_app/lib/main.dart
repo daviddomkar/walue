@@ -77,6 +77,7 @@ class WalueApp extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final themeMode = useProvider(themeProvider);
+    final theme = ThemeData();
 
     return MaterialApp.router(
       themeMode: themeMode,
@@ -90,7 +91,7 @@ class WalueApp extends HookWidget {
       routeInformationParser: BeamerParser(),
       routerDelegate: routerDelegate,
       backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
-      theme: ThemeData(
+      theme: theme.copyWith(
         brightness: Brightness.light,
         textTheme: GoogleFonts.latoTextTheme().copyWith(
           headline2: GoogleFonts.fredokaOne(fontSize: 64.0, color: const Color(0xFF222222)),
@@ -103,10 +104,12 @@ class WalueApp extends HookWidget {
           bodyText1: GoogleFonts.lato(fontSize: 14.0, color: const Color(0xFF222222)),
           bodyText2: GoogleFonts.lato(fontSize: 14.0, fontWeight: FontWeight.w300, color: const Color(0x80222222)),
         ),
-        primaryColor: const Color(0xFF0054F6),
-        accentColor: const Color(0xFF00D1FF),
+        colorScheme: theme.colorScheme.copyWith(
+          primary: const Color(0xFF0054F6),
+          secondary: const Color(0xFF00D1FF),
+        ),
       ),
-      darkTheme: ThemeData(
+      darkTheme: theme.copyWith(
         brightness: Brightness.dark,
         textTheme: GoogleFonts.latoTextTheme().copyWith(
           headline2: GoogleFonts.fredokaOne(fontSize: 64.0, color: const Color(0xFF222222)),
@@ -119,8 +122,10 @@ class WalueApp extends HookWidget {
           bodyText1: GoogleFonts.lato(fontSize: 14.0, color: const Color(0xFF222222)),
           bodyText2: GoogleFonts.lato(fontSize: 14.0, fontWeight: FontWeight.w300, color: const Color(0x80222222)),
         ),
-        primaryColor: const Color(0xFF0054F6),
-        accentColor: const Color(0xFF00D1FF),
+        colorScheme: theme.colorScheme.copyWith(
+          primary: const Color(0xFF0054F6),
+          secondary: const Color(0xFF00D1FF),
+        ),
       ),
     );
   }

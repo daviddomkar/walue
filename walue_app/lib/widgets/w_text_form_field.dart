@@ -80,7 +80,7 @@ class _WTextFormFieldState extends State<WTextFormField> {
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 2.0, color: Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
+          borderSide: BorderSide(width: 2.0, color: Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary),
           borderRadius: const BorderRadius.all(
             Radius.circular(16.0),
           ),

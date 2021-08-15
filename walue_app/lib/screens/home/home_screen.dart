@@ -299,7 +299,7 @@ class FavouriteList extends HookWidget {
                         child: loading
                             ? Center(
                                 child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
+                                  valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary),
                                   strokeWidth: 2.0,
                                 ),
                               )
@@ -355,7 +355,7 @@ class FavouriteList extends HookWidget {
                         child: ownedCurrencies == null || !ownedCurrencies.containsKey(favouriteCurrencyIds![index])
                             ? Center(
                                 child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
+                                  valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary),
                                   strokeWidth: 2.0,
                                 ),
                               )
@@ -502,7 +502,7 @@ class PortfolioRecordList extends HookWidget {
             : loading
                 ? Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).accentColor),
+                      valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary),
                       strokeWidth: 2.0,
                     ),
                   )
