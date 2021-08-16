@@ -350,7 +350,7 @@ class BuyRecordList extends HookWidget {
             : loading
                 ? Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary),
+                      valueColor: AlwaysStoppedAnimation(Theme.of(context).brightness == Brightness.light ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.secondary),
                       strokeWidth: 2.0,
                     ),
                   )

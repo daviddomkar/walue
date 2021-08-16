@@ -44,7 +44,7 @@ class ChooseFiatCurrencyScreen extends HookWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Theme.of(context).primaryColor,
+                Theme.of(context).colorScheme.primary,
                 Theme.of(context).colorScheme.secondary,
               ],
               begin: Alignment.topLeft,
@@ -67,7 +67,7 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 32.0),
                   child: Theme(
-                    data: Theme.of(context).copyWith(canvasColor: Theme.of(context).primaryColor),
+                    data: Theme.of(context).copyWith(canvasColor: Theme.of(context).colorScheme.primary),
                     child: DropdownButtonFormField<String>(
                       isExpanded: true,
                       value: 'usd',

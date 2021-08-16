@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Theme.of(context).primaryColor,
+                Theme.of(context).colorScheme.primary,
                 Theme.of(context).colorScheme.secondary,
               ],
               begin: Alignment.topLeft,

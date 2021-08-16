@@ -40,7 +40,7 @@ class CryptoSelectSheet extends HookWidget {
               if (data == null) {
                 return Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                    valueColor: AlwaysStoppedAnimation(Theme.of(context).colorScheme.primary),
                     strokeWidth: 2.0,
                   ),
                 );
@@ -91,7 +91,7 @@ class CryptoSelectSheet extends HookWidget {
             loading: () => Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation(
-                  Theme.of(context).brightness == Brightness.light ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.secondary,
+                  Theme.of(context).brightness == Brightness.light ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.secondary,
                 ),
                 strokeWidth: 2.0,
               ),
