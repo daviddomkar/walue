@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -234,9 +235,9 @@ class AddNewCryptoButton extends HookWidget {
           );
         }
       },
-      child: const Text(
-        'Add new crypto',
-        style: TextStyle(
+      child: Text(
+        AppLocalizations.of(context)!.addNewCrypto,
+        style: const TextStyle(
           fontSize: 18.0,
         ),
         textAlign: TextAlign.center,
