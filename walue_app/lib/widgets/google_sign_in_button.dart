@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final bool loading;
   final VoidCallback onPressed;
 
-  const GoogleSignInButton({Key? key, this.loading = false, required this.onPressed}) : super(key: key);
+  GoogleSignInButton({Key? key, this.loading = false, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +47,9 @@ class GoogleSignInButton extends StatelessWidget {
                         ),
                       ),
                     )
-                  : const Text(
-                      'Sign in with Google',
-                      style: TextStyle(
+                  : Text(
+                      AppLocalizations.of(context)!.singInWithGoogle,
+                      style: const TextStyle(
                         fontSize: 18.0,
                       ),
                       textAlign: TextAlign.center,

@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -62,7 +63,7 @@ class LogInScreen extends ConsumerWidget {
                                   small: true,
                                 ),
                                 Text(
-                                  'Log in to get started',
+                                  AppLocalizations.of(context)!.logInToGetStarted,
                                   style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
                                   textAlign: TextAlign.center,
                                 ),
@@ -71,7 +72,7 @@ class LogInScreen extends ConsumerWidget {
                                   child: GoogleSignInButton(
                                     loading: viewModel.googleLoading,
                                     onPressed: () {
-                                      viewModel.signInWithGoogle().onError((error, stackTrace) {
+                                      viewModel.signInWithGoogle(context).onError((error, stackTrace) {
                                         final snackBar = SnackBar(
                                           backgroundColor: Colors.red,
                                           shape: const RoundedRectangleBorder(
@@ -100,7 +101,7 @@ class LogInScreen extends ConsumerWidget {
                                   child: AppleSignInButton(
                                     loading: viewModel.appleLoading,
                                     onPressed: () {
-                                      viewModel.signInWithApple().onError((error, stackTrace) {
+                                      viewModel.signInWithApple(context).onError((error, stackTrace) {
                                         final snackBar = SnackBar(
                                           backgroundColor: Colors.red,
                                           shape: const RoundedRectangleBorder(
@@ -137,7 +138,7 @@ class LogInScreen extends ConsumerWidget {
                                   children: [
                                     TextSpan(
                                       style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white, fontSize: 16.0),
-                                      text: 'By logging in, you agree to our ',
+                                      text: '${AppLocalizations.of(context)!.byLoggingInYouAgreeToOur} ',
                                     ),
                                     TextSpan(
                                       style: Theme.of(context).textTheme.headline4!.copyWith(
@@ -145,7 +146,7 @@ class LogInScreen extends ConsumerWidget {
                                             fontSize: 16.0,
                                             decoration: TextDecoration.underline,
                                           ),
-                                      text: 'Privacy Policy',
+                                      text: AppLocalizations.of(context)!.privacyPolicy,
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           launch('https://walue.app/privacy-policy.pdf');
@@ -153,7 +154,7 @@ class LogInScreen extends ConsumerWidget {
                                     ),
                                     TextSpan(
                                       style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white, fontSize: 16.0),
-                                      text: ' and ',
+                                      text: ' ${AppLocalizations.of(context)!.and} ',
                                     ),
                                     TextSpan(
                                       style: Theme.of(context).textTheme.headline4!.copyWith(
@@ -161,7 +162,7 @@ class LogInScreen extends ConsumerWidget {
                                             fontSize: 16.0,
                                             decoration: TextDecoration.underline,
                                           ),
-                                      text: 'Terms and Conditions',
+                                      text: AppLocalizations.of(context)!.termsAndConditions,
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           launch('https://walue.app/terms-and-conditions.pdf');

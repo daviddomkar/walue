@@ -4,10 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -114,7 +114,7 @@ class HomeScreen extends HookWidget {
                                       ),
                                     ),
                                     Text(
-                                      'Favourites',
+                                      AppLocalizations.of(context)!.favourites,
                                       style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0, color: Colors.white),
                                     ),
                                   ],
@@ -144,7 +144,7 @@ class HomeScreen extends HookWidget {
                                       Padding(
                                         padding: const EdgeInsets.only(right: 16.0),
                                         child: Text(
-                                          'Portfolio',
+                                          AppLocalizations.of(context)!.portfolio,
                                           style: Theme.of(context).textTheme.headline4!.copyWith(
                                                 fontSize: 24.0,
                                                 color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
@@ -339,7 +339,7 @@ class FavouriteList extends HookWidget {
                                       Padding(
                                         padding: const EdgeInsets.only(top: 8.0),
                                         child: Text(
-                                          'Add favourite',
+                                          AppLocalizations.of(context)!.addFavourite,
                                           style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                                 fontSize: 14.0,
                                                 color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
@@ -420,7 +420,7 @@ class FavouriteList extends HookWidget {
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
                                           Text(
-                                            'Market Price',
+                                            AppLocalizations.of(context)!.marketPrice,
                                             style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                                   fontSize: 12.0,
                                                   color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
@@ -493,7 +493,7 @@ class PortfolioRecordList extends HookWidget {
         child: error
             ? Center(
                 child: Text(
-                  'An error occured while fetching records, Walue will attempt another fetch in a moment!',
+                  AppLocalizations.of(context)!.errorWhileFetchingRecords,
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(
                         color: Colors.red,
                       ),
@@ -510,7 +510,7 @@ class PortfolioRecordList extends HookWidget {
                 : portfolioRecords.data!.value!.isEmpty
                     ? Center(
                         child: Text(
-                          'No portfolio records found',
+                          AppLocalizations.of(context)!.noPortfolioRecordsFound,
                           style: TextStyle(
                             color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
                           ),

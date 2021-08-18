@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppleSignInButton extends StatelessWidget {
   final bool loading;
   final VoidCallback onPressed;
 
-  const AppleSignInButton({Key? key, this.loading = false, required this.onPressed}) : super(key: key);
+  AppleSignInButton({Key? key, this.loading = false, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +47,9 @@ class AppleSignInButton extends StatelessWidget {
                         ),
                       ),
                     )
-                  : const Text(
-                      'Sign in with Apple',
-                      style: TextStyle(
+                  : Text(
+                      AppLocalizations.of(context)!.singInWithApple,
+                      style: const TextStyle(
                         fontSize: 18.0,
                       ),
                       textAlign: TextAlign.center,

@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../repositories/auth_repository.dart';
 
@@ -13,28 +15,28 @@ class LogInViewModel extends ChangeNotifier {
       : _googleLoading = false,
         _appleLoading = false;
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle(BuildContext context) async {
     _googleLoading = true;
     notifyListeners();
 
     try {
       await authRepository.signInWithGoogle();
     } catch (error) {
-      _error = 'Could not sign in with Google';
+      _error = AppLocalizations.of(context)!.couldNotSignInWithGoogle;
       _googleLoading = false;
       notifyListeners();
       rethrow;
     }
   }
 
-  Future<void> signInWithApple() async {
+  Future<void> signInWithApple(BuildContext context) async {
     _appleLoading = true;
     notifyListeners();
 
     try {
       await authRepository.signInWithApple();
     } catch (error) {
-      _error = 'Could not sign in with Apple';
+      _error = AppLocalizations.of(context)!.couldNotSignInWithApple;
       _appleLoading = false;
       notifyListeners();
       rethrow;

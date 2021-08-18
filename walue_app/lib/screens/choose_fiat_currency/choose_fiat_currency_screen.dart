@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -59,7 +60,7 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                 small: true,
               ),
               Text(
-                'Choose your fiat currency',
+                AppLocalizations.of(context)!.chooseYourFiatCurrency,
                 style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -134,9 +135,9 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     });
                   },
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.continueWithFiatCurrency,
+                    style: const TextStyle(
                       fontSize: 18.0,
                     ),
                     textAlign: TextAlign.center,
@@ -159,9 +160,9 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                         ),
                       ),
                     ),
-                    child: const Text(
-                      'Sign out',
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context)!.signOut,
+                      style: const TextStyle(
                         fontSize: 18.0,
                         color: Colors.white,
                       ),
