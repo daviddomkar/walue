@@ -12,6 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
+
   beamer: 0.14.1
 
   hooks_riverpod: 0.14.0+3
