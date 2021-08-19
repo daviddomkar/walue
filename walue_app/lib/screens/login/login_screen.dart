@@ -1,10 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../generated/locale_keys.g.dart';
 import '../../repositories/auth_repository.dart';
 import '../../widgets/apple_sign_in_button.dart';
 import '../../widgets/google_sign_in_button.dart';
@@ -63,7 +64,7 @@ class LogInScreen extends ConsumerWidget {
                                   small: true,
                                 ),
                                 Text(
-                                  AppLocalizations.of(context)!.logInToGetStarted,
+                                  LocaleKeys.logInToGetStarted.tr(),
                                   style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
                                   textAlign: TextAlign.center,
                                 ),
@@ -82,7 +83,7 @@ class LogInScreen extends ConsumerWidget {
                                             ),
                                           ),
                                           content: Text(
-                                            viewModel.error!,
+                                            viewModel.error!.tr(),
                                             style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                                   fontSize: 16.0,
                                                   color: Colors.white,
@@ -111,7 +112,7 @@ class LogInScreen extends ConsumerWidget {
                                             ),
                                           ),
                                           content: Text(
-                                            viewModel.error!,
+                                            viewModel.error!.tr(),
                                             style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                                   fontSize: 16.0,
                                                   color: Colors.white,
@@ -138,7 +139,7 @@ class LogInScreen extends ConsumerWidget {
                                   children: [
                                     TextSpan(
                                       style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white, fontSize: 16.0),
-                                      text: '${AppLocalizations.of(context)!.byLoggingInYouAgreeToOur} ',
+                                      text: '${LocaleKeys.byLoggingInYouAgreeToOur.tr()} ',
                                     ),
                                     TextSpan(
                                       style: Theme.of(context).textTheme.headline4!.copyWith(
@@ -146,7 +147,7 @@ class LogInScreen extends ConsumerWidget {
                                             fontSize: 16.0,
                                             decoration: TextDecoration.underline,
                                           ),
-                                      text: AppLocalizations.of(context)!.privacyPolicy,
+                                      text: LocaleKeys.privacyPolicy.tr(),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           launch('https://walue.app/privacy-policy.pdf');
@@ -154,7 +155,7 @@ class LogInScreen extends ConsumerWidget {
                                     ),
                                     TextSpan(
                                       style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white, fontSize: 16.0),
-                                      text: ' ${AppLocalizations.of(context)!.and} ',
+                                      text: ' ${LocaleKeys.and.tr()} ',
                                     ),
                                     TextSpan(
                                       style: Theme.of(context).textTheme.headline4!.copyWith(
@@ -162,7 +163,7 @@ class LogInScreen extends ConsumerWidget {
                                             fontSize: 16.0,
                                             decoration: TextDecoration.underline,
                                           ),
-                                      text: AppLocalizations.of(context)!.termsAndConditions,
+                                      text: LocaleKeys.termsAndConditions.tr(),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           launch('https://walue.app/terms-and-conditions.pdf');

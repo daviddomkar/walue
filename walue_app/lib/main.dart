@@ -89,6 +89,9 @@ class WalueApp extends HookWidget {
     final theme = ThemeData();
 
     return MaterialApp.router(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       themeMode: themeMode,
       builder: (context, child) {
         return ScrollConfiguration(

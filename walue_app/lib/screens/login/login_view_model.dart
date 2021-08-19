@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../generated/locale_keys.g.dart';
 import '../../repositories/auth_repository.dart';
 
 class LogInViewModel extends ChangeNotifier {
@@ -22,7 +22,7 @@ class LogInViewModel extends ChangeNotifier {
     try {
       await authRepository.signInWithGoogle();
     } catch (error) {
-      _error = AppLocalizations.of(context)!.couldNotSignInWithGoogle;
+      _error = LocaleKeys.couldNotSignInWithGoogle;
       _googleLoading = false;
       notifyListeners();
       rethrow;
@@ -36,7 +36,7 @@ class LogInViewModel extends ChangeNotifier {
     try {
       await authRepository.signInWithApple();
     } catch (error) {
-      _error = AppLocalizations.of(context)!.couldNotSignInWithApple;
+      _error = LocaleKeys.couldNotSignInWithApple;
       _appleLoading = false;
       notifyListeners();
       rethrow;

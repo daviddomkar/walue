@@ -1,9 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../generated/locale_keys.g.dart';
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
@@ -60,7 +61,7 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                 small: true,
               ),
               Text(
-                AppLocalizations.of(context)!.chooseYourFiatCurrency,
+                LocaleKeys.chooseYourFiatCurrency.tr(),
                 style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -136,7 +137,7 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                     });
                   },
                   child: Text(
-                    AppLocalizations.of(context)!.continueWithFiatCurrency,
+                    LocaleKeys.continueWithFiatCurrency.tr(),
                     style: const TextStyle(
                       fontSize: 18.0,
                     ),
@@ -161,7 +162,7 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                       ),
                     ),
                     child: Text(
-                      AppLocalizations.of(context)!.signOut,
+                      LocaleKeys.signOut.tr(),
                       style: const TextStyle(
                         fontSize: 18.0,
                         color: Colors.white,

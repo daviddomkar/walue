@@ -1,11 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../generated/locale_keys.g.dart';
 
 class AppleSignInButton extends StatelessWidget {
   final bool loading;
   final VoidCallback onPressed;
 
-  AppleSignInButton({Key? key, this.loading = false, required this.onPressed}) : super(key: key);
+  const AppleSignInButton({Key? key, this.loading = false, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class AppleSignInButton extends StatelessWidget {
                       ),
                     )
                   : Text(
-                      AppLocalizations.of(context)!.singInWithApple,
+                      LocaleKeys.singInWithApple.tr(),
                       style: const TextStyle(
                         fontSize: 18.0,
                       ),

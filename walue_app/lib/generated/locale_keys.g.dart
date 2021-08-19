@@ -1,6 +1,6 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
-abstract class LocaleKeys {
+abstract class  LocaleKeys {
   static const logInToGetStarted = 'logInToGetStarted';
   static const singInWithGoogle = 'singInWithGoogle';
   static const singInWithApple = 'singInWithApple';
@@ -27,4 +27,5 @@ abstract class LocaleKeys {
   static const jpy = 'jpy';
   static const pln = 'pln';
   static const usd = 'usd';
+
 }
