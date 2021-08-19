@@ -1,12 +1,12 @@
 import 'package:beamer/beamer.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +14,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'generated/codegen_loader.g.dart';
 import 'locations.dart';
 import 'providers.dart';
 import 'repositories/crypto_repository.dart';
@@ -22,6 +23,7 @@ import 'utils/no_glow_scroll_behavior.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
 
   _licenceFonts();
 
@@ -39,13 +41,19 @@ Future<void> main() async {
   final sharedPreferences = await SharedPreferences.getInstance();
 
   runApp(
-    ProviderScope(
-      overrides: [
-        themeProvider.overrideWithValue(ThemeNotifier(sharedPreferences: sharedPreferences)),
-        cryptoRepositoryProvider.overrideWithValue(CoinGeckoCryptoRepository(cacheStore: cacheStore)),
-        fiatRepositoryProvider.overrideWithValue(ExchangeRateHostFiatRepository(cacheStore: cacheStore)),
-      ],
-      child: WalueApp(),
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('cs')],
+      path: 'l10n',
+      fallbackLocale: const Locale('en'),
+      assetLoader: const CodegenLoader(),
+      child: ProviderScope(
+        overrides: [
+          themeProvider.overrideWithValue(ThemeNotifier(sharedPreferences: sharedPreferences)),
+          cryptoRepositoryProvider.overrideWithValue(CoinGeckoCryptoRepository(cacheStore: cacheStore)),
+          fiatRepositoryProvider.overrideWithValue(ExchangeRateHostFiatRepository(cacheStore: cacheStore)),
+        ],
+        child: WalueApp(),
+      ),
     ),
   );
 }
@@ -88,8 +96,6 @@ class WalueApp extends HookWidget {
           child: child!,
         );
       },
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
       routeInformationParser: BeamerParser(),
       routerDelegate: routerDelegate,
