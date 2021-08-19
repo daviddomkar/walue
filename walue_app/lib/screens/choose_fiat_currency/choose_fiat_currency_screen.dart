@@ -98,7 +98,7 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(currencies[symbol]!.name),
+                              Text(symbol.tr() == symbol ? currencies[symbol]!.name : symbol.tr()),
                               Padding(
                                 padding: const EdgeInsets.only(right: 8.0),
                                 child: Text(currencies[symbol]!.symbol.toUpperCase()),
@@ -107,7 +107,17 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                           ),
                         );
                       }).toList()
-                        ..sort((item, other) => fiatCurrencies.data!.value![item.value]!.name.compareTo(fiatCurrencies.data!.value![other.value]!.name)),
+                        ..sort(
+                          (item, other) {
+                            final symbol = fiatCurrencies.data!.value![item.value]!.symbol;
+                            final otherSymbol = fiatCurrencies.data!.value![other.value]!.symbol;
+
+                            final name = symbol.tr() == symbol ? fiatCurrencies.data!.value![item.value]!.name : symbol.tr();
+                            final otherName = otherSymbol.tr() == otherSymbol ? fiatCurrencies.data!.value![other.value]!.name : otherSymbol.tr();
+
+                            return name.compareTo(otherName);
+                          },
+                        ),
                     ),
                   ),
                 ),
@@ -124,7 +134,7 @@ class ChooseFiatCurrencyScreen extends HookWidget {
                           ),
                         ),
                         content: Text(
-                          viewModel.error!,
+                          viewModel.error!.tr(),
                           style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                 fontSize: 16.0,
                                 color: Colors.white,

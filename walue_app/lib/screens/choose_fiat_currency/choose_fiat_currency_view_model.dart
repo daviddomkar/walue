@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../generated/locale_keys.g.dart';
 import '../../models/currency.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
@@ -18,7 +20,7 @@ class ChooseFiatCurrencyViewModel extends ChangeNotifier {
 
   ChooseFiatCurrencyViewModel({required this.authRepository, required this.userRepository, required this.fiatCurrencies})
       : _loading = false,
-        _currency = Currency(name: 'United States Dollar', symbol: 'usd');
+        _currency = Currency(name: 'usd'.tr(), symbol: 'usd');
 
   void signOut() {
     authRepository.signOut();
@@ -31,7 +33,7 @@ class ChooseFiatCurrencyViewModel extends ChangeNotifier {
     try {
       await userRepository.chooseFiatCurrency(_currency);
     } catch (error) {
-      _error = 'An error occured';
+      _error = LocaleKeys.anErrorOccured;
       _loading = false;
       notifyListeners();
       rethrow;
