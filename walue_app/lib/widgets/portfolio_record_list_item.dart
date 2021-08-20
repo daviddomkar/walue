@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:beamer/beamer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:beamer/beamer.dart';
 
 import '../models/crypto_currency.dart';
 import '../models/currency.dart';
@@ -30,9 +30,9 @@ class PortfolioRecordListItem extends StatelessWidget {
         context.beamToNamed('/currency/${record.id}', popToNamed: '/', data: {
           'currencyImageUrl': currency.imageUrl,
           'currencyName': currency.name,
-          'totalFiatAmount': record.computeTotalFiatAmount(currency.fiatPrice, fiatCurrency.symbol, isLandscape ? 1000000000000000000 : 1000000000000),
-          'totalAmount': record.computeTotalAmount(currency.symbol, isLandscape ? 1000000000000000 : 1000000000),
-          'increasePercentage': record.computeIncreasePercentage(currency.fiatPrice),
+          'totalFiatAmount': record.computeTotalFiatAmount(context, currency.fiatPrice, fiatCurrency.symbol, isLandscape ? 1000000000000000000 : 1000000000000),
+          'totalAmount': record.computeTotalAmount(context, currency.symbol, isLandscape ? 1000000000000000 : 1000000000),
+          'increasePercentage': record.computeIncreasePercentage(context, currency.fiatPrice),
         });
       },
       child: Container(
@@ -70,6 +70,7 @@ class PortfolioRecordListItem extends StatelessWidget {
                     ),
                     AutoSizeText(
                       record.computeTotalFiatAmount(
+                        context,
                         currency.fiatPrice,
                         fiatCurrency.symbol,
                         isLandscape ? 1000000000000000000 : 1000000000000,
@@ -82,7 +83,7 @@ class PortfolioRecordListItem extends StatelessWidget {
                       minFontSize: 8.0,
                     ),
                     AutoSizeText(
-                      '${currency.symbol.toUpperCase()} ${record.computeTotalAmount(null, isLandscape ? 1000000000000000 : 1000000000)!}',
+                      record.computeTotalAmount(context, currency.symbol, isLandscape ? 1000000000000000 : 1000000000)!,
                       group: group,
                       style: TextStyle(
                         color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
@@ -99,12 +100,14 @@ class PortfolioRecordListItem extends StatelessWidget {
               width: 80.0,
               child: AutoSizeText(
                 record.computeIncreasePercentage(
+                  context,
                   currency.fiatPrice,
                 )!,
                 maxLines: 1,
                 style: Theme.of(context).textTheme.subtitle1!.copyWith(
                   color: (() {
                     final profitText = record.computeIncreasePercentage(
+                      context,
                       currency.fiatPrice,
                     )!;
 

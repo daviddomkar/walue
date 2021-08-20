@@ -43,8 +43,8 @@ class HomeScreen extends HookWidget {
 
     final currencyFormatter = totalValueNumber != null
         ? (totalValueNumber >= (isLandscape ? 1000000000000000000 : 1000000000000) || totalValueNumber <= -(isLandscape ? 1000000000000000000 : 1000000000)
-            ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatCurrency?.symbol.toUpperCase())
-            : NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency?.symbol.toUpperCase()))
+            ? NumberFormat.compactSimpleCurrency(locale: context.locale.languageCode, name: fiatCurrency?.symbol.toUpperCase())
+            : NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: fiatCurrency?.symbol.toUpperCase()))
         : null;
 
     final totalValue = currencyFormatter?.format(totalValueNumber);
@@ -429,7 +429,7 @@ class FavouriteList extends HookWidget {
                                             textAlign: TextAlign.right,
                                           ),
                                           Text(
-                                            ownedCurrencies[favouriteCurrencyIds[index]]!.calculateFormattedFiatPrice(fiatCurrency!.symbol)!,
+                                            ownedCurrencies[favouriteCurrencyIds[index]]!.calculateFormattedFiatPrice(context, fiatCurrency!.symbol)!,
                                             style: Theme.of(context).textTheme.subtitle2!.copyWith(
                                                   fontSize: 18.0,
                                                   color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
@@ -472,8 +472,6 @@ class PortfolioRecordList extends HookWidget {
 
     final loading = ownedCurrencies is AsyncLoading || portfolioRecords is AsyncLoading || fiatCurrency == null || portfolioRecords.data?.value == null || ownedCurrencies.data?.value == null;
     final error = ownedCurrencies is AsyncError || portfolioRecords is AsyncError;
-
-    // final totalValue = portfolioRecords.data?.value?.map((record) => record.computeTotalFiatAmount(fiatPrice, fiatSymbol))
 
     return Container(
       clipBehavior: Clip.hardEdge,

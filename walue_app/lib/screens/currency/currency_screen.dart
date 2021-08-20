@@ -81,13 +81,13 @@ class CurrencyScreen extends HookWidget {
                               id: id,
                               currencyName: currency?.name ?? currencyName ?? '',
                               currencyImageUrl: currency?.imageUrl ?? currencyImageUrl ?? '',
-                              totalFiatAmount: portfolioRecord?.computeTotalFiatAmount(currency?.fiatPrice, fiatCurrency?.symbol, isLandscape ? 1000000000000000000 : 100000000000000) ??
+                              totalFiatAmount: portfolioRecord?.computeTotalFiatAmount(context, currency?.fiatPrice, fiatCurrency?.symbol, isLandscape ? 1000000000000000000 : 100000000000000) ??
                                   (buyRecords == null || buyRecords.isEmpty ? null : totalFiatAmount) ??
                                   '',
-                              totalAmount: (currency?.symbol != null ? portfolioRecord?.computeTotalAmount(currency?.symbol, isLandscape ? 1000000000000000000 : 100000000000000) : null) ??
+                              totalAmount: (currency?.symbol != null ? portfolioRecord?.computeTotalAmount(context, currency?.symbol, isLandscape ? 1000000000000000000 : 100000000000000) : null) ??
                                   (buyRecords == null || buyRecords.isEmpty ? null : totalAmount) ??
                                   '',
-                              increasePercentage: portfolioRecord?.computeIncreasePercentage(currency?.fiatPrice) ?? (buyRecords == null || buyRecords.isEmpty ? null : increasePercentage) ?? '',
+                              increasePercentage: portfolioRecord?.computeIncreasePercentage(context, currency?.fiatPrice) ?? (buyRecords == null || buyRecords.isEmpty ? null : increasePercentage) ?? '',
                               onAddToFavourites: () {
                                 context.read(userRepositoryProvider).addCryptoCurrencyToFavourites(id);
                               },
@@ -489,7 +489,7 @@ class BuyRecordListItem extends StatelessWidget {
           children: [
             Expanded(
               child: AutoSizeText(
-                record.calucalteFormattedBuyPrice(isLandscape ? 1000000000000000000 : 1000000000),
+                record.calucalteFormattedBuyPrice(context, isLandscape ? 1000000000000000000 : 1000000000),
                 style: Theme.of(context).textTheme.subtitle1!.copyWith(
                       fontSize: 14.0,
                       color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
@@ -502,7 +502,7 @@ class BuyRecordListItem extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: AutoSizeText(
-                  record.calculateFormattedAmount(isLandscape ? 1000000000000000000 : 1000000000),
+                  record.calculateFormattedAmount(context, isLandscape ? 1000000000000000000 : 1000000000),
                   style: TextStyle(
                     color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
                   ),
@@ -514,7 +514,7 @@ class BuyRecordListItem extends StatelessWidget {
             Expanded(
               child: (() {
                 final profit = record.calculateProfit(currency.additionalFiatPrices![record.fiatCurrency.symbol]!);
-                final profitText = record.calculateformattedProfit(currency.additionalFiatPrices![record.fiatCurrency.symbol]!, isLandscape ? 1000000000000000000 : 1000000000);
+                final profitText = record.calculateformattedProfit(context, currency.additionalFiatPrices![record.fiatCurrency.symbol]!, isLandscape ? 1000000000000000000 : 1000000000);
 
                 var color = Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white;
 

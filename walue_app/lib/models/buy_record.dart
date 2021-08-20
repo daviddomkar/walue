@@ -1,4 +1,6 @@
 import 'package:decimal/decimal.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'currency.dart';
 
@@ -12,12 +14,12 @@ class BuyRecord {
 
   double calculateProfit(double currentPrice) => (currentPrice * amount) - (buyPrice * amount);
 
-  String calculateformattedProfit(double currentPrice, [double simpleFormatBreakpoint = 100000]) {
+  String calculateformattedProfit(BuildContext context, double currentPrice, [double simpleFormatBreakpoint = 100000]) {
     final profit = calculateProfit(currentPrice);
 
     final currencyFormatter = profit >= simpleFormatBreakpoint || profit <= -simpleFormatBreakpoint
-        ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase())
-        : NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase());
+        ? NumberFormat.compactSimpleCurrency(locale: context.locale.languageCode, name: fiatCurrency.symbol.toUpperCase())
+        : NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: fiatCurrency.symbol.toUpperCase());
 
     if (profit > 0) {
       return '+${currencyFormatter.format(profit)}';
@@ -26,15 +28,15 @@ class BuyRecord {
     return currencyFormatter.format(profit);
   }
 
-  String calucalteFormattedBuyPrice([double simpleFormatBreakpoint = 100000]) {
+  String calucalteFormattedBuyPrice(BuildContext context, [double simpleFormatBreakpoint = 100000]) {
     final currencyFormatter = buyPrice >= simpleFormatBreakpoint || buyPrice <= -simpleFormatBreakpoint
-        ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase())
-        : NumberFormat.simpleCurrency(locale: 'en', name: fiatCurrency.symbol.toUpperCase());
+        ? NumberFormat.compactSimpleCurrency(locale: context.locale.languageCode, name: fiatCurrency.symbol.toUpperCase())
+        : NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: fiatCurrency.symbol.toUpperCase());
 
     return currencyFormatter.format(buyPrice);
   }
 
-  String calculateFormattedAmount([double simpleFormatBreakpoint = 100000]) {
+  String calculateFormattedAmount(BuildContext context, [double simpleFormatBreakpoint = 100000]) {
     var amountText = Decimal.parse(amount.toString()).toString();
 
     if (amountText.endsWith('.0')) {
@@ -46,11 +48,13 @@ class BuyRecord {
     }
 
     if (amount > simpleFormatBreakpoint || amount < -simpleFormatBreakpoint) {
-      return NumberFormat.compactSimpleCurrency(locale: 'en', name: '').format(amount);
+      return NumberFormat.compactSimpleCurrency(locale: context.locale.languageCode, name: '').format(amount);
     }
 
-    final currencyFormatter = NumberFormat.simpleCurrency(locale: 'en', name: '');
+    final decimalDigits = amountText.split('.')[1].length;
 
-    return '${currencyFormatter.format(amount).split('.')[0]}.${amountText.split('.')[1]}';
+    final currencyFormatter = NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: '', decimalDigits: decimalDigits);
+
+    return currencyFormatter.format(amount);
   }
 }
