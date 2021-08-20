@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:walue_app/widgets/language_dialog.dart';
 
 import '../../generated/locale_keys.g.dart';
 import '../../hooks/use_provider_not_null.dart';
@@ -278,6 +279,17 @@ class SettingsScreen extends HookWidget {
                                             showDialog(
                                               context: context,
                                               builder: (_) => const ThemeModeDialog(),
+                                            );
+                                          },
+                                        ),
+                                        PreferenceItem(
+                                          title: LocaleKeys.language.tr(),
+                                          subtitle: LocaleKeys.languageDescription.tr(),
+                                          value: context.locale.languageCode.tr(),
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (_) => const LanguageDialog(),
                                             );
                                           },
                                         ),

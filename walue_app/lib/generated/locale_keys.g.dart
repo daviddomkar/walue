@@ -44,6 +44,10 @@ abstract class  LocaleKeys {
   static const fiatCurrencyDescription = 'fiatCurrencyDescription';
   static const theme = 'theme';
   static const themeDescription = 'themeDescription';
+  static const language = 'language';
+  static const languageDescription = 'languageDescription';
+  static const cs = 'cs';
+  static const en = 'en';
   static const system = 'system';
   static const light = 'light';
   static const dark = 'dark';
