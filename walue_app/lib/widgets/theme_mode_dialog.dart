@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,11 +11,11 @@ class ThemeModeDialog extends HookWidget {
   static String getThemeModeName(ThemeMode mode) {
     switch (mode) {
       case ThemeMode.system:
-        return 'System';
+        return 'system';
       case ThemeMode.light:
-        return 'Light';
+        return 'light';
       case ThemeMode.dark:
-        return 'Dark';
+        return 'dark';
     }
   }
 
@@ -51,7 +52,7 @@ class ThemeModeDialog extends HookWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    getThemeModeName(mode),
+                    getThemeModeName(mode).tr(),
                     style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                   ),
                 ),

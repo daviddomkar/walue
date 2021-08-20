@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../generated/locale_keys.g.dart';
 import '../hooks/use_provider_cached.dart';
 import '../models/crypto_currency.dart';
 import '../providers.dart';
@@ -99,7 +101,7 @@ class CryptoSelectSheet extends HookWidget {
             error: (e, s) {
               return Center(
                 child: Text(
-                  'An error occured while fetching crypto currencies, check your connection and try again!',
+                  LocaleKeys.errorWhileFetchingCryptocurrencies.tr(),
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(
                         color: Colors.red,
                       ),
@@ -122,7 +124,7 @@ class CryptoCurrencySearchTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WTextFormField(
-      hintText: 'Search',
+      hintText: LocaleKeys.search.tr(),
       onChanged: (value) => onSearch(value.toLowerCase()),
     );
   }
@@ -141,7 +143,7 @@ class CryptoSelectSheetHeaderDelegate extends SliverPersistentHeaderDelegate {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Text('Choose a crypto currency', style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white)),
+            child: Text(LocaleKeys.chooseCryptoCurrency.tr(), style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 32.0),
@@ -149,11 +151,6 @@ class CryptoSelectSheetHeaderDelegate extends SliverPersistentHeaderDelegate {
           ),
         ],
       ),
-      /*
-      child: Center(
-        child: Text('Choose a crypto currency', style: Theme.of(context).textTheme.headline6),
-      ),
-      */
     );
   }
 
