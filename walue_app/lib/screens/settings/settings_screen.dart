@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:beamer/beamer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,7 +9,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:walue_app/widgets/language_dialog.dart';
 
+import '../../generated/locale_keys.g.dart';
 import '../../hooks/use_provider_not_null.dart';
 import '../../providers.dart';
 import '../../repositories/auth_repository.dart';
@@ -78,7 +81,7 @@ class SettingsScreen extends HookWidget {
                                 Transform.translate(
                                   offset: const Offset(0.0, -10.0),
                                   child: Text(
-                                    'Settings',
+                                    LocaleKeys.settings.tr(),
                                     style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                                   ),
                                 ),
@@ -113,7 +116,7 @@ class SettingsScreen extends HookWidget {
                                     ),
                                   ),
                                   Text(
-                                    'Account',
+                                    LocaleKeys.account.tr(),
                                     style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24.0, color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                                   ),
                                 ],
@@ -213,7 +216,7 @@ class SettingsScreen extends HookWidget {
                                     ),
                                   ),
                                   Text(
-                                    'Preferences',
+                                    LocaleKeys.preferences.tr(),
                                     style: Theme.of(context).textTheme.headline4!.copyWith(
                                           fontSize: 24.0,
                                           color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
@@ -241,8 +244,8 @@ class SettingsScreen extends HookWidget {
                                     child: Column(
                                       children: [
                                         PreferenceItem(
-                                          title: 'Fiat currency',
-                                          subtitle: 'Stats display currency',
+                                          title: LocaleKeys.fiatCurrency.tr(),
+                                          subtitle: LocaleKeys.fiatCurrencyDescription.tr(),
                                           value: fiatCurrency!.symbol.toUpperCase(),
                                           onTap: () {
                                             showDialog(
@@ -250,7 +253,12 @@ class SettingsScreen extends HookWidget {
                                               builder: (_) {
                                                 final currencies = viewModel.fiatCurrencies!.values.where((currency) => currency.symbol != fiatCurrency.symbol).toList();
 
-                                                currencies.sort((currency, other) => currency.name.compareTo(other.name));
+                                                currencies.sort((currency, other) {
+                                                  final name = currency.symbol.tr() == currency.symbol ? currency.name : currency.symbol.tr();
+                                                  final otherName = other.symbol.tr() == other.symbol ? other.name : other.symbol.tr();
+
+                                                  return name.compareTo(otherName);
+                                                });
 
                                                 return FiatCurrenciesDialog(
                                                   currencies: currencies,
@@ -264,13 +272,24 @@ class SettingsScreen extends HookWidget {
                                           },
                                         ),
                                         PreferenceItem(
-                                          title: 'Theme',
-                                          subtitle: 'visual style of the app',
-                                          value: ThemeModeDialog.getThemeModeName(themeMode),
+                                          title: LocaleKeys.theme.tr(),
+                                          subtitle: LocaleKeys.themeDescription.tr(),
+                                          value: ThemeModeDialog.getThemeModeName(themeMode).tr(),
                                           onTap: () {
                                             showDialog(
                                               context: context,
                                               builder: (_) => const ThemeModeDialog(),
+                                            );
+                                          },
+                                        ),
+                                        PreferenceItem(
+                                          title: LocaleKeys.language.tr(),
+                                          subtitle: LocaleKeys.languageDescription.tr(),
+                                          value: context.locale.languageCode.tr(),
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (_) => const LanguageDialog(),
                                             );
                                           },
                                         ),
@@ -295,7 +314,7 @@ class SettingsScreen extends HookWidget {
                                     ),
                                   ),
                                   Text(
-                                    'Powered by',
+                                    LocaleKeys.poweredBy.tr(),
                                     style: Theme.of(context).textTheme.headline4!.copyWith(
                                           fontSize: 24.0,
                                           color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
@@ -323,14 +342,14 @@ class SettingsScreen extends HookWidget {
                                     children: [
                                       PreferenceItem(
                                         title: 'CoinGecko',
-                                        subtitle: 'Cryptocurrency data API',
-                                        value: 'Explore',
+                                        subtitle: LocaleKeys.cryptocurrencyDataAPI.tr(),
+                                        value: LocaleKeys.visit.tr(),
                                         onTap: () => launch('https://www.coingecko.com/en/api'),
                                       ),
                                       PreferenceItem(
                                         title: 'ExchangeRate.host',
-                                        subtitle: 'Fiat currency exchange API',
-                                        value: 'Explore',
+                                        subtitle: LocaleKeys.fiatCurrencyExchangeAPI.tr(),
+                                        value: LocaleKeys.visit.tr(),
                                         onTap: () => launch('https://exchangerate.host/'),
                                       ),
                                     ],
@@ -354,7 +373,7 @@ class SettingsScreen extends HookWidget {
                                     ),
                                   ),
                                   Text(
-                                    'Danger zone',
+                                    LocaleKeys.dangerZone.tr(),
                                     style: Theme.of(context).textTheme.headline4!.copyWith(
                                           fontSize: 24.0,
                                           color: Colors.red,
@@ -398,7 +417,7 @@ class SettingsScreen extends HookWidget {
                                                   ),
                                                 ),
                                                 content: Text(
-                                                  'An error occurred',
+                                                  LocaleKeys.anErrorOccured.tr(),
                                                   style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                                         fontSize: 16.0,
                                                         color: Colors.white,
@@ -414,7 +433,7 @@ class SettingsScreen extends HookWidget {
                                       },
                                       child: Center(
                                         child: Text(
-                                          'Delete account',
+                                          LocaleKeys.deleteAccount.tr(),
                                           style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                                 color: Colors.red,
                                               ),
@@ -535,7 +554,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
-                  'Warning',
+                  LocaleKeys.warning.tr(),
                   style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.red, fontSize: 24.0),
                   textAlign: TextAlign.center,
                 ),
@@ -543,7 +562,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
-                  'Your account and all of its associated data will be deleted. Are you sure you want continue?',
+                  LocaleKeys.yourAccountWillBeDeletedYouSure.tr(),
                   style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                   textAlign: TextAlign.center,
                 ),
@@ -560,9 +579,9 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                     ),
                   );
                 },
-                child: const Text(
-                  'Delete account',
-                  style: TextStyle(
+                child: Text(
+                  LocaleKeys.deleteAccount.tr(),
+                  style: const TextStyle(
                     fontSize: 18.0,
                   ),
                   textAlign: TextAlign.center,
@@ -612,7 +631,7 @@ class _DeleteAccountConfirmationDialogState extends State<DeleteAccountConfirmat
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
-                  'Confirm delete',
+                  LocaleKeys.confirmDelete.tr(),
                   style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.red, fontSize: 24.0),
                   textAlign: TextAlign.center,
                 ),
@@ -620,7 +639,7 @@ class _DeleteAccountConfirmationDialogState extends State<DeleteAccountConfirmat
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
-                  'Type DELETE to the field below to confirm account deletion.',
+                  LocaleKeys.typeDelete.tr(),
                   style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                   textAlign: TextAlign.center,
                 ),
@@ -631,8 +650,8 @@ class _DeleteAccountConfirmationDialogState extends State<DeleteAccountConfirmat
                   key: _formKey,
                   child: WTextFormField(
                     autofocus: true,
-                    hintText: 'DELETE',
-                    validator: (value) => value == 'DELETE' ? null : 'Invalid input',
+                    hintText: LocaleKeys.deleteThatUserHasToType.tr(),
+                    validator: (value) => value == LocaleKeys.deleteThatUserHasToType.tr() ? null : LocaleKeys.invalidValue.tr(),
                   ),
                 ),
               ),
@@ -653,9 +672,9 @@ class _DeleteAccountConfirmationDialogState extends State<DeleteAccountConfirmat
                     widget.onDeleteAccount();
                   }
                 },
-                child: const Text(
-                  'Confirm',
-                  style: TextStyle(
+                child: Text(
+                  LocaleKeys.confirm.tr(),
+                  style: const TextStyle(
                     fontSize: 18.0,
                   ),
                   textAlign: TextAlign.center,

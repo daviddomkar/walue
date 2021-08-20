@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:beamer/beamer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../generated/locale_keys.g.dart';
 import '../../hooks/use_provider_cached.dart';
 import '../../hooks/use_provider_not_null.dart';
 import '../../models/buy_record.dart';
@@ -106,7 +108,7 @@ class CurrencyScreen extends HookWidget {
                                         ),
                                       ),
                                       Text(
-                                        'Buy Records',
+                                        LocaleKeys.buyRecords.tr(),
                                         style: Theme.of(context).textTheme.headline4!.copyWith(
                                               fontSize: 24.0,
                                               color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
@@ -140,9 +142,9 @@ class CurrencyScreen extends HookWidget {
                                   ),
                                 );
                               },
-                              child: const Text(
-                                'Add new buy record',
-                                style: TextStyle(
+                              child: Text(
+                                LocaleKeys.addNewBuyRecordButton.tr(),
+                                style: const TextStyle(
                                   fontSize: 18.0,
                                 ),
                                 textAlign: TextAlign.center,
@@ -340,7 +342,7 @@ class BuyRecordList extends HookWidget {
         child: error
             ? Center(
                 child: Text(
-                  'An error occured while fetching records, Walue will attempt another fetch in a moment!',
+                  LocaleKeys.errorWhileFetchingRecords.tr(),
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(
                         color: Colors.red,
                       ),
@@ -357,7 +359,7 @@ class BuyRecordList extends HookWidget {
                 : buyRecords!.isEmpty
                     ? Center(
                         child: Text(
-                          'No buy records found',
+                          LocaleKeys.noBuyRecordsFound.tr(),
                           style: TextStyle(
                             color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
                           ),
@@ -376,7 +378,7 @@ class BuyRecordList extends HookWidget {
                                   children: [
                                     Expanded(
                                       child: AutoSizeText(
-                                        'Buy price',
+                                        LocaleKeys.buyPrice.tr(),
                                         style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                               fontSize: 14.0,
                                               color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
@@ -388,7 +390,7 @@ class BuyRecordList extends HookWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                         child: AutoSizeText(
-                                          'Amount',
+                                          LocaleKeys.amount.tr(),
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
@@ -399,7 +401,7 @@ class BuyRecordList extends HookWidget {
                                     ),
                                     Expanded(
                                       child: AutoSizeText(
-                                        'Profit',
+                                        LocaleKeys.profit.tr(),
                                         style: Theme.of(context).textTheme.subtitle1!.copyWith(
                                               fontSize: 14.0,
                                               color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,

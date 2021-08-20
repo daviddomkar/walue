@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../generated/locale_keys.g.dart';
 import '../models/buy_record.dart';
 import '../models/crypto_currency.dart';
 import '../models/currency.dart';
@@ -111,7 +113,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
             child: Text(
-              widget.initialRecord != null ? 'Edit buy record' : 'Add new buy record',
+              widget.initialRecord != null ? LocaleKeys.editBuyRecord.tr() : LocaleKeys.addNewBuyRecord.tr(),
               style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
               textAlign: TextAlign.center,
             ),
@@ -121,7 +123,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
             child: WTextFormField(
               initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice),
               autofocus: widget.initialRecord == null,
-              hintText: 'Buy price',
+              hintText: LocaleKeys.buyPrice.tr(),
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               textInputAction: TextInputAction.next,
               onEditingComplete: () => node.nextFocus(),
@@ -131,11 +133,11 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
               onChanged: (value) => _buyPrice = value,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'This field is required';
+                  return LocaleKeys.thisFieldIsRequired.tr();
                 }
 
                 if (double.tryParse(value.replaceAll(',', '')) == null) {
-                  return 'Invalid value';
+                  return LocaleKeys.invalidValue.tr();
                 }
 
                 return null;
@@ -146,7 +148,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
             padding: const EdgeInsets.only(bottom: 16.0),
             child: WTextFormField(
               initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.amount),
-              hintText: 'Amount',
+              hintText: LocaleKeys.amount.tr(),
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) {
@@ -164,11 +166,11 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
               onChanged: (value) => _amount = value,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'This field is required';
+                  return LocaleKeys.thisFieldIsRequired.tr();
                 }
 
                 if (double.tryParse(value.replaceAll(',', '')) == null) {
-                  return 'Invalid value';
+                  return LocaleKeys.invalidValue.tr();
                 }
 
                 return null;
@@ -228,9 +230,9 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           if (widget.initialRecord == null)
             GradientButton(
               onPressed: addRecord,
-              child: const Text(
-                'Add',
-                style: TextStyle(
+              child: Text(
+                LocaleKeys.add.tr(),
+                style: const TextStyle(
                   fontSize: 18.0,
                 ),
                 textAlign: TextAlign.center,
@@ -244,9 +246,9 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
                     padding: const EdgeInsets.only(right: 4.0),
                     child: GradientButton(
                       onPressed: editRecord,
-                      child: const Text(
-                        'Edit',
-                        style: TextStyle(
+                      child: Text(
+                        LocaleKeys.edit.tr(),
+                        style: const TextStyle(
                           fontSize: 18.0,
                         ),
                         textAlign: TextAlign.center,
@@ -261,9 +263,9 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.red,
                       onPressed: deleteRecord,
-                      child: const Text(
-                        'Delete',
-                        style: TextStyle(
+                      child: Text(
+                        LocaleKeys.delete.tr(),
+                        style: const TextStyle(
                           fontSize: 18.0,
                         ),
                         textAlign: TextAlign.center,

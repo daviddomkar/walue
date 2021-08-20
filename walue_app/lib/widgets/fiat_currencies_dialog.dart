@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
 import '../models/currency.dart';
 
 class FiatCurrenciesDialog extends StatelessWidget {
@@ -30,7 +32,7 @@ class FiatCurrenciesDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      currency.name,
+                      currency.symbol.tr() == currency.symbol ? currency.name : currency.symbol.tr(),
                       style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white),
                     ),
                     Text(
