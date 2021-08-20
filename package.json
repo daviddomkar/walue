@@ -6,6 +6,9 @@
     "walue_scripts",
     "walue_functions"
   ],
+  "scripts": {
+    "generate:translations": "cd walue_app && flutter pub run easy_localization:generate --source-dir l10n && flutter pub run easy_localization:generate --source-dir l10n -f keys -o locale_keys.g.dart && cd .."
+  },
   "devDependencies": {
     "@commitlint/cli": "12.1.4",
     "@commitlint/config-conventional": "12.1.4",
