@@ -1,33 +1,31 @@
-import 'dart:io';
-
 import 'package:decimal/decimal.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/number_symbols_data.dart';
 
 class CurrencyInputFormatter extends TextInputFormatter {
-  static final _formatter = NumberFormat.decimalPattern('en');
+  CurrencyInputFormatter(this.context);
 
-  static String? valueToString(double? value) {
+  final BuildContext context;
+
+  static String? valueToString(BuildContext context, double? value) {
     if (value == null) return null;
 
     final decimal = Decimal.parse(value.toString()).toString();
 
-    var decimalPart = '0';
+    final decimalDigits = decimal.contains('.') ? decimal.split('.')[1].length : 0;
 
-    for (var i = 0; i < decimal.length; i++) {
-      if (decimal[i] == '.') {
-        decimalPart = decimal.substring(i + 1);
-        break;
-      }
-    }
+    final formatter = NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: '', decimalDigits: decimalDigits);
 
-    var text = '${_formatter.format(value).split('.')[0]}.$decimalPart';
+    return formatter.format(value).trim();
+  }
 
-    if (text.endsWith('.0')) {
-      text = text.substring(0, text.length - 2);
-    }
+  static double? stringToValue(BuildContext context, String? value) {
+    if (value == null || value.isEmpty) return null;
 
-    return text;
+    return NumberFormat.simpleCurrency(locale: context.locale.languageCode).parse(value).toDouble();
   }
 
   @override
@@ -38,44 +36,49 @@ class CurrencyInputFormatter extends TextInputFormatter {
 
     var text = newValue.text;
 
-    text = text.replaceAll(RegExp('[^0-9.,]'), '');
+    final decimalSeparator = numberFormatSymbols[context.locale.languageCode]!.DECIMAL_SEP.toString();
 
-    if (text.endsWith(',')) {
-      text = '${text.substring(0, text.length - 1)}.';
-    }
+    // Remove everything that is not a number or a decimal separator.
+    text = text.replaceAll(RegExp('[^0-9$decimalSeparator]'), '');
 
-    if ((text.endsWith('.') && text.split('.').length == 2) || text.isEmpty) {
-      return newValue.copyWith(
-          text: text,
-          selection: TextSelection(
-            baseOffset: oldValue.text.length > newValue.text.length ? newValue.selection.baseOffset.clamp(0, text.length) : text.length,
-            extentOffset: oldValue.text.length > newValue.text.length ? newValue.selection.extentOffset.clamp(0, text.length) : text.length,
-          ));
-    } else if (text.contains('.')) {
-      final splitted = text.split('.');
-
-      splitted[0] = splitted[0].replaceAll(RegExp(r'\D'), '');
-      splitted[1] = splitted[1].replaceAll(RegExp(r'\D'), '');
-
-      splitted[0] = splitted[0].replaceAll(RegExp(r'^0+(?!$)'), '');
-
-      if (splitted[0].isNotEmpty) {
-        splitted[0] = _formatter.format(double.parse(splitted[0]));
+    if (text.endsWith(decimalSeparator) || text.isEmpty) {
+      if (text.endsWith('$decimalSeparator$decimalSeparator')) {
+        text = text.substring(0, text.length - 1);
       }
 
-      text = '${splitted[0]}.${splitted[1]}';
-    } else {
-      text = text.replaceAll(RegExp(r'\D'), '');
-      text = text.replaceAll(RegExp(r'^0+(?!$)'), '');
+      if (text.endsWith(decimalSeparator)) {
+        final usefulPart = text.split(decimalSeparator)[0];
 
-      text = _formatter.format(double.parse(text));
-    }
+        if (usefulPart.isNotEmpty) {
+          text = '${NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: '', decimalDigits: 0).format(stringToValue(context, usefulPart)).trim()}$decimalSeparator';
+        }
+      }
 
-    return newValue.copyWith(
+      return newValue.copyWith(
         text: text,
         selection: TextSelection(
           baseOffset: oldValue.text.length > newValue.text.length ? newValue.selection.baseOffset.clamp(0, text.length) : text.length,
           extentOffset: oldValue.text.length > newValue.text.length ? newValue.selection.extentOffset.clamp(0, text.length) : text.length,
-        ));
+        ),
+      );
+    }
+
+    if (text.contains(decimalSeparator)) {}
+
+    final value = stringToValue(context, text);
+
+    final decimalDigits = text.contains(decimalSeparator) ? text.split(decimalSeparator)[1].length : 0;
+
+    final formatter = NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: '', decimalDigits: decimalDigits);
+
+    text = formatter.format(value).trim();
+
+    return newValue.copyWith(
+      text: text,
+      selection: TextSelection(
+        baseOffset: oldValue.text.length > newValue.text.length ? newValue.selection.baseOffset.clamp(0, text.length) : text.length,
+        extentOffset: oldValue.text.length > newValue.text.length ? newValue.selection.extentOffset.clamp(0, text.length) : text.length,
+      ),
+    );
   }
 }

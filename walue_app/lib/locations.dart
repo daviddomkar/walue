@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -66,22 +67,22 @@ class RootLocation extends BeamLocation {
         return [
           if (user == null)
             NoTransitionPage(
-              key: const ValueKey('login'),
+              key: ValueKey('login-${context.locale}'),
               child: const LogInScreen(),
             ),
           if (user != null && user.fiatCurrencySymbol == null)
             NoTransitionPage(
-              key: const ValueKey('choose-fiat-currency'),
+              key: ValueKey('choose-fiat-currency-${context.locale}'),
               child: const ChooseFiatCurrencyScreen(),
             ),
           if (user != null && user.fiatCurrencySymbol != null) ...[
             NoTransitionPage(
-              key: const ValueKey('home'),
+              key: ValueKey('home-${context.locale}'),
               child: const HomeScreen(),
             ),
             if (state.pathBlueprintSegments.contains('currency'))
               NoTransitionPage(
-                key: ValueKey('currency-${state.pathParameters['currencyId']!}'),
+                key: ValueKey('currency-${state.pathParameters['currencyId']!}-${context.locale}'),
                 child: CurrencyScreen(
                   id: state.pathParameters['currencyId']!,
                   currencyImageUrl: state.data['currencyImageUrl'] != null ? state.data['currencyImageUrl'] as String : null,
@@ -93,7 +94,7 @@ class RootLocation extends BeamLocation {
               ),
             if (state.pathBlueprintSegments.contains('settings'))
               NoTransitionPage(
-                key: const ValueKey('settings'),
+                key: ValueKey('settings-${context.locale}'),
                 child: const SettingsScreen(),
               ),
           ]
@@ -102,7 +103,7 @@ class RootLocation extends BeamLocation {
       loading: () {
         return [
           NoTransitionPage(
-            key: const ValueKey('splash'),
+            key: ValueKey('splash-${context.locale}'),
             child: const SplashScreen(),
           ),
         ];
@@ -110,7 +111,7 @@ class RootLocation extends BeamLocation {
       error: (error, stackTrace) {
         return [
           NoTransitionPage(
-            key: const ValueKey('splash'),
+            key: ValueKey('splash-${context.locale}'),
             child: const SplashScreen(),
           ),
         ];

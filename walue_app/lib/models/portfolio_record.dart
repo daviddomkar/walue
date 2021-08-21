@@ -1,4 +1,6 @@
 import 'package:decimal/decimal.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 import 'buy_record.dart';
@@ -27,22 +29,21 @@ class PortfolioRecord {
     return null;
   }
 
-  String? computeTotalFiatAmount(double? fiatPrice, String? fiatSymbol, [double simpleFormatBreakpoint = 100000]) {
+  String? computeTotalFiatAmount(BuildContext context, double? fiatPrice, String? fiatSymbol, [double simpleFormatBreakpoint = 100000]) {
     if (totalAmount != null && fiatPrice != null && fiatSymbol != null) {
       final totalFiatAmount = totalAmount! * fiatPrice;
 
       final currencyFormatter = totalFiatAmount >= simpleFormatBreakpoint || totalFiatAmount <= -simpleFormatBreakpoint
-          ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatSymbol.toUpperCase())
-          : NumberFormat.simpleCurrency(locale: 'en', name: fiatSymbol.toUpperCase());
+          ? NumberFormat.compactSimpleCurrency(locale: context.locale.languageCode, name: fiatSymbol.toUpperCase())
+          : NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: fiatSymbol.toUpperCase());
 
-      return currencyFormatter.format(totalFiatAmount);
+      return currencyFormatter.format(totalFiatAmount).trim();
     }
 
     return null;
   }
 
-  // ignore: avoid_positional_boolean_parameters
-  String? computeTotalAmount([String? symbol, double simpleFormatBreakpoint = 100000, bool cutLastZeros = false]) {
+  String? computeTotalAmount(BuildContext context, [String? symbol, double simpleFormatBreakpoint = 100000]) {
     if (totalAmount != null) {
       var totalAmountText = Decimal.parse(totalAmount!.toString()).toString();
 
@@ -55,33 +56,26 @@ class PortfolioRecord {
       }
 
       if (totalAmount! >= simpleFormatBreakpoint || totalAmount! <= -simpleFormatBreakpoint) {
-        totalAmountText = NumberFormat.compactSimpleCurrency(locale: 'en', name: '').format(totalAmount);
-
-        return symbol == null ? totalAmountText : '${symbol.toUpperCase()} $totalAmountText';
+        return NumberFormat.compactSimpleCurrency(locale: context.locale.languageCode, name: symbol != null ? symbol.toUpperCase() : '').format(totalAmount);
       }
 
-      final currencyFormatter = NumberFormat.simpleCurrency(locale: 'en', name: '');
-      totalAmountText = '${currencyFormatter.format(totalAmount).split('.')[0]}.${totalAmountText.split('.')[1]}';
+      final decimalDigits = totalAmountText.split('.')[1].length;
 
-      totalAmountText = symbol == null ? totalAmountText : '${symbol.toUpperCase()} $totalAmountText';
+      final currencyFormatter = NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: symbol != null ? symbol.toUpperCase() : '', decimalDigits: decimalDigits);
 
-      if (cutLastZeros && totalAmountText.endsWith('.00')) {
-        totalAmountText = totalAmountText.substring(0, totalAmountText.length - 3);
-      }
-
-      return totalAmountText;
+      return currencyFormatter.format(totalAmount).trim();
     }
 
     return null;
   }
 
-  String? computeIncreasePercentage(double? fiatPrice) {
+  String? computeIncreasePercentage(BuildContext context, double? fiatPrice) {
     if (totalAmount != null && totalAmountInFiatCurrencyWhenBought != null && fiatPrice != null) {
       final totalFiatAmount = totalAmount! * fiatPrice;
 
       final increasePercentage = totalFiatAmount / totalAmountInFiatCurrencyWhenBought! - 1.0;
 
-      return (increasePercentage > 0 ? '+' : '') + NumberFormat.decimalPercentPattern(locale: 'en', decimalDigits: 2).format(increasePercentage);
+      return (increasePercentage > 0 ? '+' : '') + NumberFormat.decimalPercentPattern(locale: context.locale.languageCode, decimalDigits: 2).format(increasePercentage);
     }
 
     return null;

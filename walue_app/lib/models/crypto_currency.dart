@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 import 'currency.dart';
@@ -19,10 +21,11 @@ class CryptoCurrency extends Currency {
     this.additionalFiatPrices,
   }) : super(symbol: symbol, name: name);
 
-  String? calculateFormattedFiatPrice(String? fiatSymbol) {
+  String? calculateFormattedFiatPrice(BuildContext context, String? fiatSymbol) {
     if (fiatSymbol == null) return null;
 
-    final currencyFormatter = fiatPrice >= 100000 || fiatPrice <= -100000 ? NumberFormat.compactSimpleCurrency(locale: 'en', name: fiatSymbol.toUpperCase()) : NumberFormat.simpleCurrency(locale: 'en', name: fiatSymbol.toUpperCase());
+    final currencyFormatter =
+        fiatPrice >= 100000 || fiatPrice <= -100000 ? NumberFormat.compactSimpleCurrency(locale: context.locale.languageCode, name: fiatSymbol.toUpperCase()) : NumberFormat.simpleCurrency(name: fiatSymbol.toUpperCase());
 
     return currencyFormatter.format(fiatPrice);
   }

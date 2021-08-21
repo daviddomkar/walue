@@ -63,7 +63,13 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
       _currency = widget.selectedCurrency!;
     }
 
-    _buyPrice = CurrencyInputFormatter.valueToString(widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice) ?? '';
+    // _buyPrice = CurrencyInputFormatter.valueToString(context, widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice) ?? '';
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _buyPrice = CurrencyInputFormatter.valueToString(context, widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice) ?? '';
   }
 
   void addRecord() {
@@ -73,8 +79,8 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
 
     if (widget.onAddRecord != null && _formKey.currentState!.validate()) {
       widget.onAddRecord!(
-        double.parse(_buyPrice.replaceAll(',', '')),
-        double.parse(_amount.replaceAll(',', '')),
+        CurrencyInputFormatter.stringToValue(context, _buyPrice)!,
+        CurrencyInputFormatter.stringToValue(context, _amount)!,
         _currency,
       );
     }
@@ -88,8 +94,8 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
     if (widget.onEditRecord != null && widget.initialRecord != null && _formKey.currentState!.validate()) {
       widget.onEditRecord!(
         widget.initialRecord!.id,
-        double.tryParse(_buyPrice.replaceAll(',', '')),
-        double.tryParse(_amount.replaceAll(',', '')),
+        CurrencyInputFormatter.stringToValue(context, _buyPrice),
+        CurrencyInputFormatter.stringToValue(context, _amount),
       );
     }
   }
@@ -121,14 +127,14 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: WTextFormField(
-              initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice),
+              initialValue: CurrencyInputFormatter.valueToString(context, widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice),
               autofocus: widget.initialRecord == null,
               hintText: LocaleKeys.buyPrice.tr(),
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               textInputAction: TextInputAction.next,
               onEditingComplete: () => node.nextFocus(),
               inputFormatters: [
-                CurrencyInputFormatter(),
+                CurrencyInputFormatter(context),
               ],
               onChanged: (value) => _buyPrice = value,
               validator: (value) {
@@ -136,7 +142,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
                   return LocaleKeys.thisFieldIsRequired.tr();
                 }
 
-                if (double.tryParse(value.replaceAll(',', '')) == null) {
+                if (CurrencyInputFormatter.stringToValue(context, value) == null) {
                   return LocaleKeys.invalidValue.tr();
                 }
 
@@ -147,7 +153,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: WTextFormField(
-              initialValue: CurrencyInputFormatter.valueToString(widget.initialRecord?.amount),
+              initialValue: CurrencyInputFormatter.valueToString(context, widget.initialRecord?.amount),
               hintText: LocaleKeys.amount.tr(),
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               textInputAction: TextInputAction.done,
@@ -161,7 +167,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
                 }
               },
               inputFormatters: [
-                CurrencyInputFormatter(),
+                CurrencyInputFormatter(context),
               ],
               onChanged: (value) => _amount = value,
               validator: (value) {
@@ -169,7 +175,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
                   return LocaleKeys.thisFieldIsRequired.tr();
                 }
 
-                if (double.tryParse(value.replaceAll(',', '')) == null) {
+                if (CurrencyInputFormatter.stringToValue(context, value) == null) {
                   return LocaleKeys.invalidValue.tr();
                 }
 
