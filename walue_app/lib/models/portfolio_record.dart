@@ -37,7 +37,7 @@ class PortfolioRecord {
           ? NumberFormat.compactSimpleCurrency(locale: context.locale.languageCode, name: fiatSymbol.toUpperCase())
           : NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: fiatSymbol.toUpperCase());
 
-      return currencyFormatter.format(totalFiatAmount);
+      return currencyFormatter.format(totalFiatAmount).trim();
     }
 
     return null;
@@ -63,7 +63,7 @@ class PortfolioRecord {
 
       final currencyFormatter = NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: symbol != null ? symbol.toUpperCase() : '', decimalDigits: decimalDigits);
 
-      return currencyFormatter.format(totalAmount);
+      return currencyFormatter.format(totalAmount).trim();
     }
 
     return null;

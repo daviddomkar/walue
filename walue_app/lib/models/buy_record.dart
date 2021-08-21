@@ -25,7 +25,7 @@ class BuyRecord {
       return '+${currencyFormatter.format(profit)}';
     }
 
-    return currencyFormatter.format(profit);
+    return currencyFormatter.format(profit).trim();
   }
 
   String calucalteFormattedBuyPrice(BuildContext context, [double simpleFormatBreakpoint = 100000]) {
@@ -33,7 +33,7 @@ class BuyRecord {
         ? NumberFormat.compactSimpleCurrency(locale: context.locale.languageCode, name: fiatCurrency.symbol.toUpperCase())
         : NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: fiatCurrency.symbol.toUpperCase());
 
-    return currencyFormatter.format(buyPrice);
+    return currencyFormatter.format(buyPrice).trim();
   }
 
   String calculateFormattedAmount(BuildContext context, [double simpleFormatBreakpoint = 100000]) {
@@ -55,6 +55,6 @@ class BuyRecord {
 
     final currencyFormatter = NumberFormat.simpleCurrency(locale: context.locale.languageCode, name: '', decimalDigits: decimalDigits);
 
-    return currencyFormatter.format(amount);
+    return currencyFormatter.format(amount).trim();
   }
 }
