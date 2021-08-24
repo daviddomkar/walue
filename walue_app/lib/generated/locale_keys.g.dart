@@ -51,6 +51,7 @@ abstract class  LocaleKeys {
   static const system = 'system';
   static const light = 'light';
   static const dark = 'dark';
+  static const about = 'about';
   static const poweredBy = 'poweredBy';
   static const cryptocurrencyDataAPI = 'cryptocurrencyDataAPI';
   static const fiatCurrencyExchangeAPI = 'fiatCurrencyExchangeAPI';

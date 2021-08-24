@@ -274,7 +274,7 @@ class CurrencyScreenHeader extends HookWidget {
               IconButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {
-                  context.beamToNamed('/', replaceCurrent: true);
+                  context.beamBack();
                 },
                 icon: const FaIcon(
                   FontAwesomeIcons.arrowLeft,

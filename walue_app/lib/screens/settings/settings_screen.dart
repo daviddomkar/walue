@@ -9,7 +9,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:walue_app/widgets/language_dialog.dart';
 
 import '../../generated/locale_keys.g.dart';
 import '../../hooks/use_provider_not_null.dart';
@@ -18,6 +17,7 @@ import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
 import '../../widgets/basic_button.dart';
 import '../../widgets/fiat_currencies_dialog.dart';
+import '../../widgets/language_dialog.dart';
 import '../../widgets/logo.dart';
 import '../../widgets/theme_mode_dialog.dart';
 import '../../widgets/w_text_form_field.dart';
@@ -92,7 +92,7 @@ class SettingsScreen extends HookWidget {
                               child: IconButton(
                                 padding: EdgeInsets.zero,
                                 onPressed: () {
-                                  context.beamToNamed('/', replaceCurrent: true);
+                                  context.beamBack();
                                 },
                                 icon: FaIcon(
                                   FontAwesomeIcons.arrowLeft,
@@ -300,6 +300,7 @@ class SettingsScreen extends HookWidget {
                             ],
                           ),
                         ),
+                        /*
                         Padding(
                           padding: const EdgeInsets.only(top: 24.0),
                           child: Column(
@@ -357,6 +358,59 @@ class SettingsScreen extends HookWidget {
                                 ),
                               ),
                             ],
+                          ),
+                        ),*/
+                        Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Container(
+                              height: 48.0,
+                              clipBehavior: Clip.hardEdge,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(16.0),
+                                ),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    blurRadius: 4.0,
+                                    color: Color(0x32000000),
+                                  ),
+                                ],
+                              ),
+                              child: Material(
+                                color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                                child: InkWell(
+                                  onTap: () {
+                                    context.beamToNamed('/settings/about');
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: Stack(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            LocaleKeys.about.tr(),
+                                            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                                ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Icon(
+                                            Icons.arrow_forward,
+                                            color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                         Padding(

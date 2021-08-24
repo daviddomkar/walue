@@ -90,7 +90,7 @@ class HomeScreen extends HookWidget {
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
                                     onPressed: () {
-                                      context.beamToNamed('/settings', popToNamed: '/');
+                                      context.beamToNamed('/settings');
                                     },
                                     icon: const FaIcon(
                                       FontAwesomeIcons.userCog,
@@ -365,7 +365,7 @@ class FavouriteList extends HookWidget {
                                 onTap: () {
                                   final id = favouriteCurrencyIds[index];
 
-                                  context.beamToNamed('/currency/$id', popToNamed: '/', data: {
+                                  context.beamToNamed('/currency/$id', beamBackOnPop: true, data: {
                                     'currencyImageUrl': ownedCurrencies[id]?.imageUrl,
                                     'currencyName': ownedCurrencies[id]?.name,
                                   });

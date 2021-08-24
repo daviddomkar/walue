@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'models/user.dart';
 import 'providers.dart';
+import 'screens/about/about_screen.dart';
 import 'screens/choose_fiat_currency/choose_fiat_currency_screen.dart';
 import 'screens/currency/currency_screen.dart';
 import 'screens/home/home_screen.dart';
@@ -33,8 +34,9 @@ class RootLocation extends BeamLocation {
         '/',
         '/login',
         '/choose-fiat-currency',
-        '/settings',
         '/currency/:currencyId',
+        '/settings',
+        '/settings/about',
       ];
 
   @override
@@ -43,12 +45,14 @@ class RootLocation extends BeamLocation {
       onChange: (context, viewModel) {
         final user = viewModel.user;
 
+        context.currentBeamLocation.update();
+
         if (user.data != null && user.data!.value == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
         } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrencySymbol == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
         } else {
-          context.currentBeamLocation.update();
+          context.currentBeamLocation.update((state) => state);
         }
       },
       provider: _rootLocationViewModelProvider,
@@ -57,8 +61,8 @@ class RootLocation extends BeamLocation {
   }
 
   @override
-  List<BeamPage> buildPages(BuildContext? context, BeamState state) {
-    final container = ProviderScope.containerOf(context!);
+  List<BeamPage> buildPages(BuildContext context, BeamState state) {
+    final container = ProviderScope.containerOf(context);
 
     final viewModel = container.read(_rootLocationViewModelProvider);
 
@@ -96,6 +100,11 @@ class RootLocation extends BeamLocation {
               NoTransitionPage(
                 key: ValueKey('settings-${context.locale}'),
                 child: const SettingsScreen(),
+              ),
+            if (state.pathBlueprintSegments.contains('about'))
+              NoTransitionPage(
+                key: ValueKey('about-${context.locale}'),
+                child: const AboutScreen(),
               ),
           ]
         ];

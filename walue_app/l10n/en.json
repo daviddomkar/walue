@@ -49,6 +49,7 @@
   "system": "System",
   "light": "Light",
   "dark": "Dark",
+  "about": "About",
   "poweredBy": "Powered by",
   "cryptocurrencyDataAPI": "Cryptocurrency data API",
   "fiatCurrencyExchangeAPI": "FIat currency exchange API",
