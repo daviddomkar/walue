@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -212,6 +213,32 @@ class AddNewCryptoButton extends HookWidget {
       loading: portfolioRecords is AsyncLoading,
       onPressed: () {
         if (portfolioRecords.data?.value != null) {
+          InterstitialAd.load(
+            adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+            request: const AdRequest(),
+            adLoadCallback: InterstitialAdLoadCallback(
+              onAdLoaded: (InterstitialAd ad) {
+                ad.fullScreenContentCallback = FullScreenContentCallback(
+                  onAdShowedFullScreenContent: (InterstitialAd ad) => print('$ad onAdShowedFullScreenContent.'),
+                  onAdDismissedFullScreenContent: (InterstitialAd ad) {
+                    print('$ad onAdDismissedFullScreenContent.');
+                    ad.dispose();
+                  },
+                  onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+                    print('$ad onAdFailedToShowFullScreenContent: $error');
+                    ad.dispose();
+                  },
+                  onAdImpression: (InterstitialAd ad) => print('$ad impression occurred.'),
+                );
+
+                ad.show();
+              },
+              onAdFailedToLoad: (LoadAdError error) {
+                print('InterstitialAd failed to load: $error');
+              },
+            ),
+          );
+
           showModalBottomSheet(
             clipBehavior: Clip.hardEdge,
             context: context,
