@@ -8,7 +8,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../generated/locale_keys.g.dart';
 import '../../hooks/use_provider_not_null.dart';
@@ -21,6 +20,7 @@ import '../../widgets/language_dialog.dart';
 import '../../widgets/logo.dart';
 import '../../widgets/theme_mode_dialog.dart';
 import '../../widgets/w_text_form_field.dart';
+
 import 'settings_view_model.dart';
 
 final settingsViewModelProvider = ChangeNotifierProvider.autoDispose<SettingsViewModel>((ref) {
@@ -301,112 +301,51 @@ class SettingsScreen extends HookWidget {
                           ),
                         ),
                         /*
+                        */
                         Padding(
-                          padding: const EdgeInsets.only(top: 24.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 4.0),
-                                    child: FaIcon(
-                                      FontAwesomeIcons.bolt,
-                                      color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    LocaleKeys.poweredBy.tr(),
-                                    style: Theme.of(context).textTheme.headline4!.copyWith(
-                                          fontSize: 24.0,
+                          padding: const EdgeInsets.only(top: 32.0),
+                          child: Container(
+                            height: 48.0,
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(16.0),
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x32000000),
+                                ),
+                              ],
+                            ),
+                            child: Material(
+                              color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
+                              child: InkWell(
+                                onTap: () {
+                                  context.beamToNamed('/settings/about');
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Stack(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          LocaleKeys.about.tr(),
+                                          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                                color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                              ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Icon(
+                                          Icons.arrow_forward,
                                           color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
                                         ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Container(
-                                  clipBehavior: Clip.hardEdge,
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(16.0),
-                                    ),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        blurRadius: 4.0,
-                                        color: Color(0x32000000),
                                       ),
                                     ],
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      PreferenceItem(
-                                        title: 'CoinGecko',
-                                        subtitle: LocaleKeys.cryptocurrencyDataAPI.tr(),
-                                        value: LocaleKeys.visit.tr(),
-                                        onTap: () => launch('https://www.coingecko.com/en/api'),
-                                      ),
-                                      PreferenceItem(
-                                        title: 'ExchangeRate.host',
-                                        subtitle: LocaleKeys.fiatCurrencyExchangeAPI.tr(),
-                                        value: LocaleKeys.visit.tr(),
-                                        onTap: () => launch('https://exchangerate.host/'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),*/
-                        Padding(
-                          padding: const EdgeInsets.only(top: 24.0),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Container(
-                              height: 48.0,
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(16.0),
-                                ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    blurRadius: 4.0,
-                                    color: Color(0x32000000),
-                                  ),
-                                ],
-                              ),
-                              child: Material(
-                                color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
-                                child: InkWell(
-                                  onTap: () {
-                                    context.beamToNamed('/settings/about');
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                    child: Stack(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            LocaleKeys.about.tr(),
-                                            style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                                ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Icon(
-                                            Icons.arrow_forward,
-                                            color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                   ),
                                 ),
                               ),

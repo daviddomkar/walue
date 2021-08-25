@@ -50,6 +50,7 @@
   "light": "Light",
   "dark": "Dark",
   "about": "About",
+  "guide": "Guide",
   "poweredBy": "Powered by",
   "cryptocurrencyDataAPI": "Cryptocurrency data API",
   "fiatCurrencyExchangeAPI": "FIat currency exchange API",
