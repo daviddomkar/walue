@@ -8,6 +8,7 @@ import 'providers.dart';
 import 'screens/about/about_screen.dart';
 import 'screens/choose_fiat_currency/choose_fiat_currency_screen.dart';
 import 'screens/currency/currency_screen.dart';
+import 'screens/guide/guide_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/login/login_screen.dart';
 import 'screens/settings/settings_screen.dart';
@@ -34,6 +35,7 @@ class RootLocation extends BeamLocation {
         '/',
         '/login',
         '/choose-fiat-currency',
+        '/guide',
         '/currency/:currencyId',
         '/settings',
         '/settings/about',
@@ -105,6 +107,11 @@ class RootLocation extends BeamLocation {
               NoTransitionPage(
                 key: ValueKey('about-${context.locale}'),
                 child: const AboutScreen(),
+              ),
+            if (state.pathBlueprintSegments.contains('guide'))
+              NoTransitionPage(
+                key: ValueKey('guide-${context.locale}'),
+                child: const GuideScreen(),
               ),
           ]
         ];

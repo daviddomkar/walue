@@ -90,7 +90,7 @@ class AboutScreen extends ConsumerWidget {
                             color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
                             child: InkWell(
                               onTap: () {
-                                context.beamToNamed('/settings/about');
+                                context.beamToNamed('/guide', beamBackOnPop: true);
                               },
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
