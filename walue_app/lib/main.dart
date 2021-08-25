@@ -27,6 +27,8 @@ Future<void> main() async {
 
   await EasyLocalization.ensureInitialized();
 
+  EasyLocalization.logger.enableBuildModes = [];
+
   await MobileAds.instance.initialize();
 
   _licenceFonts();
@@ -50,6 +52,7 @@ Future<void> main() async {
       path: 'l10n',
       fallbackLocale: const Locale('en'),
       assetLoader: const CodegenLoader(),
+      useFallbackTranslations: true,
       child: ProviderScope(
         overrides: [
           themeProvider.overrideWithValue(ThemeNotifier(sharedPreferences: sharedPreferences)),
