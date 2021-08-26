@@ -56,6 +56,7 @@ Future<void> main() async {
       child: ProviderScope(
         overrides: [
           themeProvider.overrideWithValue(ThemeNotifier(sharedPreferences: sharedPreferences)),
+          adRepositoryProvider.overrideWithValue(AdmobAdRepository(sharedPreferences: sharedPreferences)),
           cryptoRepositoryProvider.overrideWithValue(CoinGeckoCryptoRepository(cacheStore: cacheStore)),
           fiatRepositoryProvider.overrideWithValue(ExchangeRateHostFiatRepository(cacheStore: cacheStore)),
         ],
