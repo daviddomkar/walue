@@ -137,6 +137,7 @@ class CurrencyScreen extends HookWidget {
                                       if (currency != null) {
                                         context.read(userRepositoryProvider).addCryptoCurrencyBuyRecord(currency, buyPrice, amount, fiatCurrency);
                                         Navigator.of(context, rootNavigator: true).pop(context);
+                                        context.read(adRepositoryProvider).notifyNewBuyRecord();
                                       }
                                     },
                                   ),
