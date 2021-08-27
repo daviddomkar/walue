@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:walue_app/generated/ad_ids.g.dart';
 
 final adRepositoryProvider = Provider<AdRepository>((ref) => throw UnimplementedError());
 
@@ -119,7 +121,7 @@ class AdmobAdRepository extends AdRepository {
     final completer = Completer<InterstitialAd>();
 
     await InterstitialAd.load(
-      adUnitId: InterstitialAd.testAdUnitId,
+      adUnitId: kDebugMode ? InterstitialAd.testAdUnitId : mainInterstitialAd,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
