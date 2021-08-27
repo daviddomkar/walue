@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,7 +24,12 @@ import 'utils/no_glow_scroll_behavior.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await EasyLocalization.ensureInitialized();
+
+  EasyLocalization.logger.enableBuildModes = [];
+
+  await MobileAds.instance.initialize();
 
   _licenceFonts();
 
@@ -46,9 +52,11 @@ Future<void> main() async {
       path: 'l10n',
       fallbackLocale: const Locale('en'),
       assetLoader: const CodegenLoader(),
+      useFallbackTranslations: true,
       child: ProviderScope(
         overrides: [
           themeProvider.overrideWithValue(ThemeNotifier(sharedPreferences: sharedPreferences)),
+          adRepositoryProvider.overrideWithValue(AdmobAdRepository(sharedPreferences: sharedPreferences)),
           cryptoRepositoryProvider.overrideWithValue(CoinGeckoCryptoRepository(cacheStore: cacheStore)),
           fiatRepositoryProvider.overrideWithValue(ExchangeRateHostFiatRepository(cacheStore: cacheStore)),
         ],
@@ -87,6 +95,10 @@ class WalueApp extends HookWidget {
   Widget build(BuildContext context) {
     final themeMode = useProvider(themeProvider);
     final theme = ThemeData();
+
+    useEffect(() {
+      context.read(adRepositoryProvider).notifyAppOpened();
+    }, []);
 
     return MaterialApp.router(
       localizationsDelegates: context.localizationDelegates,

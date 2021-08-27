@@ -137,6 +137,7 @@ class CurrencyScreen extends HookWidget {
                                       if (currency != null) {
                                         context.read(userRepositoryProvider).addCryptoCurrencyBuyRecord(currency, buyPrice, amount, fiatCurrency);
                                         Navigator.of(context, rootNavigator: true).pop(context);
+                                        context.read(adRepositoryProvider).notifyNewBuyRecord();
                                       }
                                     },
                                   ),
@@ -274,7 +275,7 @@ class CurrencyScreenHeader extends HookWidget {
               IconButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {
-                  context.beamToNamed('/', replaceCurrent: true);
+                  context.beamBack();
                 },
                 icon: const FaIcon(
                   FontAwesomeIcons.arrowLeft,

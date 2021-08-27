@@ -6,3 +6,9 @@ export 'providers/portfolio_record_stream_provider.dart';
 export 'providers/portfolio_records_stream_provider.dart';
 export 'providers/theme_provider.dart';
 export 'providers/user_stream_provider.dart';
+
+export 'repositories/ad_repository.dart';
+export 'repositories/auth_repository.dart';
+export 'repositories/crypto_repository.dart';
+export 'repositories/fiat_repository.dart';
+export 'repositories/user_repository.dart';

@@ -27,7 +27,7 @@ class PortfolioRecordListItem extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        context.beamToNamed('/currency/${record.id}', popToNamed: '/', data: {
+        context.beamToNamed('/currency/${record.id}', beamBackOnPop: true, data: {
           'currencyImageUrl': currency.imageUrl,
           'currencyName': currency.name,
           'totalFiatAmount': record.computeTotalFiatAmount(context, currency.fiatPrice, fiatCurrency.symbol, isLandscape ? 1000000000000000000 : 1000000000000),

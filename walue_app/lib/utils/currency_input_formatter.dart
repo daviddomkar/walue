@@ -63,8 +63,6 @@ class CurrencyInputFormatter extends TextInputFormatter {
       );
     }
 
-    if (text.contains(decimalSeparator)) {}
-
     final value = stringToValue(context, text);
 
     final decimalDigits = text.contains(decimalSeparator) ? text.split(decimalSeparator)[1].length : 0;

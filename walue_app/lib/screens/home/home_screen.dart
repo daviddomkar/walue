@@ -90,7 +90,7 @@ class HomeScreen extends HookWidget {
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
                                     onPressed: () {
-                                      context.beamToNamed('/settings', popToNamed: '/');
+                                      context.beamToNamed('/settings');
                                     },
                                     icon: const FaIcon(
                                       FontAwesomeIcons.userCog,
@@ -227,6 +227,7 @@ class AddNewCryptoButton extends HookWidget {
               ownedCurrencyIds: portfolioRecords.data!.value!.map((record) => record.id).toList(),
               onCryptoCurrencySelected: (currency) {
                 Navigator.of(context).pop(context);
+                context.read(adRepositoryProvider).notifyNewCryproCurrency();
                 context.beamToNamed('/currency/${currency.id}', popToNamed: '/', data: {
                   'currencyImageUrl': currency.imageUrl,
                   'currencyName': currency.name,
@@ -325,6 +326,7 @@ class FavouriteList extends HookWidget {
                                       onCryptoCurrencySelected: (currency) {
                                         onAddFavourite(currency);
                                         Navigator.of(context).pop(context);
+                                        context.read(adRepositoryProvider).notifyNewCryproCurrency();
                                       },
                                     ),
                                   );
@@ -365,7 +367,7 @@ class FavouriteList extends HookWidget {
                                 onTap: () {
                                   final id = favouriteCurrencyIds[index];
 
-                                  context.beamToNamed('/currency/$id', popToNamed: '/', data: {
+                                  context.beamToNamed('/currency/$id', beamBackOnPop: true, data: {
                                     'currencyImageUrl': ownedCurrencies[id]?.imageUrl,
                                     'currencyName': ownedCurrencies[id]?.name,
                                   });

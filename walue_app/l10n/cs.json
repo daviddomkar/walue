@@ -49,6 +49,8 @@
   "system": "Systémový",
   "light": "Světlý",
   "dark": "Tmavý",
+  "about": "O aplikaci",
+  "guide": "Průvodce aplikací",
   "poweredBy": "Používáme",
   "cryptocurrencyDataAPI": "API s daty o kryptoměnách",
   "fiatCurrencyExchangeAPI": "API pro směnu fiat měn",
