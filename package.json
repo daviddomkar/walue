@@ -7,6 +7,7 @@
     "walue_functions"
   ],
   "scripts": {
+    "deploy:rules": "firebase deploy --only firestore:rules",
     "generate:translations": "cd walue_app && flutter pub run easy_localization:generate --source-dir l10n && flutter pub run easy_localization:generate --source-dir l10n -f keys -o locale_keys.g.dart && cd .."
   },
   "devDependencies": {
