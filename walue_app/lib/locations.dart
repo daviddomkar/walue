@@ -53,6 +53,8 @@ class RootLocation extends BeamLocation {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
         } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrencySymbol == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
+        } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrencySymbol != null && (user.data!.value!.hasCompletedGuide == null || !user.data!.value!.hasCompletedGuide!)) {
+          context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['guide']));
         } else {
           context.currentBeamLocation.update((state) => state);
         }
@@ -81,7 +83,12 @@ class RootLocation extends BeamLocation {
               key: ValueKey('choose-fiat-currency-${context.locale}'),
               child: const ChooseFiatCurrencyScreen(),
             ),
-          if (user != null && user.fiatCurrencySymbol != null) ...[
+          if (user != null && user.fiatCurrencySymbol != null && (user.hasCompletedGuide == null || !user.hasCompletedGuide!))
+            NoTransitionPage(
+              key: ValueKey('guide-${context.locale}'),
+              child: const GuideScreen(),
+            ),
+          if (user != null && user.fiatCurrencySymbol != null && user.hasCompletedGuide != null && user.hasCompletedGuide!) ...[
             NoTransitionPage(
               key: ValueKey('home-${context.locale}'),
               child: const HomeScreen(),
