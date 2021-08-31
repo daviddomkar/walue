@@ -19,22 +19,11 @@ class GuideScreen extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     final viewModel = watch(_guideViewModelProvider);
 
-    const bodyStyle = TextStyle(fontSize: 19.0);
-
     final dotsDecorator = DotsDecorator(
       color: Colors.white,
       activeColor: Colors.white,
       activeSize: const Size(18.0, 9.0),
       activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-    );
-
-    const pageDecoration = PageDecoration(
-      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
-      bodyTextStyle: bodyStyle,
-      descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-      imagePadding: EdgeInsets.zero,
-      bodyFlex: 2,
-      imageFlex: 3,
     );
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -111,28 +100,104 @@ class GuideScreen extends ConsumerWidget {
               context.beamBack();
             }
           },
-          pages: [
-            PageViewModel(
-              title: "Add crypto currency",
-              body: "Instead of having to buy an entire share, invest any amount you want.",
-              decoration: pageDecoration,
+          rawPages: const [
+            GuideScreenPage(
+              title: 'Adding crypto currencies',
+              description:
+                  'To add a crypto currency to your portfolio, click "Add new crypto" button and search for your currency using the search bar at the top of the opened dialog.\n\nOnce you have added your crypto by tapping on it the currency detail screen will be opened where you can add buy records.',
             ),
-            PageViewModel(
-              title: "Add buy record",
-              body: "Download the Stockpile app and master the market with our mini-lesson.",
-              decoration: pageDecoration,
+            GuideScreenPage(
+              title: 'Adding buy records',
+              description:
+                  'Click "Add new buy record" button on the currency detail screen and enter the buy price and the amount of the currency you bought.\n\n When you click "Add buy record" the buy record will be created. You can add as many buy records as you want.\n\nYou can also edit or delete a buy record by tapping on it.',
             ),
-            PageViewModel(
-              title: "Favourites",
-              body: "Kids and teens can track their stocks 24/7 and place trades that you approve.",
-              decoration: pageDecoration,
+            GuideScreenPage(
+              title: 'Favourite cryptocurrencies',
+              description:
+                  'You can add a crypto to your favourites using the star icon on the currency detail screen or by tapping the "Add favourite" button on the home screen.\n\nAll your favourite cryptocurrencies can be viewed at the top section of the home screen.\n\nTo remove a cryptocurrency from favourites simply click the star icon again on the currency detail page.',
             ),
-            PageViewModel(
-              title: "Settings",
-              body: "Pages can be full screen as well.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc id euismod lectus, non tempor felis. Nam rutrum rhoncus est ac venenatis.",
+            GuideScreenPage(
+              title: 'App settings',
+              description:
+                  'App\'s color theme, display language and the default fiat currency can be changed in settings.\n\nYou can get to settings by tapping the icon on the home screen.\n\nApart other things you are also able to delete your account from the setting\'s "Danger zone" section.',
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class GuideScreenPage extends StatelessWidget {
+  final String title;
+  final String description;
+
+  const GuideScreenPage({
+    Key? key,
+    required this.title,
+    required this.description,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 64.0 + 16.0),
+      child: Center(
+        child: LayoutBuilder(builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            height: 256.0 + 64.0,
+                            child: AspectRatio(
+                              aspectRatio: 9 / 18.5,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 32.0),
+                              child: Text(
+                                title,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 32.0),
+                              child: Text(
+                                description,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white, fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
