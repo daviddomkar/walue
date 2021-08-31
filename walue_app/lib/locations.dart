@@ -48,10 +48,6 @@ class RootLocation extends BeamLocation {
       onChange: (context, viewModel) {
         final user = viewModel.user;
 
-        print('updating location');
-
-        // context.currentBeamLocation.update();
-
         if (user.data != null && user.data!.value == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
         } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrencySymbol == null) {
@@ -65,8 +61,6 @@ class RootLocation extends BeamLocation {
             context.currentBeamLocation.update();
           }
         }
-
-        print(context.currentBeamLocation.state.pathBlueprintSegments);
       },
       provider: _rootLocationViewModelProvider,
       child: navigator,
