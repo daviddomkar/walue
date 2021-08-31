@@ -39,6 +39,7 @@ class RootLocation extends BeamLocation {
         '/currency/:currencyId',
         '/settings',
         '/settings/about',
+        '/settings/about/guide',
       ];
 
   @override
@@ -47,7 +48,9 @@ class RootLocation extends BeamLocation {
       onChange: (context, viewModel) {
         final user = viewModel.user;
 
-        context.currentBeamLocation.update();
+        print('updating location');
+
+        // context.currentBeamLocation.update();
 
         if (user.data != null && user.data!.value == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
@@ -56,8 +59,14 @@ class RootLocation extends BeamLocation {
         } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrencySymbol != null && (user.data!.value!.hasCompletedGuide == null || !user.data!.value!.hasCompletedGuide!)) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['guide']));
         } else {
-          context.currentBeamLocation.update((state) => state);
+          if (state.pathBlueprintSegments.isNotEmpty && state.pathBlueprintSegments[0] != 'settings' && state.pathBlueprintSegments[0] != 'currency') {
+            context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: []));
+          } else {
+            context.currentBeamLocation.update();
+          }
         }
+
+        print(context.currentBeamLocation.state.pathBlueprintSegments);
       },
       provider: _rootLocationViewModelProvider,
       child: navigator,

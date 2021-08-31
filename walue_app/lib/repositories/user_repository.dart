@@ -13,6 +13,7 @@ final userRepositoryProvider = Provider<UserRepository>((ref) => FirebaseUserRep
 abstract class UserRepository {
   Future<void> chooseFiatCurrency(Currency currency);
   Future<void> changeFiatCurrency(Currency currency);
+  Future<void> completeGuide();
   Future<void> addCryptoCurrencyToFavourites(String id);
   Future<void> deleteCryptoCurrencyFromFavourites(String id);
   Future<void> addCryptoCurrencyBuyRecord(CryptoCurrency currency, double buyPrice, double amount, Currency fiatCurrency);
@@ -57,6 +58,13 @@ class FirebaseUserRepository extends UserRepository {
   Future<void> changeFiatCurrency(Currency currency) async {
     await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).update({
       'fiat_currency_symbol': currency.symbol,
+    });
+  }
+
+  @override
+  Future<void> completeGuide() async {
+    await _firestore.collection('users').doc(read(userStreamProvider).data?.value?.id).update({
+      'has_completed_guide': true,
     });
   }
 
