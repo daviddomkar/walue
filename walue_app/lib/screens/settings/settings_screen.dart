@@ -398,7 +398,10 @@ class SettingsScreen extends HookWidget {
                                         showDialog(
                                           context: context,
                                           builder: (context) => DeleteAccountDialog(onDeleteAccount: () {
-                                            viewModel.deleteAccount().then((value) => Navigator.of(context, rootNavigator: true).pop()).onError((error, stackTrace) {
+                                            viewModel.deleteAccount().then((value) {
+                                              Navigator.of(context, rootNavigator: true).pop();
+                                              context.read(adRepositoryProvider).notifyAccountDeleted();
+                                            }).onError((error, stackTrace) {
                                               Navigator.of(context, rootNavigator: true).pop();
 
                                               final snackBar = SnackBar(

@@ -4,31 +4,44 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:walue_app/generated/ad_ids.g.dart';
+
+import '../generated/ad_ids.g.dart';
 
 final adRepositoryProvider = Provider<AdRepository>((ref) => throw UnimplementedError());
 
 const _newBuyRecordCountToShowAd = 5;
+const _editBuyRecordCountToShowAd = 5;
+const _deleteBuyRecordCountToShowAd = 5;
+
 const _newCryptoCurrencyCountToShowAd = 3;
 const _lastTimeAppOpenedDurationToShowAd = Duration(hours: 1);
 
 abstract class AdRepository {
   Future<void> notifyNewBuyRecord();
+  Future<void> notifyEditBuyRecord();
+  Future<void> notifyDeleteBuyRecord();
   Future<void> notifyNewCryproCurrency();
   Future<void> notifyAppOpened();
+  Future<void> notifyAccountDeleted();
 }
 
 class AdmobAdRepository extends AdRepository {
   final SharedPreferences sharedPreferences;
 
   int _newBuyRecordCount;
+  int _editBuyRecordCount;
+  int _deleteBuyRecordCount;
+
   int _newCryptoCurrencyCount;
+
   DateTime _lastTimeAppOpened;
 
   InterstitialAd? _interstitialAd;
 
   AdmobAdRepository({required this.sharedPreferences})
       : _newBuyRecordCount = sharedPreferences.containsKey('new_buy_record_count') ? sharedPreferences.getInt('new_buy_record_count')! : 0,
+        _editBuyRecordCount = sharedPreferences.containsKey('edit_buy_record_count') ? sharedPreferences.getInt('edit_buy_record_count')! : 0,
+        _deleteBuyRecordCount = sharedPreferences.containsKey('delete_buy_record_count') ? sharedPreferences.getInt('delete_buy_record_count')! : 0,
         _newCryptoCurrencyCount = sharedPreferences.containsKey('new_crypto_currency_count') ? sharedPreferences.getInt('new_crypto_currency_count')! : 0,
         _lastTimeAppOpened = sharedPreferences.containsKey('last_time_app_opened')
             ? DateTime.fromMillisecondsSinceEpoch(sharedPreferences.getInt('last_time_app_opened')!)
@@ -56,6 +69,34 @@ class AdmobAdRepository extends AdRepository {
   }
 
   @override
+  Future<void> notifyEditBuyRecord() async {
+    _editBuyRecordCount++;
+
+    if (_editBuyRecordCount >= _editBuyRecordCountToShowAd) {
+      try {
+        await _showInterstitialAd();
+        _editBuyRecordCount = 0;
+      } catch (_) {}
+    }
+
+    sharedPreferences.setInt('edit_buy_record_count', _editBuyRecordCount);
+  }
+
+  @override
+  Future<void> notifyDeleteBuyRecord() async {
+    _deleteBuyRecordCount++;
+
+    if (_deleteBuyRecordCount >= _deleteBuyRecordCountToShowAd) {
+      try {
+        await _showInterstitialAd();
+        _deleteBuyRecordCount = 0;
+      } catch (_) {}
+    }
+
+    sharedPreferences.setInt('delete_buy_record_count', _deleteBuyRecordCount);
+  }
+
+  @override
   Future<void> notifyNewCryproCurrency() async {
     _newCryptoCurrencyCount++;
 
@@ -78,6 +119,13 @@ class AdmobAdRepository extends AdRepository {
         sharedPreferences.setInt('last_time_app_opened', _lastTimeAppOpened.millisecondsSinceEpoch);
       } catch (_) {}
     }
+  }
+
+  @override
+  Future<void> notifyAccountDeleted() async {
+    try {
+      await _showInterstitialAd();
+    } catch (_) {}
   }
 
   Future<void> _showInterstitialAd() async {
