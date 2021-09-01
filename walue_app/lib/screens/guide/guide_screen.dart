@@ -104,7 +104,7 @@ class GuideScreen extends ConsumerWidget {
             GuideScreenPage(
               title: 'Adding crypto currencies',
               description:
-                  'To add a crypto currency to your portfolio, click "Add new crypto" button and search for your currency using the search bar at the top of the opened dialog.\n\nOnce you have added your crypto by tapping on it the currency detail screen will be opened where you can add buy records.',
+                  'To add a crypto currency to your portfolio click "Add new crypto" button and search for your currency using the search bar at the top of the opened dialog.\n\nOnce you have added your crypto by tapping on it the currency detail screen will be opened where you can add buy records.',
             ),
             GuideScreenPage(
               title: 'Adding buy records',
