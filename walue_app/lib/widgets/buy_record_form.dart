@@ -69,7 +69,10 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _buyPrice = CurrencyInputFormatter.valueToString(context, widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice) ?? '';
+
+    if (_buyPrice.isEmpty) {
+      _buyPrice = CurrencyInputFormatter.valueToString(context, widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice) ?? '';
+    }
   }
 
   void addRecord() {
