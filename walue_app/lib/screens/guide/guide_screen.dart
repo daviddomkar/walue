@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../generated/locale_keys.g.dart';
 
@@ -100,26 +101,26 @@ class GuideScreen extends ConsumerWidget {
               context.beamBack();
             }
           },
-          rawPages: const [
+          rawPages: [
             GuideScreenPage(
-              title: 'Adding crypto currencies',
-              description:
-                  'To add a crypto currency to your portfolio click "Add new crypto" button and search for your currency using the search bar at the top of the opened dialog.\n\nOnce you have added your crypto by tapping on it the currency detail screen will be opened where you can add buy records.',
+              videoPath: 'assets/guide/add_cryptocurrency.mp4',
+              title: LocaleKeys.guideAddCryptoCurrencyTitle.tr(),
+              description: LocaleKeys.guideAddCryptoCurrencyDescription.tr(),
             ),
             GuideScreenPage(
-              title: 'Adding buy records',
-              description:
-                  'Click "Add new buy record" button on the currency detail screen and enter the buy price and the amount of the currency you bought.\n\n When you click "Add buy record" the buy record will be created. You can add as many buy records as you want.\n\nYou can also edit or delete a buy record by tapping on it.',
+              videoPath: 'assets/guide/add_buy_record.mp4',
+              title: LocaleKeys.guideAddBuyRecordsTitle.tr(),
+              description: LocaleKeys.guideAddBuyRecordsDescription.tr(),
             ),
             GuideScreenPage(
-              title: 'Favourite cryptocurrencies',
-              description:
-                  'You can add a crypto to your favourites using the star icon on the currency detail screen or by tapping the "Add favourite" button on the home screen.\n\nAll your favourite cryptocurrencies can be viewed at the top section of the home screen.\n\nTo remove a cryptocurrency from favourites simply click the star icon again on the currency detail page.',
+              videoPath: 'assets/guide/favourites.mp4',
+              title: LocaleKeys.guideFavouritesTitle.tr(),
+              description: LocaleKeys.guideFavouritesDescription.tr(),
             ),
             GuideScreenPage(
-              title: 'App settings',
-              description:
-                  'App\'s color theme, display language and the default fiat currency can be changed in settings.\n\nYou can get to settings by tapping the icon on the home screen.\n\nApart other things you are also able to delete your account from the setting\'s "Danger zone" section.',
+              videoPath: 'assets/guide/settings.mp4',
+              title: LocaleKeys.guideSettingsTitle.tr(),
+              description: LocaleKeys.guideSettingsDescription.tr(),
             ),
           ],
         ),
@@ -128,15 +129,49 @@ class GuideScreen extends ConsumerWidget {
   }
 }
 
-class GuideScreenPage extends StatelessWidget {
+class GuideScreenPage extends StatefulWidget {
+  final String videoPath;
   final String title;
   final String description;
 
   const GuideScreenPage({
     Key? key,
+    required this.videoPath,
     required this.title,
     required this.description,
   }) : super(key: key);
+
+  @override
+  State<GuideScreenPage> createState() => _GuideScreenPageState();
+}
+
+class _GuideScreenPageState extends State<GuideScreenPage> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = VideoPlayerController.asset(widget.videoPath, videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true))
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.setLooping(true);
+        _controller.setVolume(0.0);
+        _controller.play();
+      });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,11 +193,24 @@ class GuideScreenPage extends StatelessWidget {
                           child: SizedBox(
                             height: 256.0 + 64.0,
                             child: AspectRatio(
-                              aspectRatio: 9 / 18.5,
+                              aspectRatio: 9 / 18,
                               child: Container(
+                                padding: const EdgeInsets.all(2.0),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   borderRadius: BorderRadius.circular(16.0),
+                                ),
+                                child: Container(
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                  child: AnimatedOpacity(
+                                    opacity: _controller.value.isInitialized ? 1.0 : 0.0,
+                                    duration: const Duration(milliseconds: 250),
+                                    child: _controller.value.isInitialized ? VideoPlayer(_controller) : null,
+                                  ),
                                 ),
                               ),
                             ),
@@ -175,7 +223,7 @@ class GuideScreenPage extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 32.0),
                               child: Text(
-                                title,
+                                widget.title,
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
                               ),
@@ -183,7 +231,7 @@ class GuideScreenPage extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 32.0),
                               child: Text(
-                                description,
+                                widget.description,
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white, fontSize: 16.0),
                               ),
