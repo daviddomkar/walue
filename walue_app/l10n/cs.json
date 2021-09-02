@@ -19,7 +19,7 @@
   "guideFavouritesTitle": "Oblíbené kryptoměny",
   "guideFavouritesDescription": "Kryptoměny lze přidat do oblíbených kliknutím na ikonu hvězdičky na obrazovce s podrobnostmi o měně nebo tlačítkem \"Přidat oblíbené\" na domovské obrazovce.\n\nPro odstranění měny z oblíbených jednoduše klikněte znovu na tlačítko hvězdičky na obrazovce s podrobnostmi o měně.",
   "guideSettingsTitle": "Nastavení aplikace",
-  "guideSettingsDescription": "Barevný motiv aplikace, jazyk a výchozí fiat měnu můžete měnit v nastavení aplikace.\n\nDo nastavení se dostanete kliknutím na ikonu v pravé horní části domovské obrazovky.\n\nPokud již nechcete používat Walue, v nastavení lze smazat účet se všemi daty pomocí tlačítka v sekci \"Nebezpečná zóna\".",
+  "guideSettingsDescription": "Barevný motiv aplikace, jazyk a výchozí fiat měnu můžete měnit v nastavení aplikace.\n\nDo nastavení se dostanete kliknutím na ikonu v pravé horní části domovské obrazovky.\n\nPokud již nechcete používat Walue, v nastavení lze smazat účet se všemi daty pomocí tlačítka \"Smazat účet\" v sekci \"Nebezpečná zóna\". Tento krok je nevratný.",
   "signOut": "Odhlásit se",
   "favourites": "Oblíbené",
   "marketPrice": "Nákupní cena",
