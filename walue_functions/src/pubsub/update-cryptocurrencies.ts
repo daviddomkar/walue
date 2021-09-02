@@ -24,7 +24,7 @@ export const updateCryptocurrencies = functions.region('europe-west1').pubsub.sc
     for (let i = 0; i < pages; i++) {
       const page = (await axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=250&page=${i + 1}`)).data;
 
-      coinGeckoCryptoList = [...coinGeckoCryptoList, ...page.map((data: any) => data.id)];
+      coinGeckoCryptoList = [...coinGeckoCryptoList, ...page.filter((data: any) => data.current_price != null).map((data: any) => data.id)];
     }
 
     //* 2. Compare intermediate list with main list and add new cryptos to the main list

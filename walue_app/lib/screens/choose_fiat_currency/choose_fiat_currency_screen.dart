@@ -12,7 +12,7 @@ import '../../widgets/basic_button.dart';
 import '../../widgets/logo.dart';
 import 'choose_fiat_currency_view_model.dart';
 
-final chooseFiatCurrencyViewModelProvider = ChangeNotifierProvider.autoDispose<ChooseFiatCurrencyViewModel>((ref) {
+final _chooseFiatCurrencyViewModelProvider = ChangeNotifierProvider.autoDispose<ChooseFiatCurrencyViewModel>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final userRepository = ref.watch(userRepositoryProvider);
   final fiatCurrencies = ref.watch(fiatCurrenciesStreamProvider);
@@ -29,7 +29,7 @@ class ChooseFiatCurrencyScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = useProvider(chooseFiatCurrencyViewModelProvider);
+    final viewModel = useProvider(_chooseFiatCurrencyViewModelProvider);
 
     final fiatCurrencies = viewModel.fiatCurrencies;
 

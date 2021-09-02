@@ -475,10 +475,12 @@ class BuyRecordListItem extends StatelessWidget {
             onEditRecord: (id, buyPrice, amount) {
               onEditBuyRecord(id, buyPrice, amount);
               Navigator.of(context, rootNavigator: true).pop(context);
+              context.read(adRepositoryProvider).notifyEditBuyRecord();
             },
             onDeleteRecord: (id) {
               onDeleteBuyRecord(id);
               Navigator.of(context, rootNavigator: true).pop(context);
+              context.read(adRepositoryProvider).notifyDeleteBuyRecord();
             },
           ),
         );

@@ -25,6 +25,7 @@ final userStreamProvider = StreamProvider.autoDispose<User?>((ref) {
                   displayName: user.displayName == null || user.displayName!.isEmpty ? null : user.displayName,
                   photoUrl: user.photoURL,
                   fiatCurrencySymbol: data.containsKey('fiat_currency_symbol') ? data['fiat_currency_symbol'] as String : null,
+                  hasCompletedGuide: data.containsKey('has_completed_guide') ? data['has_completed_guide'] as bool : null,
                   favouriteCurrencyIds: (data['favourite_currency_ids'] as List<dynamic>?)?.cast<String>() ?? [],
                 );
               }

@@ -69,7 +69,10 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _buyPrice = CurrencyInputFormatter.valueToString(context, widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice) ?? '';
+
+    if (_buyPrice.isEmpty) {
+      _buyPrice = CurrencyInputFormatter.valueToString(context, widget.initialRecord?.buyPrice ?? widget.cryptoCurrency?.fiatPrice) ?? '';
+    }
   }
 
   void addRecord() {
@@ -216,7 +219,7 @@ class _BuyRecordFormState extends State<BuyRecordForm> {
                         LimitedBox(
                           maxWidth: 130.0,
                           child: AutoSizeText(
-                            widget.fiatCurrencies![symbol]!.name,
+                            widget.fiatCurrencies![symbol]!.symbol.tr() == widget.fiatCurrencies![symbol]!.symbol ? widget.fiatCurrencies![symbol]!.name : widget.fiatCurrencies![symbol]!.symbol.tr(),
                             group: autoSizeGroup,
                           ),
                         ),

@@ -395,10 +395,14 @@ class SettingsScreen extends HookWidget {
                                     color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF222222),
                                     child: InkWell(
                                       onTap: () {
+                                        final adRepository = context.read(adRepositoryProvider);
+
                                         showDialog(
                                           context: context,
                                           builder: (context) => DeleteAccountDialog(onDeleteAccount: () {
-                                            viewModel.deleteAccount().then((value) => Navigator.of(context, rootNavigator: true).pop()).onError((error, stackTrace) {
+                                            viewModel.deleteAccount().then((value) {
+                                              adRepository.notifyAccountDeleted();
+                                            }).onError((error, stackTrace) {
                                               Navigator.of(context, rootNavigator: true).pop();
 
                                               final snackBar = SnackBar(

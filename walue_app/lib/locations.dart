@@ -39,6 +39,7 @@ class RootLocation extends BeamLocation {
         '/currency/:currencyId',
         '/settings',
         '/settings/about',
+        '/settings/about/guide',
       ];
 
   @override
@@ -47,14 +48,18 @@ class RootLocation extends BeamLocation {
       onChange: (context, viewModel) {
         final user = viewModel.user;
 
-        context.currentBeamLocation.update();
-
         if (user.data != null && user.data!.value == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['login']));
         } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrencySymbol == null) {
           context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['choose-fiat-currency']));
+        } else if (user.data != null && user.data!.value != null && user.data!.value!.fiatCurrencySymbol != null && (user.data!.value!.hasCompletedGuide == null || !user.data!.value!.hasCompletedGuide!)) {
+          context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: ['guide']));
         } else {
-          context.currentBeamLocation.update((state) => state);
+          if (state.pathBlueprintSegments.isNotEmpty && state.pathBlueprintSegments[0] != 'settings' && state.pathBlueprintSegments[0] != 'currency') {
+            context.currentBeamLocation.update((state) => state.copyWith(pathBlueprintSegments: []));
+          } else {
+            context.currentBeamLocation.update();
+          }
         }
       },
       provider: _rootLocationViewModelProvider,
@@ -81,7 +86,12 @@ class RootLocation extends BeamLocation {
               key: ValueKey('choose-fiat-currency-${context.locale}'),
               child: const ChooseFiatCurrencyScreen(),
             ),
-          if (user != null && user.fiatCurrencySymbol != null) ...[
+          if (user != null && user.fiatCurrencySymbol != null && (user.hasCompletedGuide == null || !user.hasCompletedGuide!))
+            NoTransitionPage(
+              key: ValueKey('guide-${context.locale}'),
+              child: const GuideScreen(),
+            ),
+          if (user != null && user.fiatCurrencySymbol != null && user.hasCompletedGuide != null && user.hasCompletedGuide!) ...[
             NoTransitionPage(
               key: ValueKey('home-${context.locale}'),
               child: const HomeScreen(),

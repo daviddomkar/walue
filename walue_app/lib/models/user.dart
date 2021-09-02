@@ -7,6 +7,8 @@ class User {
   final String? photoUrl;
   final String? fiatCurrencySymbol;
 
+  final bool? hasCompletedGuide;
+
   final List<String> favouriteCurrencyIds;
 
   User({
@@ -15,6 +17,7 @@ class User {
     required this.displayName,
     required this.photoUrl,
     this.fiatCurrencySymbol,
+    this.hasCompletedGuide,
     this.favouriteCurrencyIds = const [],
   });
 }
