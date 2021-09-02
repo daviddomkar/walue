@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:beamer/beamer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class GuideScreen extends ConsumerWidget {
                     ),
                   ),
                 )
-              : Text(
+              : AutoSizeText(
                   LocaleKeys.skip.tr(),
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white, fontSize: 16.0),
                 ),
@@ -82,7 +83,7 @@ class GuideScreen extends ConsumerWidget {
                     ),
                   ),
                 )
-              : Text(
+              : AutoSizeText(
                   LocaleKeys.done.tr(),
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white, fontSize: 16.0),
                 ),
