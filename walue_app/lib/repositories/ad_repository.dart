@@ -14,6 +14,8 @@ const _editBuyRecordCountToShowAd = 5;
 const _deleteBuyRecordCountToShowAd = 5;
 
 const _newCryptoCurrencyCountToShowAd = 3;
+const _newFavouriteCurrencyCountToShowAd = 3;
+
 const _lastTimeAppOpenedDurationToShowAd = Duration(hours: 1);
 
 abstract class AdRepository {
@@ -21,6 +23,7 @@ abstract class AdRepository {
   Future<void> notifyEditBuyRecord();
   Future<void> notifyDeleteBuyRecord();
   Future<void> notifyNewCryproCurrency();
+  Future<void> notifyNewFavouriteCurrency();
   Future<void> notifyAppOpened();
   Future<void> notifyAccountDeleted();
 }
@@ -33,6 +36,7 @@ class AdmobAdRepository extends AdRepository {
   int _deleteBuyRecordCount;
 
   int _newCryptoCurrencyCount;
+  int _newFavouriteCurrencyCount;
 
   DateTime _lastTimeAppOpened;
 
@@ -43,6 +47,7 @@ class AdmobAdRepository extends AdRepository {
         _editBuyRecordCount = sharedPreferences.containsKey('edit_buy_record_count') ? sharedPreferences.getInt('edit_buy_record_count')! : 0,
         _deleteBuyRecordCount = sharedPreferences.containsKey('delete_buy_record_count') ? sharedPreferences.getInt('delete_buy_record_count')! : 0,
         _newCryptoCurrencyCount = sharedPreferences.containsKey('new_crypto_currency_count') ? sharedPreferences.getInt('new_crypto_currency_count')! : 0,
+        _newFavouriteCurrencyCount = sharedPreferences.containsKey('new_favourite_currency_count') ? sharedPreferences.getInt('new_favourite_currency_count')! : 0,
         _lastTimeAppOpened = sharedPreferences.containsKey('last_time_app_opened')
             ? DateTime.fromMillisecondsSinceEpoch(sharedPreferences.getInt('last_time_app_opened')!)
             : (() {
@@ -111,10 +116,26 @@ class AdmobAdRepository extends AdRepository {
   }
 
   @override
+  Future<void> notifyNewFavouriteCurrency() async {
+    _newFavouriteCurrencyCount++;
+
+    if (_newFavouriteCurrencyCount >= _newFavouriteCurrencyCountToShowAd) {
+      try {
+        await _showInterstitialAd();
+        _newFavouriteCurrencyCount = 0;
+      } catch (_) {}
+    }
+
+    sharedPreferences.setInt('new_favourite_currency_count', _newFavouriteCurrencyCount);
+  }
+
+  @override
   Future<void> notifyAppOpened() async {
     if (_lastTimeAppOpened.add(_lastTimeAppOpenedDurationToShowAd).isBefore(DateTime.now())) {
       try {
         await _showInterstitialAd();
+
+        // Reset last time app opened time
         _lastTimeAppOpened = DateTime.now();
         sharedPreferences.setInt('last_time_app_opened', _lastTimeAppOpened.millisecondsSinceEpoch);
       } catch (_) {}
@@ -125,6 +146,10 @@ class AdmobAdRepository extends AdRepository {
   Future<void> notifyAccountDeleted() async {
     try {
       await _showInterstitialAd();
+
+      // Reset last time app opened time
+      _lastTimeAppOpened = DateTime.now();
+      sharedPreferences.setInt('last_time_app_opened', _lastTimeAppOpened.millisecondsSinceEpoch);
     } catch (_) {}
   }
 

@@ -96,10 +96,6 @@ class WalueApp extends HookWidget {
     final themeMode = useProvider(themeProvider);
     final theme = ThemeData();
 
-    useEffect(() {
-      context.read(adRepositoryProvider).notifyAppOpened();
-    }, []);
-
     return MaterialApp.router(
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
