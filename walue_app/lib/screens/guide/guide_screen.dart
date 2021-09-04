@@ -70,6 +70,7 @@ class GuideScreen extends ConsumerWidget {
               : AutoSizeText(
                   LocaleKeys.skip.tr(),
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white, fontSize: 16.0),
+                  maxLines: 1,
                 ),
           skipColor: Colors.white,
           done: viewModel.loading
@@ -86,6 +87,7 @@ class GuideScreen extends ConsumerWidget {
               : AutoSizeText(
                   LocaleKeys.done.tr(),
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white, fontSize: 16.0),
+                  maxLines: 1,
                 ),
           doneColor: Colors.white,
           onSkip: () {
