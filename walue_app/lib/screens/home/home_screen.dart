@@ -28,6 +28,10 @@ class HomeScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    useEffect(() {
+      context.read(adRepositoryProvider).notifyAppOpened();
+    }, []);
+
     final viewModel = useProvider(userRepositoryProvider);
 
     final ownedCurrencies = useProviderCached(ownedCryptoCurrenciesStreamProvider);
@@ -326,7 +330,7 @@ class FavouriteList extends HookWidget {
                                       onCryptoCurrencySelected: (currency) {
                                         onAddFavourite(currency);
                                         Navigator.of(context).pop(context);
-                                        context.read(adRepositoryProvider).notifyNewCryproCurrency();
+                                        context.read(adRepositoryProvider).notifyNewFavouriteCurrency();
                                       },
                                     ),
                                   );
@@ -367,7 +371,7 @@ class FavouriteList extends HookWidget {
                                 onTap: () {
                                   final id = favouriteCurrencyIds[index];
 
-                                  context.beamToNamed('/currency/$id', beamBackOnPop: true, data: {
+                                  context.beamToNamed('/currency/$id', popToNamed: '/', data: {
                                     'currencyImageUrl': ownedCurrencies[id]?.imageUrl,
                                     'currencyName': ownedCurrencies[id]?.name,
                                   });
@@ -407,13 +411,18 @@ class FavouriteList extends HookWidget {
                                                     overflow: TextOverflow.ellipsis,
                                                   ),
                                                 ),
-                                                Text(
-                                                  ownedCurrencies[favouriteCurrencyIds[index]]!.symbol.toUpperCase(),
-                                                  style: TextStyle(
-                                                    height: 0.9,
-                                                    color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                                                LimitedBox(
+                                                  maxWidth: 70.0,
+                                                  child: AutoSizeText(
+                                                    ownedCurrencies[favouriteCurrencyIds[index]]!.symbol.toUpperCase(),
+                                                    style: TextStyle(
+                                                      height: 0.9,
+                                                      color: Theme.of(context).brightness == Brightness.light ? const Color(0x80222222) : const Color(0x80FFFFFF),
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
-                                                )
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -430,13 +439,20 @@ class FavouriteList extends HookWidget {
                                                 ),
                                             textAlign: TextAlign.right,
                                           ),
-                                          Text(
-                                            ownedCurrencies[favouriteCurrencyIds[index]]!.calculateFormattedFiatPrice(context, fiatCurrency!.symbol)!,
-                                            style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                                  fontSize: 18.0,
-                                                  color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
-                                                ),
-                                            textAlign: TextAlign.right,
+                                          SizedBox(
+                                            height: 22.0,
+                                            child: Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: AutoSizeText(
+                                                ownedCurrencies[favouriteCurrencyIds[index]]!.calculateFormattedFiatPrice(context, fiatCurrency!.symbol)!,
+                                                style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                                      fontSize: 18.0,
+                                                      color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF222222) : Colors.white,
+                                                    ),
+                                                textAlign: TextAlign.right,
+                                                maxLines: 1,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),

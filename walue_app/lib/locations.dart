@@ -96,7 +96,7 @@ class RootLocation extends BeamLocation {
               key: ValueKey('home-${context.locale}'),
               child: const HomeScreen(),
             ),
-            if (state.pathBlueprintSegments.contains('currency'))
+            if (state.pathBlueprintSegments.contains('currency') && state.pathParameters.containsKey('currencyId'))
               NoTransitionPage(
                 key: ValueKey('currency-${state.pathParameters['currencyId']!}-${context.locale}'),
                 child: CurrencyScreen(
