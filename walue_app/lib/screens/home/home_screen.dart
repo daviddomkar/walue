@@ -451,6 +451,7 @@ class FavouriteList extends HookWidget {
                                                     ),
                                                 textAlign: TextAlign.right,
                                                 maxLines: 1,
+                                                minFontSize: 4.0,
                                               ),
                                             ),
                                           ),
