@@ -13,8 +13,8 @@ const _newBuyRecordCountToShowAd = 5;
 const _editBuyRecordCountToShowAd = 5;
 const _deleteBuyRecordCountToShowAd = 5;
 
-const _newCryptoCurrencyCountToShowAd = 3;
-const _newFavouriteCurrencyCountToShowAd = 3;
+const _newCryptoCurrencyCountToShowAd = 6;
+const _newFavouriteCurrencyCountToShowAd = 6;
 
 const _lastTimeAppOpenedDurationToShowAd = Duration(hours: 1);
 
