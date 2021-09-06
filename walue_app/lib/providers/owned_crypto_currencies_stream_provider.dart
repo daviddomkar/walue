@@ -1,7 +1,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:stream_transform/stream_transform.dart';
 import 'package:quiver/iterables.dart' as quiver;
+import 'package:stream_transform/stream_transform.dart';
 
 import '../models/crypto_currency.dart';
 import '../providers.dart';
