@@ -19,7 +19,7 @@
   "guideFavouritesTitle": "Favourite cryptocurrencies",
   "guideFavouritesDescription": "You can add a crypto to your favourites using the star icon on the currency detail screen or by tapping the \"Add favourite\" button on the home screen.\n\nAll your favourite cryptocurrencies can be viewed at the top section of the home screen.\n\nTo remove a cryptocurrency from favourites simply click the star icon again on the currency detail page.",
   "guideSettingsTitle": "App settings",
-   "guideSettingsDescription": "App's color theme, display language and the default fiat currency can be changed in settings.\n\nYou can get to settings by tapping the icon at the top right of the home screen.\n\nYou are able to delete your account using the \"Delete account\" button from the setting's \"Danger zone\" section if you no longer want to use Walue. This action is irreversible.",
+  "guideSettingsDescription": "App's color theme, display language and the default fiat currency can be changed in settings.\n\nYou can get to settings by tapping the icon at the top right of the home screen.\n\nYou are able to delete your account using the \"Delete account\" button from the setting's \"Danger zone\" section if you no longer want to use Walue. This action is irreversible.",
   "signOut": "Sign out",
   "favourites": "Favourites",
   "marketPrice": "Market price",
