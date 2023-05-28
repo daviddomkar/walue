@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  beamer: 0.14.1
+  beamer: 1.5.5
 
   easy_localization: 3.0.1
 
