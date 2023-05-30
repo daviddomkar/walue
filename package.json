@@ -11,8 +11,8 @@
     "generate:translations": "cd walue_app && flutter pub run easy_localization:generate --source-dir l10n && flutter pub run easy_localization:generate --source-dir l10n -f keys -o locale_keys.g.dart && cd .."
   },
   "devDependencies": {
-    "@commitlint/cli": "12.1.4",
-    "@commitlint/config-conventional": "12.1.4",
+    "@commitlint/cli": "17.6.5",
+    "@commitlint/config-conventional": "17.6.5",
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
     "eslint": "7.32.0",
