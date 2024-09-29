@@ -25,3 +25,17 @@ Cryptocurrency portfolio tracker. This app (and backend using Firebase) was made
 ![Fiat Selection Screen](walue_branding/screenshots/Screenshot_1620246036.png)
 ![Login Screen](walue_branding/screenshots/Screenshot_1620245708.png)
 
+## Tech Stack
+
+- Flutter (Riverpod, Hooks)
+- Firebase (Authentication, Firestore, Cloud Functions)
+- CoinGecko API
+- Exchange Rate Host API
+
+## Repository Structure
+
+- `walue_app` - Flutter app
+- `walue_branding` - Screenshots, icons and other branding assets
+- `walue_functions` - Firebase Cloud Functions
+- `walue_scripts` - Scripts to quickly make changes to the firestore database as needed
+- `walue_website` - Website for the app (not implemented)
