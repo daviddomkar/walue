@@ -15,16 +15,6 @@ Cryptocurrency portfolio tracker. This app (and backend using Firebase) was made
 - [x] User onboarding
 - [x] User settings
 
-## Screenshots
-
-[All Screenshots](walue_branding/screenshots)
-
-![Dashboard Screen](walue_branding/screenshots/Screenshot_1620246268.png)
-![Cryptocurrency Detail Screen](walue_branding/screenshots/Screenshot_1620246233.png)
-![Choose Cryptocurrency Screen](walue_branding/screenshots/Screenshot_1620246069.png)
-![Fiat Selection Screen](walue_branding/screenshots/Screenshot_1620246036.png)
-![Login Screen](walue_branding/screenshots/Screenshot_1620245708.png)
-
 ## Tech Stack
 
 - Flutter (Riverpod, Hooks)
@@ -39,3 +29,13 @@ Cryptocurrency portfolio tracker. This app (and backend using Firebase) was made
 - `walue_functions` - Firebase Cloud Functions
 - `walue_scripts` - Scripts to quickly make changes to the firestore database as needed
 - `walue_website` - Website for the app (not implemented)
+
+## Screenshots
+
+[All Screenshots](walue_branding/screenshots)
+
+![Dashboard Screen](walue_branding/screenshots/Screenshot_1620246268.png)
+![Cryptocurrency Detail Screen](walue_branding/screenshots/Screenshot_1620246233.png)
+![Choose Cryptocurrency Screen](walue_branding/screenshots/Screenshot_1620246069.png)
+![Fiat Selection Screen](walue_branding/screenshots/Screenshot_1620246036.png)
+![Login Screen](walue_branding/screenshots/Screenshot_1620245708.png)
